@@ -2,10 +2,8 @@
 package oqs
 
 /*
-#cgo CFLAGS: -I/Users/vlad/liboqs/include
+#cgo CFLAGS: -I$HOME/liboqs/include
 #cgo LDFLAGS: -L/usr/local/lib -loqs
-#include <stdio.h>
-#include <stdlib.h>
 #include <oqs/oqs.h>
 */
 import "C"
@@ -63,6 +61,53 @@ func init() {
 
 /**************** END KEMs ****************/
 
+/**************** KeyEncapsulation ****************/
+type keyEncapsulationDetails struct {
+    ClaimedNISTLevel   int
+    IsINDCCA           bool
+    LengthCiphertext   int
+    LengthPublicKey    int
+    LengthSecretKey    int
+    LengthSharedSecret int
+    Name               string
+    Version            string
+}
+
+type KeyEncapsulation struct {
+    kem        *C.OQS_KEM
+    algName    string
+    secretKey  *bytes.Buffer
+    algDetails keyEncapsulationDetails
+}
+
+func (kem *KeyEncapsulation) Init(algName string, secretKey *bytes.Buffer) {
+    if !IsKEMEnabled(algName) {
+        // perhaps it's supported
+        if (IsKEMSupported(algName)) {
+            panic(`"` + algName + `" is not enabled by OQS`)
+        } else {
+            panic(`"` + algName + `" is not supported by OQS`)
+        }
+    }
+    kem.kem = C.OQS_KEM_new(C.CString(algName))
+    kem.algName = algName
+    kem.secretKey = secretKey
+    kem.algDetails.Name = C.GoString(kem.kem.method_name)
+    kem.algDetails.Version = C.GoString(kem.kem.alg_version)
+    kem.algDetails.ClaimedNISTLevel = int(kem.kem.claimed_nist_level)
+    kem.algDetails.IsINDCCA = bool(kem.kem.ind_cca)
+    kem.algDetails.LengthPublicKey = int(kem.kem.length_public_key)
+    kem.algDetails.LengthSecretKey = int(kem.kem.length_secret_key)
+    kem.algDetails.LengthCiphertext = int(kem.kem.length_ciphertext)
+    kem.algDetails.LengthSharedSecret = int(kem.kem.length_shared_secret)
+}
+
+func (kem *KeyEncapsulation) GetDetails() keyEncapsulationDetails {
+    return kem.algDetails
+}
+
+/**************** END KeyEncapsulation ****************/
+
 /**************** SIGs ****************/
 var enabledSIGs []string
 var supportedSIGs []string
@@ -113,36 +158,46 @@ func init() {
 /**************** END SIGs ****************/
 
 /**************** Signature ****************/
+type signatureDetails struct {
+    ClaimedNISTLevel   int
+    IsEUFCMA           bool
+    LengthPublicKey    int
+    LengthSecretKey    int
+    MaxLengthSignature int
+    Name               string
+    Version            string
+}
+
 type Signature struct {
+    sig        *C.OQS_SIG
     algName    string
-    secretKey  bytes.Buffer
-    algDetails struct {
-        ClaimedNISTLevel   int
-        IsEUFCMA           bool
-        LengthPublicKey    int
-        LengthSecretKey    int
-        MaxLengthSignature int
-        Name               string
-        Version            string
+    secretKey  *bytes.Buffer
+    algDetails signatureDetails
+}
+
+func (sig *Signature) Init(algName string, secretKey *bytes.Buffer) {
+    if !IsSIGEnabled(algName) {
+        // perhaps it's supported
+        if (IsSIGSupported(algName)) {
+            panic(`"` + algName + `" is not enabled by OQS`)
+        } else {
+            panic(`"` + algName + `" is not supported by OQS`)
+        }
     }
+    sig.sig = C.OQS_SIG_new(C.CString(algName))
+    sig.algName = algName
+    sig.secretKey = secretKey
+    sig.algDetails.Name = C.GoString(sig.sig.method_name)
+    sig.algDetails.Version = C.GoString(sig.sig.alg_version)
+    sig.algDetails.ClaimedNISTLevel = int(sig.sig.claimed_nist_level)
+    sig.algDetails.IsEUFCMA = bool(sig.sig.euf_cma)
+    sig.algDetails.LengthPublicKey = int(sig.sig.length_public_key)
+    sig.algDetails.LengthSecretKey = int(sig.sig.length_secret_key)
+    sig.algDetails.MaxLengthSignature = int(sig.sig.length_signature)
+}
+
+func (sig *Signature) GetDetails() signatureDetails {
+    return sig.algDetails
 }
 
 /**************** END Signature ****************/
-
-/**************** KeyEncapsulation ****************/
-type KeyEncapsulation struct {
-    algName    string
-    secretKey  bytes.Buffer
-    algDetails struct {
-        ClaimedNISTLevel int
-        IsINDCCA         bool
-        LengthCiphertext int
-        LengthPublicKey  int
-        LengthSecretKey  int
-        MaxSharedSecret  int
-        Name             string
-        Version          string
-    }
-}
-
-/**************** END KeyEncapsulation ****************/
