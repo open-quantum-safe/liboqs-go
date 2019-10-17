@@ -10,6 +10,10 @@ package oqs
 */
 import "C"
 
+import (
+    "bytes"
+)
+
 /**************** KEMs ****************/
 var enabledKEMs []string
 var supportedKEMs []string
@@ -107,3 +111,38 @@ func init() {
 }
 
 /**************** END SIGs ****************/
+
+/**************** Signature ****************/
+type Signature struct {
+    algName    string
+    secretKey  bytes.Buffer
+    algDetails struct {
+        ClaimedNISTLevel   int
+        IsEUFCMA           bool
+        LengthPublicKey    int
+        LengthSecretKey    int
+        MaxLengthSignature int
+        Name               string
+        Version            string
+    }
+}
+
+/**************** END Signature ****************/
+
+/**************** KeyEncapsulation ****************/
+type KeyEncapsulation struct {
+    algName    string
+    secretKey  bytes.Buffer
+    algDetails struct {
+        ClaimedNISTLevel int
+        IsINDCCA         bool
+        LengthCiphertext int
+        LengthPublicKey  int
+        LengthSecretKey  int
+        MaxSharedSecret  int
+        Name             string
+        Version          string
+    }
+}
+
+/**************** END KeyEncapsulation ****************/
