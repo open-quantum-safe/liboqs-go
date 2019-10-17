@@ -24,8 +24,8 @@ func IsKEMEnabled(algName string) bool {
 }
 
 func IsKEMSupported(algName string) bool {
-    for _, v := range supportedKEMs {
-        if v == algName {
+    for i := range supportedKEMs {
+        if supportedKEMs[i] == algName {
             return true
         }
     }
@@ -73,8 +73,8 @@ func IsSIGEnabled(algName string) bool {
 }
 
 func IsSIGSupported(algName string) bool {
-    for _, v := range supportedSIGs {
-        if v == algName {
+    for i := range supportedSIGs {
+        if supportedSIGs[i] == algName {
             return true
         }
     }
