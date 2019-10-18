@@ -9,8 +9,14 @@ package oqs
 import "C"
 
 import (
-    "bytes"
+    "unsafe"
 )
+
+/**************** Types ****************/
+type Byte uint8
+type Bytes []Byte
+
+/**************** End Types ****************/
 
 /**************** KEMs ****************/
 var enabledKEMs []string
@@ -76,11 +82,11 @@ type keyEncapsulationDetails struct {
 type KeyEncapsulation struct {
     kem        *C.OQS_KEM
     algName    string
-    secretKey  *bytes.Buffer
+    secretKey  Bytes
     algDetails keyEncapsulationDetails
 }
 
-func (kem *KeyEncapsulation) Init(algName string, secretKey *bytes.Buffer) {
+func (kem *KeyEncapsulation) Init(algName string, secretKey Bytes) {
     if !IsKEMEnabled(algName) {
         // perhaps it's supported
         if (IsKEMSupported(algName)) {
@@ -171,11 +177,11 @@ type signatureDetails struct {
 type Signature struct {
     sig        *C.OQS_SIG
     algName    string
-    secretKey  *bytes.Buffer
+    secretKey  Bytes
     algDetails signatureDetails
 }
 
-func (sig *Signature) Init(algName string, secretKey *bytes.Buffer) {
+func (sig *Signature) Init(algName string, secretKey Bytes) {
     if !IsSIGEnabled(algName) {
         // perhaps it's supported
         if (IsSIGSupported(algName)) {
@@ -198,6 +204,63 @@ func (sig *Signature) Init(algName string, secretKey *bytes.Buffer) {
 
 func (sig *Signature) GetDetails() signatureDetails {
     return sig.algDetails
+}
+
+func (sig *Signature) GenerateKeypair() Bytes {
+    publicKey := make(Bytes, sig.algDetails.LengthPublicKey)
+    sig.secretKey = make(Bytes, sig.algDetails.LengthSecretKey)
+
+    rv := C.OQS_SIG_keypair(sig.sig, (*C.uchar)(&publicKey[0]),
+        (*C.uchar)(&sig.secretKey[0]))
+    if rv != C.OQS_SUCCESS {
+        panic("Can not generate keypair")
+    }
+
+    return publicKey
+}
+
+func (sig *Signature) ExportSecretKey() Bytes {
+    return sig.secretKey
+}
+
+func (sig *Signature) Sign(message Bytes) Bytes {
+    if len(sig.secretKey) != sig.algDetails.LengthSecretKey {
+        panic("Incorrect secret key length, make sure you specify one in " +
+            "Init() or run GenerateKeypair()")
+    }
+
+    maxLenSig := sig.algDetails.MaxLengthSignature
+    signature := make(Bytes, maxLenSig)
+    rv := C.OQS_SIG_sign(sig.sig, (*C.uchar)(&signature[0]),
+        (*C.ulong)(unsafe.Pointer(&maxLenSig)), (*C.uchar)(&message[0]),
+        C.ulong(len(message)), (*C.uchar)(&sig.secretKey[0]))
+
+    if rv != C.OQS_SUCCESS {
+        panic("Can not sign message")
+    }
+
+    return signature[:sig.algDetails.MaxLengthSignature]
+}
+
+func (sig *Signature) Verify(message Bytes, signature Bytes,
+    publicKey Bytes) bool {
+    if len(publicKey) != sig.algDetails.LengthPublicKey {
+        panic("Incorrect public key length")
+    }
+
+    if len(signature) > sig.algDetails.MaxLengthSignature {
+        panic("Incorrect signature size")
+    }
+
+    rv := C.OQS_SIG_verify(sig.sig, (*C.uchar)(&message[0]),
+        C.ulong(len(message)), (*C.uchar)(&signature[0]),
+        C.ulong(len(signature)), (*C.uchar)(&publicKey[0]))
+
+    if rv != C.OQS_SUCCESS {
+        return false
+    }
+
+    return true
 }
 
 /**************** END Signature ****************/
