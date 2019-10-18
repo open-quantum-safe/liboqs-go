@@ -1,6 +1,8 @@
 liboqs-go: Go bindings for liboqs
 ===================================
 
+Build status: to appear soon...
+
 ---
 
 **liboqs-go** offers a Go wrapper for the master branch of [Open Quantum Safe](https://openquantumsafe.org/) [liboqs](https://github.com/open-quantum-safe/liboqs/) C library, which is a C library for quantum-resistant cryptographic algorithms.
@@ -26,7 +28,7 @@ Usage
 -----
 The examples in the [`examples`](https://github.com/open-quantum-safe/liboqs-go/tree/master/examples) folder are self-explanatory and provide more details about the wrapper's API.
 
-Building
+Running/building
 --------------------------------------------
 
 First, you must build the master branch of liboqs according to the [liboqs building instructions](https://github.com/open-quantum-safe/liboqs#building), followed (optionally) by a `sudo make install` to ensure that the compiled library is system-wide visible (by default it installs under `/usr/local/include` and `/usr/local/lib` under Linux/macOS).
