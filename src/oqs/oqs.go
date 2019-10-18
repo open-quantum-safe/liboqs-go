@@ -119,7 +119,7 @@ func (kem *KeyEncapsulation) GenerateKeypair() Bytes {
     kem.secretKey = make(Bytes, kem.algDetails.LengthSecretKey)
 
     rv := C.OQS_KEM_keypair(kem.kem, (*C.uint8_t)(&publicKey[0]),
-        (*C.uchar)(&kem.secretKey[0]))
+        (*C.uint8_t)(&kem.secretKey[0]))
     if rv != C.OQS_SUCCESS {
         panic("Can not generate keypair")
     }
@@ -199,7 +199,7 @@ func GetSIGName(algID int) string {
     if algID >= MaxNumberSIGs() {
         panic("Algorithm ID out of range")
     }
-    return C.GoString(C.OQS_SIG_alg_identifier(C.ulong(algID)))
+    return C.GoString(C.OQS_SIG_alg_identifier(C.size_t(algID)))
 }
 
 func GetSupportedSIGs() []string {
@@ -269,8 +269,8 @@ func (sig *Signature) GenerateKeypair() Bytes {
     publicKey := make(Bytes, sig.algDetails.LengthPublicKey)
     sig.secretKey = make(Bytes, sig.algDetails.LengthSecretKey)
 
-    rv := C.OQS_SIG_keypair(sig.sig, (*C.uchar)(&publicKey[0]),
-        (*C.uchar)(&sig.secretKey[0]))
+    rv := C.OQS_SIG_keypair(sig.sig, (*C.uint8_t)(&publicKey[0]),
+        (*C.uint8_t)(&sig.secretKey[0]))
     if rv != C.OQS_SUCCESS {
         panic("Can not generate keypair")
     }
@@ -290,9 +290,9 @@ func (sig *Signature) Sign(message Bytes) Bytes {
 
     maxLenSig := sig.algDetails.MaxLengthSignature
     signature := make(Bytes, maxLenSig)
-    rv := C.OQS_SIG_sign(sig.sig, (*C.uchar)(&signature[0]),
-        (*C.ulong)(unsafe.Pointer(&maxLenSig)), (*C.uchar)(&message[0]),
-        C.ulong(len(message)), (*C.uchar)(&sig.secretKey[0]))
+    rv := C.OQS_SIG_sign(sig.sig, (*C.uint8_t)(&signature[0]),
+        (*C.size_t)(unsafe.Pointer(&maxLenSig)), (*C.uint8_t)(&message[0]),
+        C.ulong(len(message)), (*C.uint8_t)(&sig.secretKey[0]))
 
     if rv != C.OQS_SUCCESS {
         panic("Can not sign message")
@@ -311,9 +311,9 @@ func (sig *Signature) Verify(message Bytes, signature Bytes,
         panic("Incorrect signature size")
     }
 
-    rv := C.OQS_SIG_verify(sig.sig, (*C.uchar)(&message[0]),
-        C.ulong(len(message)), (*C.uchar)(&signature[0]),
-        C.ulong(len(signature)), (*C.uchar)(&publicKey[0]))
+    rv := C.OQS_SIG_verify(sig.sig, (*C.uint8_t)(&message[0]),
+        C.ulong(len(message)), (*C.uint8_t)(&signature[0]),
+        C.ulong(len(signature)), (*C.uint8_t)(&publicKey[0]))
 
     if rv != C.OQS_SUCCESS {
         return false
