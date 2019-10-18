@@ -33,7 +33,7 @@ Running/building
 
 First, you must build the master branch of liboqs according to the [liboqs building instructions](https://github.com/open-quantum-safe/liboqs#building), followed (optionally) by a `sudo make install` to ensure that the compiled library is system-wide visible (by default it installs under `/usr/local/include` and `/usr/local/lib` under Linux/macOS).
 
-Next, to use the wrapper, you must first add/append `liboqs-go` to the `GOPATH` environment variable, and add/append `liboqs-go/config` to the `PKG_CONFIG_PATH` environment variable.
+Next, to use the wrapper, you must first add/append the path to `liboqs-go` to the `GOPATH` environment variable, and add/append the path to `liboqs-go/config` to the `PKG_CONFIG_PATH` environment variable.
 
 Then simple `import "oqs"` in your Go program and run with `go run <program.go>` or build an executable with `go build <program.go>`. To run the examples from the terminal/command prompt, type (from the project root directory)
 
