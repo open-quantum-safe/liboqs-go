@@ -35,7 +35,14 @@ First, you must build the master branch of liboqs according to the [liboqs build
 
 Next, to use the wrapper, you must first add/append the path to `liboqs-go` to the `GOPATH` environment variable, and add/append the path to `liboqs-go/config` to the `PKG_CONFIG_PATH` environment variable.
 
-Then simple `import "oqs"` in your Go program and run with `go run <program.go>` or build an executable with `go build <program.go>`. To run the examples from the terminal/command prompt, type (from the project root directory)
+If running/building on Linux, you may need to set the `LD_LIBRARY_PATH` environment variable to point to the path
+to liboqs library directory, e.g.
+
+    export LD_LIBRARY_PATH=/usr/local/lib
+            
+assuming `liboqs.so.*` were installed in `/usr/local/lib` (true if you ran `make install` during your liboqs setup).
+ 
+Once you configured your system, simply `import "oqs"` in your Go program and run with `go run <program.go>` or build an executable with `go build <program.go>`. To run the examples from the terminal/command prompt, type (from the project root directory)
 
     go run examples/sig.go 
     
