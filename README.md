@@ -9,7 +9,7 @@ The wrapper is written in Go, hence in the following it is assumed that you have
 
 ## Pre-requisites
 
-liboqs-go depends on the [liboqs](https://github.com/open-quantum-safe/liboqs) C library; liboqs master branch must first be compiled as a Linux/macOS/Windows library, see the specific platform building instructions below.
+liboqs-go depends on the [liboqs](https://github.com/open-quantum-safe/liboqs) C library; liboqs master branch must first be compiled as a Linux/macOS/Windows library, see the liboqs [specific platform building instructions](https://github.com/open-quantum-safe/liboqs#quickstart).
 
 Contents
 --------
