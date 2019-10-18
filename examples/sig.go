@@ -15,10 +15,10 @@ func main() {
 
     sigName := "DEFAULT"
     signer := oqs.Signature{}
-    signer.Init(sigName, oqs.Bytes{})
+    signer.Init(sigName, []byte{})
     fmt.Printf("\nSignature details:\n%#v\n", signer.GetDetails())
 
-    msg := oqs.Bytes{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+    msg := []byte{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
     pubKey := signer.GenerateKeypair()
     fmt.Printf("\nSigner public key:\n% X ... % X\n", pubKey[0:8],
         pubKey[len(pubKey)-8:])
@@ -28,7 +28,7 @@ func main() {
         signature[len(signature)-8:])
 
     verifier := oqs.Signature{}
-    verifier.Init(sigName, oqs.Bytes{})
+    verifier.Init(sigName, []byte{})
     isValid := verifier.Verify(msg, signature, pubKey)
 
     fmt.Println("\nValid signature? ", isValid)

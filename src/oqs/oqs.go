@@ -11,11 +11,6 @@ import (
     "unsafe"
 )
 
-/**************** Types ****************/
-type Bytes []byte
-
-/**************** End Types ****************/
-
 /**************** Misc ****************/
 
 /**************** END Misc ****************/
@@ -84,11 +79,11 @@ type keyEncapsulationDetails struct {
 type KeyEncapsulation struct {
     kem        *C.OQS_KEM
     algName    string
-    secretKey  Bytes
+    secretKey  []byte
     algDetails keyEncapsulationDetails
 }
 
-func (kem *KeyEncapsulation) Init(algName string, secretKey Bytes) {
+func (kem *KeyEncapsulation) Init(algName string, secretKey []byte) {
     if !IsKEMEnabled(algName) {
         // perhaps it's supported
         if (IsKEMSupported(algName)) {
@@ -114,9 +109,9 @@ func (kem *KeyEncapsulation) GetDetails() keyEncapsulationDetails {
     return kem.algDetails
 }
 
-func (kem *KeyEncapsulation) GenerateKeypair() Bytes {
-    publicKey := make(Bytes, kem.algDetails.LengthPublicKey)
-    kem.secretKey = make(Bytes, kem.algDetails.LengthSecretKey)
+func (kem *KeyEncapsulation) GenerateKeypair() []byte {
+    publicKey := make([]byte, kem.algDetails.LengthPublicKey)
+    kem.secretKey = make([]byte, kem.algDetails.LengthSecretKey)
 
     rv := C.OQS_KEM_keypair(kem.kem, (*C.uint8_t)(&publicKey[0]),
         (*C.uint8_t)(&kem.secretKey[0]))
@@ -127,17 +122,17 @@ func (kem *KeyEncapsulation) GenerateKeypair() Bytes {
     return publicKey
 }
 
-func (kem *KeyEncapsulation) ExportSecretKey() Bytes {
+func (kem *KeyEncapsulation) ExportSecretKey() []byte {
     return kem.secretKey
 }
 
-func (kem *KeyEncapsulation) EncapSecret(publicKey Bytes) (ciphertext, sharedSecret Bytes) {
+func (kem *KeyEncapsulation) EncapSecret(publicKey []byte) (ciphertext, sharedSecret []byte) {
     if len(publicKey) != kem.algDetails.LengthPublicKey {
         panic("Incorrect public key length")
     }
 
-    ciphertext = make(Bytes, kem.algDetails.LengthCiphertext)
-    sharedSecret = make(Bytes, kem.algDetails.LengthSharedSecret)
+    ciphertext = make([]byte, kem.algDetails.LengthCiphertext)
+    sharedSecret = make([]byte, kem.algDetails.LengthSharedSecret)
 
     rv := C.OQS_KEM_encaps(kem.kem, (*C.uint8_t)(&ciphertext[0]),
         (*C.uint8_t)(&sharedSecret[0]), (*C.uint8_t)(&publicKey[0]))
@@ -149,7 +144,7 @@ func (kem *KeyEncapsulation) EncapSecret(publicKey Bytes) (ciphertext, sharedSec
     return ciphertext, sharedSecret
 }
 
-func (kem *KeyEncapsulation) DecapSecret(ciphertext Bytes) Bytes {
+func (kem *KeyEncapsulation) DecapSecret(ciphertext []byte) []byte {
     if len(ciphertext) != kem.algDetails.LengthCiphertext {
         panic("Incorrect ciphertext length")
     }
@@ -160,7 +155,7 @@ func (kem *KeyEncapsulation) DecapSecret(ciphertext Bytes) Bytes {
 
     }
 
-    sharedSecret := make(Bytes, kem.algDetails.LengthSharedSecret)
+    sharedSecret := make([]byte, kem.algDetails.LengthSharedSecret)
     rv := C.OQS_KEM_decaps(kem.kem, (*C.uint8_t)(&sharedSecret[0]),
         (*C.uchar)(&ciphertext[0]), (*C.uint8_t)(&kem.secretKey[0]))
 
@@ -236,11 +231,11 @@ type signatureDetails struct {
 type Signature struct {
     sig        *C.OQS_SIG
     algName    string
-    secretKey  Bytes
+    secretKey  []byte
     algDetails signatureDetails
 }
 
-func (sig *Signature) Init(algName string, secretKey Bytes) {
+func (sig *Signature) Init(algName string, secretKey []byte) {
     if !IsSIGEnabled(algName) {
         // perhaps it's supported
         if (IsSIGSupported(algName)) {
@@ -265,9 +260,9 @@ func (sig *Signature) GetDetails() signatureDetails {
     return sig.algDetails
 }
 
-func (sig *Signature) GenerateKeypair() Bytes {
-    publicKey := make(Bytes, sig.algDetails.LengthPublicKey)
-    sig.secretKey = make(Bytes, sig.algDetails.LengthSecretKey)
+func (sig *Signature) GenerateKeypair() []byte {
+    publicKey := make([]byte, sig.algDetails.LengthPublicKey)
+    sig.secretKey = make([]byte, sig.algDetails.LengthSecretKey)
 
     rv := C.OQS_SIG_keypair(sig.sig, (*C.uint8_t)(&publicKey[0]),
         (*C.uint8_t)(&sig.secretKey[0]))
@@ -278,18 +273,18 @@ func (sig *Signature) GenerateKeypair() Bytes {
     return publicKey
 }
 
-func (sig *Signature) ExportSecretKey() Bytes {
+func (sig *Signature) ExportSecretKey() []byte {
     return sig.secretKey
 }
 
-func (sig *Signature) Sign(message Bytes) Bytes {
+func (sig *Signature) Sign(message []byte) []byte {
     if len(sig.secretKey) != sig.algDetails.LengthSecretKey {
         panic("Incorrect secret key length, make sure you specify one in " +
             "Init() or run GenerateKeypair()")
     }
 
     maxLenSig := sig.algDetails.MaxLengthSignature
-    signature := make(Bytes, maxLenSig)
+    signature := make([]byte, maxLenSig)
     rv := C.OQS_SIG_sign(sig.sig, (*C.uint8_t)(&signature[0]),
         (*C.size_t)(unsafe.Pointer(&maxLenSig)), (*C.uint8_t)(&message[0]),
         C.size_t(len(message)), (*C.uint8_t)(&sig.secretKey[0]))
@@ -301,8 +296,8 @@ func (sig *Signature) Sign(message Bytes) Bytes {
     return signature[:sig.algDetails.MaxLengthSignature]
 }
 
-func (sig *Signature) Verify(message Bytes, signature Bytes,
-    publicKey Bytes) bool {
+func (sig *Signature) Verify(message []byte, signature []byte,
+    publicKey []byte) bool {
     if len(publicKey) != sig.algDetails.LengthPublicKey {
         panic("Incorrect public key length")
     }

@@ -16,13 +16,13 @@ func main() {
 
     kemName := "DEFAULT"
     client := oqs.KeyEncapsulation{}
-    client.Init(kemName, oqs.Bytes{})
+    client.Init(kemName, []byte{})
 
     clientPublicKey := client.GenerateKeypair()
     fmt.Printf("\nKEM details:\n%#v\n", client.GetDetails())
 
     server := oqs.KeyEncapsulation{}
-    server.Init(kemName, oqs.Bytes{})
+    server.Init(kemName, []byte{})
     ciphertext, sharedSecretServer := server.EncapSecret(clientPublicKey)
 
     sharedSecretClient := client.DecapSecret(ciphertext)
