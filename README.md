@@ -33,7 +33,14 @@ Running/building
 
 First, you must build the master branch of liboqs according to the [liboqs building instructions](https://github.com/open-quantum-safe/liboqs#building), followed (optionally) by a `sudo make install` to ensure that the compiled library is system-wide visible (by default it installs under `/usr/local/include` and `/usr/local/lib` under Linux/macOS).
 
-Next, to use the wrapper, you must first add/append the path to `liboqs-go` to the `GOPATH` environment variable, and add/append the path to `liboqs-go/config` to the `PKG_CONFIG_PATH` environment variable.
+Next, you must modify the following lines in `liboqs-go/config/liboqs.pc`
+
+    LIBOQS_INCLUDE_DIR=/usr/local/include
+    LIBOQS_LIB_DIR=/usr/local/lib
+    
+so they correspond to your liboqs installation directories.    
+
+Finally, you must add/append the path to `liboqs-go` to the `GOPATH` environment variable, then add/append the path to `liboqs-go/config` to the `PKG_CONFIG_PATH` environment variable.
 
 If running/building on Linux, you may need to set the `LD_LIBRARY_PATH` environment variable to point to the path
 to liboqs library directory, e.g.
