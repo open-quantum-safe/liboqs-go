@@ -46,7 +46,7 @@ func GetKEMName(algID int) string {
     if algID >= MaxNumberKEMs() {
         panic("Algorithm ID out of range")
     }
-    return C.GoString(C.OQS_KEM_alg_identifier(C.ulong(algID)))
+    return C.GoString(C.OQS_KEM_alg_identifier(C.size_t(algID)))
 }
 
 func GetSupportedKEMs() []string {
@@ -118,7 +118,7 @@ func (kem *KeyEncapsulation) GenerateKeypair() Bytes {
     publicKey := make(Bytes, kem.algDetails.LengthPublicKey)
     kem.secretKey = make(Bytes, kem.algDetails.LengthSecretKey)
 
-    rv := C.OQS_KEM_keypair(kem.kem, (*C.uchar)(&publicKey[0]),
+    rv := C.OQS_KEM_keypair(kem.kem, (*C.uint8)(&publicKey[0]),
         (*C.uchar)(&kem.secretKey[0]))
     if rv != C.OQS_SUCCESS {
         panic("Can not generate keypair")
@@ -139,8 +139,8 @@ func (kem *KeyEncapsulation) EncapSecret(publicKey Bytes) (ciphertext, sharedSec
     ciphertext = make(Bytes, kem.algDetails.LengthCiphertext)
     sharedSecret = make(Bytes, kem.algDetails.LengthSharedSecret)
 
-    rv := C.OQS_KEM_encaps(kem.kem, (*C.uchar)(&ciphertext[0]),
-        (*C.uchar)(&sharedSecret[0]), (*C.uchar)(&publicKey[0]))
+    rv := C.OQS_KEM_encaps(kem.kem, (*C.uint8)(&ciphertext[0]),
+        (*C.uint8)(&sharedSecret[0]), (*C.uint8)(&publicKey[0]))
 
     if rv != C.OQS_SUCCESS {
         panic("Can not encapsulate secret")
@@ -161,8 +161,8 @@ func (kem *KeyEncapsulation) DecapSecret(ciphertext Bytes) Bytes {
     }
 
     sharedSecret := make(Bytes, kem.algDetails.LengthSharedSecret)
-    rv := C.OQS_KEM_decaps(kem.kem, (*C.uchar)(&sharedSecret[0]),
-        (*C.uchar)(&ciphertext[0]), (*C.uchar)(&kem.secretKey[0]))
+    rv := C.OQS_KEM_decaps(kem.kem, (*C.uint8)(&sharedSecret[0]),
+        (*C.uint8)(&ciphertext[0]), (*C.uint8)(&kem.secretKey[0]))
 
     if rv != C.OQS_SUCCESS {
         panic("Can not decapsulate secret")
