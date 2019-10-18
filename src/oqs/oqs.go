@@ -162,7 +162,7 @@ func (kem *KeyEncapsulation) DecapSecret(ciphertext Bytes) Bytes {
 
     sharedSecret := make(Bytes, kem.algDetails.LengthSharedSecret)
     rv := C.OQS_KEM_decaps(kem.kem, (*C.uint8_t)(&sharedSecret[0]),
-        (*C.uint8_t)(&ciphertext[0]), (*C.uint8_t)(&kem.secretKey[0]))
+        (*C.uchar)(&ciphertext[0]), (*C.uint8_t)(&kem.secretKey[0]))
 
     if rv != C.OQS_SUCCESS {
         panic("Can not decapsulate secret")
@@ -292,7 +292,7 @@ func (sig *Signature) Sign(message Bytes) Bytes {
     signature := make(Bytes, maxLenSig)
     rv := C.OQS_SIG_sign(sig.sig, (*C.uint8_t)(&signature[0]),
         (*C.size_t)(unsafe.Pointer(&maxLenSig)), (*C.uint8_t)(&message[0]),
-        C.ulong(len(message)), (*C.uint8_t)(&sig.secretKey[0]))
+        C.size_t(len(message)), (*C.uint8_t)(&sig.secretKey[0]))
 
     if rv != C.OQS_SUCCESS {
         panic("Can not sign message")
@@ -312,8 +312,8 @@ func (sig *Signature) Verify(message Bytes, signature Bytes,
     }
 
     rv := C.OQS_SIG_verify(sig.sig, (*C.uint8_t)(&message[0]),
-        C.ulong(len(message)), (*C.uint8_t)(&signature[0]),
-        C.ulong(len(signature)), (*C.uint8_t)(&publicKey[0]))
+        C.size_t(len(message)), (*C.uint8_t)(&signature[0]),
+        C.size_t(len(signature)), (*C.uint8_t)(&publicKey[0]))
 
     if rv != C.OQS_SUCCESS {
         return false
