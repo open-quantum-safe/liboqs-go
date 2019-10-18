@@ -1,0 +1,8 @@
+liboqs_include_dir=$HOME/liboqs
+liboqs_lib_dir=/usr/local/lib
+
+Name: liboqs
+Description: liboqs C library for quantum resistant cryptography
+Version: 0.2.0
+Libs: -L${liboqs_lib_dir} -loqs
+Cflags: -I${liboqs_include_dir}

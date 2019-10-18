@@ -2,8 +2,7 @@
 package oqs
 
 /*
-#cgo CFLAGS: -I$HOME/liboqs/include
-#cgo LDFLAGS: -L/usr/local/lib -loqs
+#cgo pkg-config: liboqs
 #include <oqs/oqs.h>
 */
 import "C"
@@ -13,10 +12,13 @@ import (
 )
 
 /**************** Types ****************/
-type Byte uint8
-type Bytes []Byte
+type Bytes []byte
 
 /**************** End Types ****************/
+
+/**************** Misc ****************/
+
+/**************** END Misc ****************/
 
 /**************** KEMs ****************/
 var enabledKEMs []string
@@ -110,6 +112,63 @@ func (kem *KeyEncapsulation) Init(algName string, secretKey Bytes) {
 
 func (kem *KeyEncapsulation) GetDetails() keyEncapsulationDetails {
     return kem.algDetails
+}
+
+func (kem *KeyEncapsulation) GenerateKeypair() Bytes {
+    publicKey := make(Bytes, kem.algDetails.LengthPublicKey)
+    kem.secretKey = make(Bytes, kem.algDetails.LengthSecretKey)
+
+    rv := C.OQS_KEM_keypair(kem.kem, (*C.uchar)(&publicKey[0]),
+        (*C.uchar)(&kem.secretKey[0]))
+    if rv != C.OQS_SUCCESS {
+        panic("Can not generate keypair")
+    }
+
+    return publicKey
+}
+
+func (kem *KeyEncapsulation) ExportSecretKey() Bytes {
+    return kem.secretKey
+}
+
+func (kem *KeyEncapsulation) EncapSecret(publicKey Bytes) (ciphertext, sharedSecret Bytes) {
+    if len(publicKey) != kem.algDetails.LengthPublicKey {
+        panic("Incorrect public key length")
+    }
+
+    ciphertext = make(Bytes, kem.algDetails.LengthCiphertext)
+    sharedSecret = make(Bytes, kem.algDetails.LengthSharedSecret)
+
+    rv := C.OQS_KEM_encaps(kem.kem, (*C.uchar)(&ciphertext[0]),
+        (*C.uchar)(&sharedSecret[0]), (*C.uchar)(&publicKey[0]))
+
+    if rv != C.OQS_SUCCESS {
+        panic("Can not encapsulate secret")
+    }
+
+    return ciphertext, sharedSecret
+}
+
+func (kem *KeyEncapsulation) DecapSecret(ciphertext Bytes) Bytes {
+    if len(ciphertext) != kem.algDetails.LengthCiphertext {
+        panic("Incorrect ciphertext length")
+    }
+
+    if len(kem.secretKey) != kem.algDetails.LengthSecretKey {
+        panic("Incorrect secret key length, make sure you specify one in " +
+            "Init() or run GenerateKeypair()")
+
+    }
+
+    sharedSecret := make(Bytes, kem.algDetails.LengthSharedSecret)
+    rv := C.OQS_KEM_decaps(kem.kem, (*C.uchar)(&sharedSecret[0]),
+        (*C.uchar)(&ciphertext[0]), (*C.uchar)(&kem.secretKey[0]))
+
+    if rv != C.OQS_SUCCESS {
+        panic("Can not decapsulate secret")
+    }
+
+    return sharedSecret
 }
 
 /**************** END KeyEncapsulation ****************/
