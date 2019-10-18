@@ -13,3 +13,7 @@
 
 # GoLand
 .idea/
+
+# Examples
+examples/kem
+examples/sig
