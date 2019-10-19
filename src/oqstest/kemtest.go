@@ -1,4 +1,4 @@
-// oqs unit testing
+// Package oqstest provides unit testing for the oqs Go package
 package oqstest
 
 import (
@@ -8,6 +8,7 @@ import (
     "testing"
 )
 
+// Test all enabled KEMs
 func TestKeyEncapsulation(t *testing.T) {
     var client, server oqs.KeyEncapsulation
 
@@ -27,6 +28,7 @@ func TestKeyEncapsulation(t *testing.T) {
     }
 }
 
+// Test that an unsupported KEM emits a panic
 func TestUnsupportedKeyEncapsulation(t *testing.T) {
     defer func() {
         if r := recover(); r == nil {

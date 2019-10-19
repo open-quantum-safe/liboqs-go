@@ -1,4 +1,4 @@
-// liboqs GO wrapper
+// Package oqs provides a GO wrapper for the C liboqs quantum-resistant library
 package oqs
 
 /*
@@ -11,11 +11,8 @@ import (
     "unsafe"
 )
 
-/**************** Misc ****************/
-
-/**************** END Misc ****************/
-
 /**************** KEMs ****************/
+
 var enabledKEMs []string
 var supportedKEMs []string
 
@@ -65,6 +62,7 @@ func init() {
 /**************** END KEMs ****************/
 
 /**************** KeyEncapsulation ****************/
+
 type keyEncapsulationDetails struct {
     ClaimedNISTLevel   int
     IsINDCCA           bool
@@ -177,6 +175,7 @@ func (kem *KeyEncapsulation) Release() {
 /**************** END KeyEncapsulation ****************/
 
 /**************** SIGs ****************/
+
 var enabledSIGs []string
 var supportedSIGs []string
 
@@ -226,6 +225,7 @@ func init() {
 /**************** END SIGs ****************/
 
 /**************** Signature ****************/
+
 type signatureDetails struct {
     ClaimedNISTLevel   int
     IsEUFCMA           bool

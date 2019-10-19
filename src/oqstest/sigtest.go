@@ -1,4 +1,3 @@
-// oqs unit testing
 package oqstest
 
 import (
@@ -7,6 +6,7 @@ import (
     "testing"
 )
 
+// Test all enabled signatures
 func TestSignature(t *testing.T) {
     var signer, verifier oqs.Signature
     msg := []byte("This is our favourite message to sign")
@@ -26,6 +26,7 @@ func TestSignature(t *testing.T) {
     }
 }
 
+// Test that an unsupported signature emits a panic
 func TestUnsupportedSignature(t *testing.T) {
     defer func() {
         if r := recover(); r == nil {
