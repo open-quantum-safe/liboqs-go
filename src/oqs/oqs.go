@@ -301,7 +301,7 @@ func (sig *Signature) Sign(message []byte) []byte {
         panic("Can not sign message")
     }
 
-    return signature[:sig.algDetails.MaxLengthSignature]
+    return signature[:maxLenSig]
 }
 
 func (sig *Signature) Verify(message []byte, signature []byte,
