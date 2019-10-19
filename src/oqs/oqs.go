@@ -291,17 +291,17 @@ func (sig *Signature) Sign(message []byte) []byte {
             "Init() or run GenerateKeypair()")
     }
 
-    maxLenSig := sig.algDetails.MaxLengthSignature
-    signature := make([]byte, maxLenSig)
+    signature := make([]byte, sig.algDetails.MaxLengthSignature)
+    var lenSig int
     rv := C.OQS_SIG_sign(sig.sig, (*C.uint8_t)(&signature[0]),
-        (*C.size_t)(unsafe.Pointer(&maxLenSig)), (*C.uint8_t)(&message[0]),
+        (*C.size_t)(unsafe.Pointer(&lenSig)), (*C.uint8_t)(&message[0]),
         C.size_t(len(message)), (*C.uint8_t)(&sig.secretKey[0]))
 
     if rv != C.OQS_SUCCESS {
         panic("Can not sign message")
     }
 
-    return signature[:maxLenSig]
+    return signature[:lenSig]
 }
 
 func (sig *Signature) Verify(message []byte, signature []byte,
