@@ -1,5 +1,5 @@
-// oqs.KeyEncapsulation unit testing
-package testing
+// oqs unit testing
+package oqstest
 
 import (
     "bytes"

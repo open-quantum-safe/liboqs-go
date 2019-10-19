@@ -1,5 +1,5 @@
-// oqs.Signature unit testing
-package testing
+// oqs unit testing
+package oqstest
 
 import (
     "fmt"
