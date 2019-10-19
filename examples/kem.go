@@ -34,4 +34,7 @@ func main() {
 
     isValid := bytes.Compare(sharedSecretClient, sharedSecretServer) == 0
     fmt.Println("\nShared secrets coincide? ", isValid)
+
+    client.Release()
+    server.Release()
 }

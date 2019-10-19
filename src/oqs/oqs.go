@@ -86,7 +86,7 @@ type KeyEncapsulation struct {
 func (kem *KeyEncapsulation) Init(algName string, secretKey []byte) {
     if !IsKEMEnabled(algName) {
         // perhaps it's supported
-        if (IsKEMSupported(algName)) {
+        if IsKEMSupported(algName) {
             panic(`"` + algName + `" is not enabled by OQS`)
         } else {
             panic(`"` + algName + `" is not supported by OQS`)
@@ -166,6 +166,14 @@ func (kem *KeyEncapsulation) DecapSecret(ciphertext []byte) []byte {
     return sharedSecret
 }
 
+func (kem *KeyEncapsulation) Release() {
+    if len(kem.secretKey) > 0 {
+        C.OQS_MEM_cleanse(unsafe.Pointer(&kem.secretKey[0]),
+            C.size_t(len(kem.secretKey)))
+    }
+    C.OQS_KEM_free(kem.kem)
+}
+
 /**************** END KeyEncapsulation ****************/
 
 /**************** SIGs ****************/
@@ -238,7 +246,7 @@ type Signature struct {
 func (sig *Signature) Init(algName string, secretKey []byte) {
     if !IsSIGEnabled(algName) {
         // perhaps it's supported
-        if (IsSIGSupported(algName)) {
+        if IsSIGSupported(algName) {
             panic(`"` + algName + `" is not enabled by OQS`)
         } else {
             panic(`"` + algName + `" is not supported by OQS`)
@@ -315,6 +323,14 @@ func (sig *Signature) Verify(message []byte, signature []byte,
     }
 
     return true
+}
+
+func (sig *Signature) Release() {
+    if len(sig.secretKey) > 0 {
+        C.OQS_MEM_cleanse(unsafe.Pointer(&sig.secretKey[0]),
+            C.size_t(len(sig.secretKey)))
+    }
+    C.OQS_SIG_free(sig.sig)
 }
 
 /**************** END Signature ****************/

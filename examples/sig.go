@@ -32,4 +32,7 @@ func main() {
     isValid := verifier.Verify(msg, signature, pubKey)
 
     fmt.Println("\nValid signature? ", isValid)
+
+    signer.Release()
+    verifier.Release()
 }
