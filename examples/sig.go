@@ -18,7 +18,7 @@ func main() {
     signer.Init(sigName, []byte{})
     fmt.Printf("\nSignature details:\n%#v\n", signer.GetDetails())
 
-    msg := []byte{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+    msg := []byte("This is the message to sign")
     pubKey := signer.GenerateKeypair()
     fmt.Printf("\nSigner public key:\n% X ... % X\n", pubKey[0:8],
         pubKey[len(pubKey)-8:])
