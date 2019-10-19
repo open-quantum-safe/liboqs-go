@@ -20,12 +20,13 @@ liboqs-go is a Go package. The project contains the following files
 and folders:
 
  - **`src/oqs/oqs.go`: main package file for the wrapper**
+ - `src/oqs/oqstest`: unit tests 
  - `examples/kem.go`: key encapsulation example
  - `examples/sig.go`: signature example
- - `unit_tests`: unit tests 
 
 Usage
 -----
+
 The examples in the [`examples`](https://github.com/open-quantum-safe/liboqs-go/tree/master/examples) folder are self-explanatory and provide more details about the wrapper's API.
 
 Running/building
@@ -59,6 +60,10 @@ or
 
 from the root of the project folder. Replace `go run` with `go build` if you intend to build the corresponding executables.
 
+To run the unit tests from the terminal/command prompt, type (from the project root directory)
+	
+	go test -v oqstest
+	
 Limitations and security
 ------------------------
 
