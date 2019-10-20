@@ -32,7 +32,7 @@ func main() {
     fmt.Printf("\nServer shared secret:\n% X ... % X\n",
         sharedSecretServer[0:8], sharedSecretServer[len(sharedSecretServer)-8:])
 
-    isValid := bytes.Compare(sharedSecretClient, sharedSecretServer) == 0
+    isValid := bytes.Equal(sharedSecretClient, sharedSecretServer)
     fmt.Println("\nShared secrets coincide? ", isValid)
 
     client.Release()
