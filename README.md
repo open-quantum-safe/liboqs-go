@@ -7,11 +7,19 @@ Build status: to appear soon...
 
 **liboqs-go** offers a Go wrapper for the master branch of [Open Quantum Safe](https://openquantumsafe.org/) [liboqs](https://github.com/open-quantum-safe/liboqs/) C library, which is a C library for quantum-resistant cryptographic algorithms.
 
-The wrapper is written in Go, hence in the following it is assumed that you have access to a Go compliant environment. liboqs-go has been extensively tested on Linux, macOS and Windows systems. Continuous integration is provided via Travis CI and AppVeyor.
+The wrapper is written in Go, hence in the following it is assumed that you have access to a Go compliant environment. liboqs-go has been extensively tested on Linux and macOS systems. Continuous integration is provided via Travis CI.
 
 ## Pre-requisites
 
-liboqs-go depends on the [liboqs](https://github.com/open-quantum-safe/liboqs) C library; liboqs master branch must first be compiled as a Linux/macOS/Windows library, see the liboqs [specific platform building instructions](https://github.com/open-quantum-safe/liboqs#quickstart).
+liboqs-go depends on the [liboqs](https://github.com/open-quantum-safe/liboqs) C library; liboqs master branch must first be compiled as a UNIX/Linux/macOS library, see the liboqs [specific platform building instructions](https://github.com/open-quantum-safe/liboqs#quickstart).
+
+In addition, we assume you have access to:
+
+- Go version 1.7 or later
+- a POSIX compilant system (UNIX/Linux/Mac OS). For now, `cgo` seems to be not fully supported by Windows; we will try to add Windows support soon.
+- C compliant compiler (gcc/clang etc)
+- pkg-config (`sudo apt-get install pkg-config` in Linux)
+
 
 Contents
 --------
