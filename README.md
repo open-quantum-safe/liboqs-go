@@ -15,9 +15,9 @@ liboqs-go depends on the [liboqs](https://github.com/open-quantum-safe/liboqs) C
 
 In addition, we assume you have access to:
 
+- a POSIX compilant system (UNIX/Linux/Mac OS). For now, `cgo` is not fully supported under Windows due to various ABI issues; we will add Windows support when it becomes available.
 - Go version 1.7 or later
-- a POSIX compilant system (UNIX/Linux/Mac OS). For now, `cgo` seems to be not fully supported by Windows; we will try to add Windows support soon.
-- C compliant compiler (gcc/clang etc)
+- a C compliant compiler (gcc/clang etc.)
 - pkg-config (`sudo apt-get install pkg-config` in Linux)
 
 
