@@ -2,7 +2,7 @@ LIBOQS_INCLUDE_DIR=/usr/local/include
 LIBOQS_LIB_DIR=/usr/local/lib
 
 Name: liboqs
-Description: liboqs C library for quantum resistant cryptography
+Description: C library for quantum resistant cryptography
 Version: 0.2.0
 Cflags: -I${LIBOQS_INCLUDE_DIR}
 Libs: -L${LIBOQS_LIB_DIR} -loqs
