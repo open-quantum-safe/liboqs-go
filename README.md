@@ -18,7 +18,7 @@ In addition, we assume you have access to:
 - a POSIX compilant system (UNIX/Linux/Mac OS). For now, `cgo` is not fully supported under Windows due to various ABI issues; we will add Windows support when it becomes available.
 - Go version 1.7 or later
 - a standard C compliant compiler (gcc/clang etc.)
-- pkg-config (`sudo apt-get install pkg-config` in Linux)
+- pkg-config (use `sudo apt-get install pkg-config` to install on Ubuntu/Debian-based Linux platforms)
 
 
 Contents
