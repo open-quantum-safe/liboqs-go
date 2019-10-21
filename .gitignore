@@ -4,6 +4,7 @@
 *.dll
 *.so
 *.dylib
+*.swp
 
 # Test binary, build with `go test -c`
 *.test
@@ -17,3 +18,8 @@
 # Examples
 examples/kem
 examples/sig
+
+# build
+build/
+kem
+sig

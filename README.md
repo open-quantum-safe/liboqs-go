@@ -58,7 +58,9 @@ to liboqs' library directory, e.g.
             
 assuming `liboqs.so.*` were installed in `/usr/local/lib` (true assuming you ran `make install` during your liboqs setup).
  
-Once you configured your system as directed above, simply `import "oqs"` in your Go program and run with `go run <program.go>` or build an executable with `go build <program.go>`. To run the examples from the terminal/command prompt, type (from the project's root directory)
+Once you configured your system as directed above, simply `import "oqs"` in your Go program and run with `go run <program.go>` or build an executable with `go build <program.go>`.
+
+To run the examples from the terminal/console, type (from the project's root directory)
 
     go run examples/sig.go 
     
@@ -66,18 +68,24 @@ or
     
     go run examples/kem.go
 
-Replace `go run` with `go build` if you intend to build the corresponding executables.
+Replace `go run` with `go build` if you intend to build the corresponding executables; in this case they will be built in the project's root directory. 
 
-To run the unit tests from the terminal/command prompt, type (from the project's root directory)
+If you intend to build the examples in a different directory, create the latter in the project's root directory, e.g. `mkdir build`, then `cd build`, and finally type e.g.
+
+    go build ../examples/kem.go 
+
+to build the executable `kem` inside the `build` directory. 
+
+To run the unit tests from the terminal/console, type
 	
 	go test -v oqstest
 	
-To build the unit tests from the terminal/command prompt, type (from the project's root directory)
+To build the unit test executable from the terminal/console, type (from the directory in which you want to build the executable)
 
     go test -c oqstest
     
-The command above will build `oqstest.test` binary in the project's root directory.	
-	
+This will build the `oqstest.test` executable in the directory of your choice above.
+
 Limitations and security
 ------------------------
 
