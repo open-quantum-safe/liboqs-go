@@ -1,10 +1,10 @@
 // key encapsulation Go example
-package main
+package examples // import "github.com/open-quantum-safe/liboqs-go/examples"
 
 import (
     "bytes"
     "fmt"
-    "oqs"
+    "github.com/open-quantum-safe/liboqs-go/oqs"
 )
 
 func main() {

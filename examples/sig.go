@@ -1,9 +1,9 @@
 // signature Go example
-package main
+package examples // import "github.com/open-quantum-safe/liboqs-go/oqs/examples"
 
 import (
     "fmt"
-    "oqs"
+    "github.com/open-quantum-safe/liboqs-go/oqs"
 )
 
 func main() {

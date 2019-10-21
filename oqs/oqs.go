@@ -1,5 +1,5 @@
 // Package oqs provides a GO wrapper for the C liboqs quantum-resistant library
-package oqs
+package oqs // import "github.com/open-quantum-safe/liboqs-go/oqs"
 
 /*
 #cgo pkg-config: liboqs

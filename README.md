@@ -27,9 +27,9 @@ Contents
 liboqs-go is a Go package. The project contains the following files
 and directories:
 
- - **`src/oqs/oqs.go`: main package file for the wrapper**
- - `src/oqs/oqstest`: unit tests package
- - `config/liboqs.pc`: `pkg-config` configuration file needed by `cgo`
+ - **`oqs/oqs.go`: main package file for the wrapper**
+ - `oqs/oqstest`: unit tests package
+ - `./config/liboqs.pc`: `pkg-config` configuration file needed by `cgo`
  - `examples/kem.go`: key encapsulation example
  - `examples/sig.go`: signature example
 

@@ -1,10 +1,10 @@
 // Package oqstest provides unit testing for the oqs Go package
-package oqstest
+package tests // import "github.com/open-quantum-safe/liboqs-go/tests"
 
 import (
     "bytes"
     "fmt"
-    "oqs"
+    "github.com/open-quantum-safe/liboqs-go/oqs"
     "testing"
 )
 

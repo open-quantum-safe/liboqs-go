@@ -1,8 +1,8 @@
-package oqstest
+package tests
 
 import (
     "fmt"
-    "oqs"
+    "github.com/open-quantum-safe/liboqs-go/oqs"
     "testing"
 )
 
