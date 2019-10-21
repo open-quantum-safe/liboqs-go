@@ -67,7 +67,7 @@ Finally, you must add/append `$LIBOQSGO_INSTALL_PATH/.config` to the `PKG_CONFIG
 If running/building on Linux, you may need to set the `LD_LIBRARY_PATH` environment variable to point to the path
 to liboqs' library directory, e.g.
 
-    export LD_LIBRARY_PATH=/usr/local/lib
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
             
 assuming `liboqs.so.*` were installed in `/usr/local/lib` (true assuming you ran `make install` during your liboqs setup).
  
@@ -75,11 +75,11 @@ Once you configured your system as directed above, simply `import "github.com/op
 
 To run the examples from the terminal/console, type 
 
-    go run $LIBOQSGO_INSTALL_PATH/examples/sig.go 
+    go run $LIBOQSGO_INSTALL_PATH/examples/kem.go 
     
 or 
     
-    go run $LIBOQSGO_INSTALL_PATH/examples/kem.go
+    go run $LIBOQSGO_INSTALL_PATH/examples/sig.go
 
 Replace `go run` with `go build` if you intend to build the corresponding executables; in this case they will be built in the directory you ran the `go build` command from. 
 

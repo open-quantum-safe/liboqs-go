@@ -1,0 +1,59 @@
+language: cpp
+dist: xenial
+
+matrix:
+  include:
+    # Ubuntu Linux 16.04 gcc5.4
+    - os: linux
+      compiler: gcc
+      before_install:
+        - export CXX="g++-5" CC="gcc-5"
+        - sudo apt-get install autoconf automake
+
+    # Apple OSX LLVM version 10.0.0 (clang-1000.11.45.5)
+    - os: osx
+      osx_image: xcode10.1
+      compiler: clang
+      before_install:
+        - rm -rf /usr/local/include/c++
+        - brew update
+        - brew install gcc6
+
+    # OSX gcc6
+    - os: osx
+      osx_image: xcode10.1
+      compiler: gcc
+      before_install:
+        - rm -rf /usr/local/include/c++
+        - brew update
+        - brew install gcc6
+        - export CXX="g++-6" CC="gcc-6"
+        - sudo softwareupdate -i "Command Line Tools (macOS High Sierra version 10.13) for Xcode-10.1"
+
+notifications:
+  email: false
+
+script:
+  # Install liboqs
+  - sh ./.travis/install_liboqs.sh &>/dev/null
+  
+  # Install go 
+  - sudo apt-get install golang
+  - mkdir go
+  - export GOPATH=$HOME/go
+
+  # Install liboqs-go 
+  - go get github.com/open-quantum-safe/liboqs-go
+
+  # Configure the environment variables
+  - export LIBOQSGO_INSTALL_PATH=$HOME/go/src/github.com/open-quantum-safe/liboqs-go
+  - export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$LIBOQSGO_INSTALL_PATH/.config
+  - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib 
+
+  # Run the examples
+  - go run $LIBOQSGO_INSTALL_PATH/examples/kem.go 
+  - go run go run $LIBOQSGO_INSTALL_PATH/examples/sig.go 
+  
+  # Run the unit tests
+  - go test -v github.com/open-quantum-safe/liboqs-go/oqstests
+
