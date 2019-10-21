@@ -1,5 +1,5 @@
 // signature Go example
-package examples // import "github.com/open-quantum-safe/liboqs-go/oqs/examples"
+package main
 
 import (
     "fmt"

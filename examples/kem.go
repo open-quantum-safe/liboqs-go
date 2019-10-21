@@ -1,5 +1,5 @@
 // key encapsulation Go example
-package examples // import "github.com/open-quantum-safe/liboqs-go/examples"
+package main
 
 import (
     "bytes"
