@@ -23,8 +23,8 @@ func TestKeyEncapsulation(t *testing.T) {
         if !isValid {
             t.Fatal("Shared secrets do not coincide")
         }
-        client.Release()
-        server.Release()
+        client.Clean()
+        server.Clean()
     }
 }
 

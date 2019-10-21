@@ -164,12 +164,13 @@ func (kem *KeyEncapsulation) DecapSecret(ciphertext []byte) []byte {
     return sharedSecret
 }
 
-func (kem *KeyEncapsulation) Close() {
+func (kem *KeyEncapsulation) Clean() {
     if len(kem.secretKey) > 0 {
         C.OQS_MEM_cleanse(unsafe.Pointer(&kem.secretKey[0]),
             C.size_t(len(kem.secretKey)))
     }
     C.OQS_KEM_free(kem.kem)
+    *kem = KeyEncapsulation{}
 }
 
 /**************** END KeyEncapsulation ****************/
@@ -325,12 +326,22 @@ func (sig *Signature) Verify(message []byte, signature []byte,
     return true
 }
 
-func (sig *Signature) Close() {
+func (sig *Signature) Clean() {
     if len(sig.secretKey) > 0 {
         C.OQS_MEM_cleanse(unsafe.Pointer(&sig.secretKey[0]),
             C.size_t(len(sig.secretKey)))
     }
     C.OQS_SIG_free(sig.sig)
+    *sig = Signature{}
 }
 
 /**************** END Signature ****************/
+
+/**************** Misc ****************/
+
+func MemCleanse(v []byte) {
+    C.OQS_MEM_cleanse(unsafe.Pointer(&v[0]),
+        C.size_t(len(v)))
+}
+
+/**************** END Misc ****************/
