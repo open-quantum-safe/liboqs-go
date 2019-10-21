@@ -45,7 +45,7 @@ First, you must build the master branch of liboqs according to the [liboqs build
 
 Next, install the `liboqs-go` wrapper by typing
 
-    go get github.com/open-quantum-safe/liboqs-go
+    go get github.com/open-quantum-safe/liboqs-go/oqs
 
 in a terminal/console. This will install the wrapper in one of your `$GOPATH` folders. In my case the go package manager installs the wrapper in `$HOME/go/src/github.com/open-quantum-safe/liboqs-go`. To simplify the instructions to follow, export the path to the wrapper in the `LIBOQSGO_INSTALL_PATH` environment variable by typing in a terminal/console
 

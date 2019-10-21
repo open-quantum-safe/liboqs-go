@@ -43,7 +43,7 @@ script:
   - export GOPATH=$HOME/go
 
   # Install liboqs-go 
-  - go get github.com/open-quantum-safe/liboqs-go
+  - go get github.com/open-quantum-safe/liboqs-go/oqs
 
   # Configure the environment variables
   - export LIBOQSGO_INSTALL_PATH=$HOME/go/src/github.com/open-quantum-safe/liboqs-go
