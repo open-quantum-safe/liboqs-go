@@ -89,7 +89,7 @@ To run the unit tests from the terminal/console, type
 	
 To build the unit test executable from the terminal/console, type (from the directory in which you want to build the executable)
 
-    go test -c $LIBOQSGO_INSTALL_PATH/oqstest
+    go test -c $LIBOQSGO_INSTALL_PATH/oqstests
     
 This will build the `oqstests.test` executable in the directory of your choice above.
 
