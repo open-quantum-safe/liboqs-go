@@ -85,7 +85,7 @@ Replace `go run` with `go build` if you intend to build the corresponding execut
 
 To run the unit tests from the terminal/console, type
 	
-	go test -v github.com/open-quantum-safe/liboqs-go/oqstest
+	go test -v github.com/open-quantum-safe/liboqs-go/oqstests
 	
 To build the unit test executable from the terminal/console, type (from the directory in which you want to build the executable)
 
