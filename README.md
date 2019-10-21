@@ -17,8 +17,8 @@ In addition, we assume you have access to:
 
 - a POSIX compliant system (UNIX/Linux/Mac OS). For now, `cgo` is not fully supported under Windows due to various ABI issues; we will add Windows support when it becomes available.
 - Go version 1.7 or later
-- a standard C compliant compiler (gcc/clang etc.)
-- pkg-config (use `sudo apt-get install pkg-config` to install on Ubuntu/Debian-based Linux platforms)
+- a standard C compliant compiler (`gcc`/`clang` etc.)
+- `pkg-config` (use `sudo apt-get install pkg-config` to install on Ubuntu/Debian-based Linux platforms)
 
 
 Contents
@@ -28,7 +28,8 @@ liboqs-go is a Go package. The project contains the following files
 and directories:
 
  - **`src/oqs/oqs.go`: main package file for the wrapper**
- - `src/oqs/oqstest`: unit tests 
+ - `src/oqs/oqstest`: unit tests package
+ - `config/liboqs.pc`: `pkg-config` configuration file needed by `cgo`
  - `examples/kem.go`: key encapsulation example
  - `examples/sig.go`: signature example
 
