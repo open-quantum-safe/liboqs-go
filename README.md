@@ -1,7 +1,7 @@
 liboqs-go: Go bindings for liboqs
 ===================================
 
-Build status: to appear soon...
+[![Build status - Linux/macOS](https://api.travis-ci.com/open-quantum-safe/liboqs-go.svg?branch=master)](https://travis-ci.com/open-quantum-safe/liboqs-go)
 
 ---
 
