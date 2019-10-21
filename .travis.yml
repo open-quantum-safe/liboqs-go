@@ -52,7 +52,7 @@ script:
 
   # Run the examples
   - go run $LIBOQSGO_INSTALL_PATH/examples/kem.go 
-  - go run go run $LIBOQSGO_INSTALL_PATH/examples/sig.go 
+  - go run $LIBOQSGO_INSTALL_PATH/examples/sig.go 
   
   # Run the unit tests
   - go test -v github.com/open-quantum-safe/liboqs-go/oqstests
