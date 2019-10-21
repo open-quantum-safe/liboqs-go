@@ -35,6 +35,6 @@ func main() {
     isValid := bytes.Equal(sharedSecretClient, sharedSecretServer)
     fmt.Println("\nShared secrets coincide? ", isValid)
 
-    client.Release()
-    server.Release()
+    client.Close()
+    server.Close()
 }

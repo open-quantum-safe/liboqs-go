@@ -164,7 +164,7 @@ func (kem *KeyEncapsulation) DecapSecret(ciphertext []byte) []byte {
     return sharedSecret
 }
 
-func (kem *KeyEncapsulation) Release() {
+func (kem *KeyEncapsulation) Close() {
     if len(kem.secretKey) > 0 {
         C.OQS_MEM_cleanse(unsafe.Pointer(&kem.secretKey[0]),
             C.size_t(len(kem.secretKey)))
@@ -325,7 +325,7 @@ func (sig *Signature) Verify(message []byte, signature []byte,
     return true
 }
 
-func (sig *Signature) Release() {
+func (sig *Signature) Close() {
     if len(sig.secretKey) > 0 {
         C.OQS_MEM_cleanse(unsafe.Pointer(&sig.secretKey[0]),
             C.size_t(len(sig.secretKey)))

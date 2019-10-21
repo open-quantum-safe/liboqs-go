@@ -33,6 +33,6 @@ func main() {
 
     fmt.Println("\nValid signature? ", isValid)
 
-    signer.Release()
-    verifier.Release()
+    signer.Close()
+    verifier.Close()
 }
