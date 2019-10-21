@@ -21,8 +21,8 @@ func TestSignature(t *testing.T) {
         if !isValid {
             t.Fatal("Signature verification failed")
         }
-        signer.Release()
-        verifier.Release()
+        signer.Clean()
+        verifier.Clean()
     }
 }
 
@@ -30,7 +30,8 @@ func TestSignature(t *testing.T) {
 func TestUnsupportedSignature(t *testing.T) {
     defer func() {
         if r := recover(); r == nil {
-            t.Errorf("Unsupported signature should have generated a panic")
+            t.Errorf("Unsupported signature should have generated a " +
+                "panic")
         }
     }()
     signer := oqs.Signature{}

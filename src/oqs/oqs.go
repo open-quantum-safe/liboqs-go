@@ -124,7 +124,8 @@ func (kem *KeyEncapsulation) ExportSecretKey() []byte {
     return kem.secretKey
 }
 
-func (kem *KeyEncapsulation) EncapSecret(publicKey []byte) (ciphertext, sharedSecret []byte) {
+func (kem *KeyEncapsulation) EncapSecret(publicKey []byte) (ciphertext,
+    sharedSecret []byte) {
     if len(publicKey) != kem.algDetails.LengthPublicKey {
         panic("Incorrect public key length")
     }
