@@ -30,7 +30,7 @@ func TestSignature(t *testing.T) {
 func TestUnsupportedSignature(t *testing.T) {
     defer func() {
         if r := recover(); r == nil {
-            t.Errorf("Unsupported signature should have generated a " +
+            t.Errorf("Unsupported signature should have emitted a " +
                 "panic")
         }
     }()

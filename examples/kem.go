@@ -16,15 +16,17 @@ func main() {
 
     kemName := "DEFAULT"
     client := oqs.KeyEncapsulation{}
-    client.Init(kemName, []byte{})
+    defer client.Clean() // clean up even in case of panic
 
+    client.Init(kemName, []byte{})
     clientPublicKey := client.GenerateKeypair()
     fmt.Printf("\nKEM details:\n%#v\n", client.GetDetails())
 
     server := oqs.KeyEncapsulation{}
+    defer server.Clean() // clean up even in case of panic
+
     server.Init(kemName, []byte{})
     ciphertext, sharedSecretServer := server.EncapSecret(clientPublicKey)
-
     sharedSecretClient := client.DecapSecret(ciphertext)
 
     fmt.Printf("\nClient shared secret:\n% X ... % X\n",
@@ -34,7 +36,4 @@ func main() {
 
     isValid := bytes.Equal(sharedSecretClient, sharedSecretServer)
     fmt.Println("\nShared secrets coincide? ", isValid)
-
-    client.Clean()
-    server.Clean()
 }
