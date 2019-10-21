@@ -72,6 +72,12 @@ To run the unit tests from the terminal/command prompt, type (from the project's
 	
 	go test -v oqstest
 	
+To build the unit tests from the terminal/command prompt, type (from the project's root directory)
+
+    go test -c oqstest
+    
+The command above will build `oqstest.test` binary in the project's root directory.	
+	
 Limitations and security
 ------------------------
 
