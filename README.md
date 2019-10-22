@@ -53,7 +53,7 @@ in a terminal/console. This will install the wrapper in one of your `$GOPATH` di
 
     go get -u github.com/open-quantum-safe/liboqs-go/oqs
     
-in a terminal/console.    
+in a terminal/console.
 
 To simplify the instructions to follow, export the path to the wrapper in the `LIBOQSGO_INSTALL_PATH` environment variable by typing in a terminal/console
 
