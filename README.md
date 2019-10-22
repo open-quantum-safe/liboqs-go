@@ -102,7 +102,7 @@ This will build the `oqstests.test` executable in the directory of your choice a
 Documentation
 -------------
 
-The `oqs` Go package is fully documented using the Go documentation conventions. For example, to read the full documentation about the `oqs.Signature.Verify` method, type in a terminal/console
+The `oqs` Go package is fully documented using the Go standard documentation conventions. For example, to read the full documentation about the `oqs.Signature.Verify` method, type in a terminal/console
 
     go doc github.com/open-quantum-safe/liboqs-go/oqs.Signature.Verify    
 
