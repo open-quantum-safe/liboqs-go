@@ -9,6 +9,7 @@ matrix:
       before_install:
         - export CXX="g++-5" CC="gcc-5"
         - sudo apt-get install autoconf automake
+        - sudo apt-get install golang
 
     # Apple OSX LLVM version 10.0.0 (clang-1000.11.45.5)
     - os: osx
@@ -44,9 +45,8 @@ script:
   # Install liboqs
   - sh ./.travis/install_liboqs.sh &>/dev/null
   
-  # Install go 
+  # Go 
   - mkdir go
-  - sudo apt-get install golang
 
   # Install liboqs-go 
   - go get github.com/open-quantum-safe/liboqs-go/oqs
