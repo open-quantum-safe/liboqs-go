@@ -2,6 +2,8 @@ liboqs-go: Go bindings for liboqs
 ===================================
 
 [![Build status - Linux/macOS](https://api.travis-ci.com/open-quantum-safe/liboqs-go.svg?branch=master)](https://travis-ci.com/open-quantum-safe/liboqs-go)
+[![Documentation](https://godoc.org/github.com/open-quantum-safe/liboqs-go/oqs?status.svg)](https://godoc.org/github.com/open-quantum-safe/liboqs-go/oqs)
+
 
 ---
 
@@ -104,7 +106,9 @@ Documentation
 
 The `oqs` Go package is fully documented using the Go standard documentation conventions. For example, to read the full documentation about the `oqs.Signature.Verify` method, type in a terminal/console
 
-    go doc github.com/open-quantum-safe/liboqs-go/oqs.Signature.Verify    
+    go doc github.com/open-quantum-safe/liboqs-go/oqs.Signature.Verify
+ 
+For [GoDoc](https://godoc.org) automatically-generated documentation in HTML format, click [here](https://godoc.org/github.com/open-quantum-safe/liboqs-go/oqs).
 
 Limitations and security
 ------------------------
