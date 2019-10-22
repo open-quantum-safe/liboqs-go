@@ -86,8 +86,8 @@ func init() {
 
 /**************** KeyEncapsulation ****************/
 
-// keyEncapsulationDetails defines the KEM algorithm details.
-type keyEncapsulationDetails struct {
+// KeyEncapsulationDetails defines the KEM algorithm details.
+type KeyEncapsulationDetails struct {
     ClaimedNISTLevel   int
     IsINDCCA           bool
     LengthCiphertext   int
@@ -103,7 +103,7 @@ type KeyEncapsulation struct {
     kem        *C.OQS_KEM
     algName    string
     secretKey  []byte
-    algDetails keyEncapsulationDetails
+    algDetails KeyEncapsulationDetails
 }
 
 // Init initializes the KEM data structure with an algorithm name and a secret
@@ -133,7 +133,7 @@ func (kem *KeyEncapsulation) Init(algName string, secretKey []byte) {
 }
 
 // GetDetails returns the KEM algorithm details.
-func (kem *KeyEncapsulation) GetDetails() keyEncapsulationDetails {
+func (kem *KeyEncapsulation) GetDetails() KeyEncapsulationDetails {
     return kem.algDetails
 }
 
@@ -245,7 +245,7 @@ func IsSIGSupported(algName string) bool {
     return false
 }
 
-// GetKEMName returns the signature name from its corresponding numerical id.
+// GetSIGName returns the signature name from its corresponding numerical id.
 func GetSIGName(algID int) string {
     if algID >= MaxNumberSIGs() {
         panic(errors.New("algorithm ID out of range"))
@@ -278,8 +278,8 @@ func init() {
 
 /**************** Signature ****************/
 
-// signatureDetails defines the signature algorithm details.
-type signatureDetails struct {
+// SignatureDetails defines the signature algorithm details.
+type SignatureDetails struct {
     ClaimedNISTLevel   int
     IsEUFCMA           bool
     LengthPublicKey    int
@@ -294,7 +294,7 @@ type Signature struct {
     sig        *C.OQS_SIG
     algName    string
     secretKey  []byte
-    algDetails signatureDetails
+    algDetails SignatureDetails
 }
 
 // Init initializes the signature data structure with an algorithm name and a
@@ -323,7 +323,7 @@ func (sig *Signature) Init(algName string, secretKey []byte) {
 }
 
 // GetDetails returns the signature algorithm details.
-func (sig *Signature) GetDetails() signatureDetails {
+func (sig *Signature) GetDetails() SignatureDetails {
     return sig.algDetails
 }
 
