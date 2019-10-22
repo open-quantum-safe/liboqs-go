@@ -65,7 +65,7 @@ Next, you must `cd $LIBOQSGO_INSTALL_PATH` and modify the following lines in [`.
 
     LIBOQS_INCLUDE_DIR=/usr/local/include
     LIBOQS_LIB_DIR=/usr/local/lib
-    
+
 so they correspond to your C liboqs include/lib installation directories.
 
 Finally, you must add/append `$LIBOQSGO_INSTALL_PATH/.config` to the `PKG_CONFIG_PATH` environment variable, e.g.
