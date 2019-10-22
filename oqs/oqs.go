@@ -369,7 +369,7 @@ func (sig *Signature) Sign(message []byte) []byte {
     return signature[:lenSig]
 }
 
-// Verify verifies the validity of a signed message and returns true if the
+// Verify verifies the validity of a signed message, returning true if the
 // signature is valid, and false otherwise.
 func (sig *Signature) Verify(message []byte, signature []byte,
     publicKey []byte) bool {

@@ -99,6 +99,13 @@ To build the unit test executable from the terminal/console, type (from the dire
     
 This will build the `oqstests.test` executable in the directory of your choice above.
 
+Documentation
+-------------
+
+The `oqs` Go package is fully documented using the Go documentation conventions. For example, to read the full documentation about the `oqs.Signature.Verify` method, type in a terminal/console
+
+    go doc github.com/open-quantum-safe/liboqs-go/oqs.Signature.Verify    
+
 Limitations and security
 ------------------------
 
