@@ -59,7 +59,7 @@ To simplify the instructions to follow, export the path to the wrapper in the `L
 
     export LIBOQSGO_INSTALL_PATH=/your/path/to/liboqs-go
     
-In my case `LIBOQSGO_INSTALL_PATH` is set to `$HOME/go/src/github.com/open-quantum-safe/liboqs-go`. 
+In my case `LIBOQSGO_INSTALL_PATH` is set to `$HOME/go/src/github.com/open-quantum-safe/liboqs-go`.
 
 Next, you must `cd $LIBOQSGO_INSTALL_PATH` and modify the following lines in [`.config/liboqs.pc`](https://github.com/open-quantum-safe/liboqs-go/tree/master/.config/liboqs.pc)
 
