@@ -6,6 +6,8 @@ matrix:
     # Ubuntu Linux 16.04 gcc5.4
     - os: linux
       compiler: gcc
+      env: 
+        - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib 
       before_install:
         - export CXX="g++-5" CC="gcc-5"
         - sudo apt-get install autoconf automake
@@ -39,7 +41,6 @@ env:
     - GOPATH=$HOME/go
     - LIBOQSGO_INSTALL_PATH=$HOME/go/src/github.com/open-quantum-safe/liboqs-go
     - PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$LIBOQSGO_INSTALL_PATH/.config
-    - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib 
   
 script:
   # Install liboqs
