@@ -1,5 +1,5 @@
 liboqs-go: Go bindings for liboqs
-===================================
+=================================
 
 [![Build status - Linux/macOS](https://api.travis-ci.com/open-quantum-safe/liboqs-go.svg?branch=master)](https://travis-ci.com/open-quantum-safe/liboqs-go)
 [![Documentation](https://godoc.org/github.com/open-quantum-safe/liboqs-go/oqs?status.svg)](https://godoc.org/github.com/open-quantum-safe/liboqs-go/oqs)
@@ -41,7 +41,7 @@ Usage
 The examples in the [`examples`](https://github.com/open-quantum-safe/liboqs-go/tree/master/examples) directory are self-explanatory and provide more details about the wrapper's API.
 
 Running/building
---------------------------------------------
+----------------
 
 First, you must build the master branch of liboqs according to the [liboqs building instructions](https://github.com/open-quantum-safe/liboqs#building), followed (optionally) by a `sudo make install` to ensure that the compiled library is system-wide visible (by default it installs under `/usr/local/include` and `/usr/local/lib` under Linux/macOS).
 
