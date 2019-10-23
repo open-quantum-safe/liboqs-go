@@ -102,8 +102,8 @@ type KeyEncapsulationDetails struct {
 // String converts the KEM algorithm details to a string representation.
 // Use this method to pretty-print the KEM algorithm details, e.g.
 // fmt.Println(client.GetDetails())
-func (kemDetails *KeyEncapsulationDetails) String() string {
-	return fmt.Sprintf("Name: %s\nVersion:%s\nClaimed NIST level: %d\n"+
+func (kemDetails KeyEncapsulationDetails) String() string {
+	return fmt.Sprintf("Name: %s\nVersion: %s\nClaimed NIST level: %d\n"+
 		"Is IND_CCA: %v\nLength public key (bytes): %d\nLength secret key ("+
 		"bytes): %d\nLength ciphertext (bytes): %d\nLength shared secret ("+
 		"bytes): %d", kemDetails.Name,
@@ -115,9 +115,16 @@ func (kemDetails *KeyEncapsulationDetails) String() string {
 // KeyEncapsulation defines the KEM main data structure.
 type KeyEncapsulation struct {
 	kem        *C.OQS_KEM
-	algName    string
 	secretKey  []byte
 	algDetails KeyEncapsulationDetails
+}
+
+// String converts the KEM algorithm name to a string representation.
+// Use this method to pretty-print the KEM algorithm name, e.g.
+// fmt.Println(client)
+func (kem KeyEncapsulation) String() string {
+	return fmt.Sprintf("Key encapsulation mechanism: %s",
+		kem.algDetails.Name)
 }
 
 // Init initializes the KEM data structure with an algorithm name and a secret
@@ -134,7 +141,6 @@ func (kem *KeyEncapsulation) Init(algName string, secretKey []byte) {
 		}
 	}
 	kem.kem = C.OQS_KEM_new(C.CString(algName))
-	kem.algName = algName
 	kem.secretKey = secretKey
 	kem.algDetails.Name = C.GoString(kem.kem.method_name)
 	kem.algDetails.Version = C.GoString(kem.kem.alg_version)
@@ -147,8 +153,8 @@ func (kem *KeyEncapsulation) Init(algName string, secretKey []byte) {
 }
 
 // GetDetails returns the KEM algorithm details.
-func (kem *KeyEncapsulation) GetDetails() *KeyEncapsulationDetails {
-	return &kem.algDetails
+func (kem *KeyEncapsulation) GetDetails() KeyEncapsulationDetails {
+	return kem.algDetails
 }
 
 // GenerateKeypair generates a pair of secret key/public key and returns the
@@ -306,10 +312,10 @@ type SignatureDetails struct {
 // String converts the signature algorithm details to a string representation.
 // Use this method to pretty-print the signature algorithm details, e.g.
 // fmt.Println(signer.GetDetails())
-func (sigDetails *SignatureDetails) String() string {
-	return fmt.Sprintf("Name: %s\nVersion:%s\nClaimed NIST level: %d\n"+
+func (sigDetails SignatureDetails) String() string {
+	return fmt.Sprintf("Name: %s\nVersion: %s\nClaimed NIST level: %d\n"+
 		"Is EUF_CMA: %v\nLength public key (bytes): %d\nLength secret key ("+
-		"bytes): %d\nMaximum length signature (bytes): %d\n", sigDetails.Name,
+		"bytes): %d\nMaximum length signature (bytes): %d", sigDetails.Name,
 		sigDetails.Version, sigDetails.ClaimedNISTLevel, sigDetails.IsEUFCMA,
 		sigDetails.LengthPublicKey, sigDetails.LengthSecretKey,
 		sigDetails.MaxLengthSignature)
@@ -318,9 +324,16 @@ func (sigDetails *SignatureDetails) String() string {
 // Signature defines the signature main data structure.
 type Signature struct {
 	sig        *C.OQS_SIG
-	algName    string
 	secretKey  []byte
 	algDetails SignatureDetails
+}
+
+// String converts the signature algorithm name to a string representation.
+// Use this method to pretty-print the signature algorithm name, e.g.
+// fmt.Println(signer)
+func (sig Signature) String() string {
+	return fmt.Sprintf("Key encapsulation mechanism: %s",
+		sig.algDetails.Name)
 }
 
 // Init initializes the signature data structure with an algorithm name and a
@@ -337,7 +350,6 @@ func (sig *Signature) Init(algName string, secretKey []byte) {
 		}
 	}
 	sig.sig = C.OQS_SIG_new(C.CString(algName))
-	sig.algName = algName
 	sig.secretKey = secretKey
 	sig.algDetails.Name = C.GoString(sig.sig.method_name)
 	sig.algDetails.Version = C.GoString(sig.sig.alg_version)
@@ -349,8 +361,8 @@ func (sig *Signature) Init(algName string, secretKey []byte) {
 }
 
 // GetDetails returns the signature algorithm details.
-func (sig *Signature) GetDetails() *SignatureDetails {
-	return &sig.algDetails
+func (sig *Signature) GetDetails() SignatureDetails {
+	return sig.algDetails
 }
 
 // GenerateKeypair generates a pair of secret key/public key and returns the
