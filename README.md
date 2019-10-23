@@ -2,8 +2,8 @@ liboqs-go: Go bindings for liboqs
 =================================
 
 [![Build status - Linux/macOS](https://api.travis-ci.com/open-quantum-safe/liboqs-go.svg?branch=master)](https://travis-ci.com/open-quantum-safe/liboqs-go)
-[![Documentation](https://godoc.org/github.com/open-quantum-safe/liboqs-go/oqs?status.svg)](https://godoc.org/github.com/open-quantum-safe/liboqs-go/oqs)
 [![Go Report Card](https://goreportcard.com/badge/github.com/open-quantum-safe/liboqs-go)](https://goreportcard.com/report/github.com/open-quantum-safe/liboqs-go)
+[![Documentation](https://godoc.org/github.com/open-quantum-safe/liboqs-go/oqs?status.svg)](https://godoc.org/github.com/open-quantum-safe/liboqs-go/oqs)
 
 ---
 
