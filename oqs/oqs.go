@@ -101,7 +101,7 @@ type KeyEncapsulationDetails struct {
 
 // String converts the KEM algorithm details to a string representation.
 // Use this method to pretty-print the KEM algorithm details, e.g.
-// fmt.Println(signer.GetDetails())
+// fmt.Println(client.GetDetails())
 func (kemDetails *KeyEncapsulationDetails) String() string {
 	return fmt.Sprintf("Name: %s\nVersion:%s\nClaimed NIST level: %d\n"+
 		"Is IND_CCA: %v\nLength public key (bytes): %d\nLength secret key ("+
