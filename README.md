@@ -26,8 +26,7 @@ In addition, we assume you have access to:
 Contents
 --------
 
-liboqs-go is a Go package. The project contains the following files
-and directories:
+liboqs-go is a Go package. The project contains the following files and directories:
 
  - **`oqs/oqs.go`: main package file for the wrapper**
  - `.config/liboqs.pc`: `pkg-config` configuration file needed by `cgo`
