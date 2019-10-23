@@ -108,7 +108,7 @@ type KeyEncapsulation struct {
 
 // Init initializes the KEM data structure with an algorithm name and a secret
 // key. If the secret key is null, then the user must invoke the
-//// KeyEncapsulation.GenerateKeyPair method to generate the pair of
+// KeyEncapsulation.GenerateKeyPair method to generate the pair of
 // secret key/public key.
 func (kem *KeyEncapsulation) Init(algName string, secretKey []byte) {
 	if !IsKEMEnabled(algName) {
