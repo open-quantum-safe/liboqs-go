@@ -138,7 +138,7 @@ func (kem *KeyEncapsulation) GetDetails() KeyEncapsulationDetails {
 }
 
 // GenerateKeypair generates a pair of secret key/public key and returns the
-// public key. The secret key is stored inside the kem callee. The secret key
+// public key. The secret key is stored inside the kem receiver. The secret key
 // is not directly accessible, unless one exports it with
 // KeyEncapsulation.ExportSecretKey method.
 func (kem *KeyEncapsulation) GenerateKeypair() []byte {
@@ -154,7 +154,7 @@ func (kem *KeyEncapsulation) GenerateKeypair() []byte {
     return publicKey
 }
 
-// ExportSecretKey exports the corresponding secret key from the kem callee.
+// ExportSecretKey exports the corresponding secret key from the kem receiver.
 func (kem *KeyEncapsulation) ExportSecretKey() []byte {
     return kem.secretKey
 }
@@ -204,7 +204,7 @@ func (kem *KeyEncapsulation) DecapSecret(ciphertext []byte) []byte {
     return sharedSecret
 }
 
-// Clean zeroes-in the stored secret key and resets the kem callee. One can
+// Clean zeroes-in the stored secret key and resets the kem receiver. One can
 // reuse the KEM by re-initializing it with the KeyEncapsulation.Init method.
 func (kem *KeyEncapsulation) Clean() {
     if len(kem.secretKey) > 0 {
@@ -328,7 +328,7 @@ func (sig *Signature) GetDetails() SignatureDetails {
 }
 
 // GenerateKeypair generates a pair of secret key/public key and returns the
-// public key. The secret key is stored inside the sig callee. The secret key
+// public key. The secret key is stored inside the sig receiver. The secret key
 // is not directly accessible, unless one exports it with
 // Signature.ExportSecretKey method.
 func (sig *Signature) GenerateKeypair() []byte {
@@ -344,7 +344,7 @@ func (sig *Signature) GenerateKeypair() []byte {
     return publicKey
 }
 
-// ExportSecretKey exports the corresponding secret key from the sig callee.
+// ExportSecretKey exports the corresponding secret key from the sig receiver.
 func (sig *Signature) ExportSecretKey() []byte {
     return sig.secretKey
 }
@@ -392,7 +392,7 @@ func (sig *Signature) Verify(message []byte, signature []byte,
     return true
 }
 
-// Clean zeroes-in the stored secret key and resets the sig callee. One can
+// Clean zeroes-in the stored secret key and resets the sig receiver. One can
 // reuse the signature by re-initializing it with the Signature.Init method.
 func (sig *Signature) Clean() {
     if len(sig.secretKey) > 0 {
