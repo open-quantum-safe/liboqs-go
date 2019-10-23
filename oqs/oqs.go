@@ -332,7 +332,7 @@ type Signature struct {
 // Use this method to pretty-print the signature algorithm name, e.g.
 // fmt.Println(signer)
 func (sig Signature) String() string {
-	return fmt.Sprintf("Key encapsulation mechanism: %s",
+	return fmt.Sprintf("Signature mechanism: %s",
 		sig.algDetails.Name)
 }
 
