@@ -18,7 +18,8 @@ func main() {
 	defer signer.Clean() // clean up even in case of panic
 
 	signer.Init(sigName, []byte{})
-	fmt.Printf("\nSignature details:\n%#v\n", signer.GetDetails())
+	fmt.Println("\nSignature details:")
+	fmt.Println(signer.GetDetails())
 
 	msg := []byte("This is the message to sign")
 	pubKey := signer.GenerateKeypair()

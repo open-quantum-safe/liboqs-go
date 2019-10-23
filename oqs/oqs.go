@@ -9,6 +9,7 @@ import "C"
 
 import (
 	"errors"
+	"fmt"
 	"unsafe"
 )
 
@@ -98,6 +99,19 @@ type KeyEncapsulationDetails struct {
 	Version            string
 }
 
+// String converts the KEM algorithm details to a string representation.
+// Use this method to pretty-print the KEM algorithm details, e.g.
+// fmt.Println(signer.GetDetails())
+func (kemDetails *KeyEncapsulationDetails) String() string {
+	return fmt.Sprintf("Name: %s\nVersion:%s\nClaimed NIST level: %d\n"+
+		"Is IND_CCA: %v\nLength public key (bytes): %d\nLength secret key ("+
+		"bytes): %d\nLength ciphertext (bytes): %d\nLength shared secret ("+
+		"bytes): %d", kemDetails.Name,
+		kemDetails.Version, kemDetails.ClaimedNISTLevel, kemDetails.IsINDCCA,
+		kemDetails.LengthPublicKey, kemDetails.LengthSecretKey,
+		kemDetails.LengthCiphertext, kemDetails.LengthSharedSecret)
+}
+
 // KeyEncapsulation defines the KEM main data structure.
 type KeyEncapsulation struct {
 	kem        *C.OQS_KEM
@@ -133,8 +147,8 @@ func (kem *KeyEncapsulation) Init(algName string, secretKey []byte) {
 }
 
 // GetDetails returns the KEM algorithm details.
-func (kem *KeyEncapsulation) GetDetails() KeyEncapsulationDetails {
-	return kem.algDetails
+func (kem *KeyEncapsulation) GetDetails() *KeyEncapsulationDetails {
+	return &kem.algDetails
 }
 
 // GenerateKeypair generates a pair of secret key/public key and returns the
@@ -289,6 +303,18 @@ type SignatureDetails struct {
 	Version            string
 }
 
+// String converts the signature algorithm details to a string representation.
+// Use this method to pretty-print the signature algorithm details, e.g.
+// fmt.Println(signer.GetDetails())
+func (sigDetails *SignatureDetails) String() string {
+	return fmt.Sprintf("Name: %s\nVersion:%s\nClaimed NIST level: %d\n"+
+		"Is EUF_CMA: %v\nLength public key (bytes): %d\nLength secret key ("+
+		"bytes): %d\nMaximum length signature (bytes): %d\n", sigDetails.Name,
+		sigDetails.Version, sigDetails.ClaimedNISTLevel, sigDetails.IsEUFCMA,
+		sigDetails.LengthPublicKey, sigDetails.LengthSecretKey,
+		sigDetails.MaxLengthSignature)
+}
+
 // Signature defines the signature main data structure.
 type Signature struct {
 	sig        *C.OQS_SIG
@@ -323,8 +349,8 @@ func (sig *Signature) Init(algName string, secretKey []byte) {
 }
 
 // GetDetails returns the signature algorithm details.
-func (sig *Signature) GetDetails() SignatureDetails {
-	return sig.algDetails
+func (sig *Signature) GetDetails() *SignatureDetails {
+	return &sig.algDetails
 }
 
 // GenerateKeypair generates a pair of secret key/public key and returns the

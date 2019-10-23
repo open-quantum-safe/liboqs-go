@@ -20,7 +20,8 @@ func main() {
 
 	client.Init(kemName, []byte{})
 	clientPublicKey := client.GenerateKeypair()
-	fmt.Printf("\nKEM details:\n%#v\n", client.GetDetails())
+	fmt.Println("\nKEM details:")
+	fmt.Println(client.GetDetails())
 
 	server := oqs.KeyEncapsulation{}
 	defer server.Clean() // clean up even in case of panic
