@@ -29,8 +29,8 @@ liboqs-go is a Go package. The project contains the following files and director
 
  - **`oqs/oqs.go`: main package file for the wrapper**
  - `.config/liboqs.pc`: `pkg-config` configuration file needed by `cgo`
- - `examples/kem.go`: key encapsulation example
- - `examples/sig.go`: signature example
+ - `examples/kem/kem.go`: key encapsulation example
+ - `examples/sig/sig.go`: signature example
  - `oqstests`: unit tests
 
 Usage
@@ -69,11 +69,11 @@ Once you have configured your system as directed above, simply `import "github.c
 
 To run the examples from the terminal/console, type
 
-    go run $HOME/liboqs-go/examples/kem.go 
+    go run $HOME/liboqs-go/examples/kem/kem.go 
     
 or 
     
-    go run $HOME/liboqs-go/examples/sig.go
+    go run $HOME/liboqs-go/examples/sig/sig.go
 
 Replace `go run` with `go build` if you intend to build the corresponding executables; in this case they will be built in the directory you ran the `go build` command from. 
 
@@ -120,11 +120,11 @@ Once you have configured your system as directed above, simply `import "github.c
 
 To run the examples from the terminal/console, type 
 
-    go run $LIBOQSGO_INSTALL_PATH/examples/kem.go 
+    go run $LIBOQSGO_INSTALL_PATH/examples/kem/kem.go 
     
 or 
     
-    go run $LIBOQSGO_INSTALL_PATH/examples/sig.go
+    go run $LIBOQSGO_INSTALL_PATH/examples/sig/sig.go
 
 Replace `go run` with `go build` if you intend to build the corresponding executables; in this case they will be built in the directory you ran the `go build` command from. 
 
