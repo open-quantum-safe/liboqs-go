@@ -1,4 +1,4 @@
-liboqs-go version 0.1.0
+liboqs-go version 0.1.1
 =======================
 
 About
@@ -13,12 +13,11 @@ The **Open Quantum Safe (OQS) project** has the goal of developing and prototypi
 Release notes
 =============
 
-This release of liboqs-go was released on October 22, 2019. Its release page on GitHub is https://github.com/open-quantum-safe/liboqs-go/releases/tag/0.1.0.
+This release of liboqs-go was released on October 24, 2019. Its release page on GitHub is https://github.com/open-quantum-safe/liboqs-go/releases/tag/0.1.1.
 
 What's New
 ----------
 
-This is the first public release of liboqs-go. 
+This is the second release of liboqs-go. 
 
 For a list of changes see [CHANGES.txt](https://github.com/open-quantum-safe/liboqs-go/blob/master/CHANGES.txt).
-

@@ -54,7 +54,7 @@ Next, you must `cd $HOME/liboqs-go` and modify the following lines in [`.config/
 
 so they correspond to your C liboqs include/lib installation directories.
 
-Finally, you must add/append the `.config` directory to the `PKG_CONFIG_PATH` environment variable, e.g.
+Finally, you must add/append the `.config` directory to the `PKG_CONFIG_PATH` environment variable, i.e.
 
     export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$HOME/liboqs-go/.config
     
@@ -105,12 +105,12 @@ Next, you must `cd $LIBOQSGO_INSTALL_PATH` and modify the following lines in [`.
 
 so they correspond to your C liboqs include/lib installation directories.
 
-Finally, you must add/append the `$LIBOQSGO_INSTALL_PATH/.config` directory to the `PKG_CONFIG_PATH` environment variable, e.g.
+Finally, you must add/append the `$LIBOQSGO_INSTALL_PATH/.config` directory to the `PKG_CONFIG_PATH` environment variable, i.e.
 
     export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$LIBOQSGO_INSTALL_PATH/.config
 
 If running/building on Linux, you may need to set the `LD_LIBRARY_PATH` environment variable to point to the path
-to liboqs' library directory, e.g.
+to liboqs' library directory, i.e.
 
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
             

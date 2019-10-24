@@ -1,2 +1,5 @@
+Version 0.1.1 - October 24, 2019
+    - Added support for Go modules
+
 Version 0.1.0 - October 22, 2019
     - Initial release
