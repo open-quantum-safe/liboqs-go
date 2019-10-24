@@ -22,7 +22,6 @@ In addition, we assume you have access to:
 - a standard C compliant compiler (`gcc`/`clang` etc.)
 - `pkg-config` (use `sudo apt-get install pkg-config` to install on Ubuntu/Debian-based Linux platforms)
 
-
 Contents
 --------
 
@@ -41,10 +40,49 @@ The examples in the [`examples`](https://github.com/open-quantum-safe/liboqs-go/
 
 Running/building
 ----------------
-
 First, you must build the master branch of liboqs according to the [liboqs building instructions](https://github.com/open-quantum-safe/liboqs#building), followed (optionally) by a `sudo make install` to ensure that the compiled library is system-wide visible (by default it installs under `/usr/local/include` and `/usr/local/lib` under Linux/macOS).
 
-Next, install the `liboqs-go` wrapper by typing 
+### Using Go modules (requires Go 1.11 or later)
+Download/clone the `liboqs-go` wrapper repository in the directory of your choice, e.g. `$HOME`
+
+    git clone https://github.com/open-quantum-safe/liboqs-go
+    
+Next, you must `cd $HOME/liboqs-go` and modify the following lines in [`.config/liboqs.pc`](https://github.com/open-quantum-safe/liboqs-go/tree/master/.config/liboqs.pc)
+
+    LIBOQS_INCLUDE_DIR=/usr/local/include
+    LIBOQS_LIB_DIR=/usr/local/lib
+
+so they correspond to your C liboqs include/lib installation directories.
+
+Finally, you must add/append the `.config` directory to the `PKG_CONFIG_PATH` environment variable, e.g.
+
+    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$HOME/liboqs-go/.config
+    
+Once you have configured your system as directed above, simply `import "github.com/open-quantum-safe/liboqs-go/oqs"` in the Go application of your choice, initialize the application module with `go mod init <module_name>`, and finally run it with `go run <module_name>` or build it with `go build <module_name>`.
+
+To run the examples from the terminal/console, type (from `$HOME/liboqs-go`)
+
+    go run examples/kem.go 
+    
+or 
+    
+    go run examples/sig.go
+
+Replace `go run` with `go build` if you intend to build the corresponding executables; in this case they will be built in the directory you ran the `go build` command from. 
+
+To run the unit tests from the terminal/console, type (from `$HOME/liboqs-go`)
+	
+	go test -v ./oqstests
+	
+To build the unit test executable from the terminal/console, type (from the directory in which you want to build the executable)
+
+    go test -c /path/to/liboqs-go/oqstests
+    
+This will build the `oqstests.test` executable in the directory of your choice above.
+
+
+### Using traditional Go get
+Install the latest version of the `liboqs-go` wrapper by typing 
 
     go get github.com/open-quantum-safe/liboqs-go/oqs
 
@@ -67,7 +105,7 @@ Next, you must `cd $LIBOQSGO_INSTALL_PATH` and modify the following lines in [`.
 
 so they correspond to your C liboqs include/lib installation directories.
 
-Finally, you must add/append `$LIBOQSGO_INSTALL_PATH/.config` to the `PKG_CONFIG_PATH` environment variable, e.g.
+Finally, you must add/append the `$LIBOQSGO_INSTALL_PATH/.config` directory to the `PKG_CONFIG_PATH` environment variable, e.g.
 
     export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$LIBOQSGO_INSTALL_PATH/.config
 
@@ -78,7 +116,7 @@ to liboqs' library directory, e.g.
             
 assuming `liboqs.so.*` were installed in `/usr/local/lib` (true assuming you ran `make install` during your liboqs setup).
  
-Once you configured your system as directed above, simply `import "github.com/open-quantum-safe/liboqs-go/oqs"` in your Go program and run with `go run <program.go>` or build an executable with `go build <program.go>`.
+Once you have configured your system as directed above, simply `import "github.com/open-quantum-safe/liboqs-go/oqs"` in the Go application of your choice and run it with `go run <application_name.go>` or build it with `go build <applicaiton_name.go>`.
 
 To run the examples from the terminal/console, type 
 
