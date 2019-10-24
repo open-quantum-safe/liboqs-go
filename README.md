@@ -18,7 +18,7 @@ liboqs-go depends on the [liboqs](https://github.com/open-quantum-safe/liboqs) C
 In addition, we assume you have access to:
 
 - a POSIX compliant system (UNIX/Linux/macOS). For now, `cgo` is not fully supported under Windows due to various ABI issues; we will add Windows support when it becomes available.
-- Go version 1.7 or later
+- Go version 1.7 or later (version 1.11 or later for Go modules support)
 - a standard C compliant compiler (`gcc`/`clang` etc.)
 - `pkg-config` (use `sudo apt-get install pkg-config` to install on Ubuntu/Debian-based Linux platforms)
 
@@ -88,7 +88,7 @@ To build the unit test executable from the terminal/console, type
 This will build the `oqstests.test` executable in the directory you ran the above command from.
 
 
-### Using the traditional Go get
+### Using Go without module support
 Install the latest version of the `liboqs-go` wrapper by typing 
 
     go get github.com/open-quantum-safe/liboqs-go/oqs
