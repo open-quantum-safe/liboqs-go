@@ -8,11 +8,10 @@ env:
     - PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$TRAVIS_BUILD_DIR/.config
     - GO111MODULE=on  
 
+matrix:
 before_install:
   # Install liboqs
   - sh ./.travis/install_liboqs.sh &>/dev/null  
-
-matrix:
   include:
     # Ubuntu Linux 16.04 gcc5.4
     - os: linux
