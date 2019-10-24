@@ -4,8 +4,9 @@ language: go
 go:
     - 1.11
 env:
-  - PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$TRAVIS_BUILD_DIR/liboqs-go/.config
-  - GO111MODULE=on  
+  global:
+    - PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$TRAVIS_BUILD_DIR/liboqs-go/.config
+    - GO111MODULE=on  
 
 matrix:
   include:
