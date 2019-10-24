@@ -38,7 +38,7 @@ notifications:
 
 env:
   global: 
-    - PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$TRAVIS_BUILD_DIR/liboqs-go/.config
+    - PKG_CONFIG_PATH=$PKG_CONFIG_PATH:liboqs-go/.config
   
 script:
   # Install liboqs
@@ -46,6 +46,11 @@ script:
   
   # Install liboqs-go 
   - git clone https://github.com/open-quantum-safe/liboqs-go
+
+  - echo $HOME
+  - echo $TRAVIS_BUILD  
+  - echo $PKG_CONFIG_PATH
+  - pwd 
 
   # Run the examples
   - go run liboqs-go/examples/kem.go 
