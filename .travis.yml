@@ -8,7 +8,7 @@ env:
     - PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$TRAVIS_BUILD_DIR/.config
     - GO111MODULE=on  
 
-before_install:
+before_script:
   # Install liboqs
   - sh ./.travis/install_liboqs.sh &>/dev/null  
 
