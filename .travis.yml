@@ -51,8 +51,8 @@ notifications:
 script:
   # Run the examples
   - pwd 
-  - go run liboqs-go/examples/kem/kem.go 
-  - go run liboqs-go/examples/sig/sig.go 
+  - go run examples/kem/kem.go 
+  - go run examples/sig/sig.go 
   
   # Run the unit tests
-  - go test -v liboqs-go/oqstests/* 
+  - go test -v oqstests/* 
