@@ -38,24 +38,19 @@ notifications:
 
 env:
   global: 
-    - GOPATH=$HOME/go
-    - LIBOQSGO_INSTALL_PATH=$HOME/go/src/github.com/open-quantum-safe/liboqs-go
-    - PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$LIBOQSGO_INSTALL_PATH/.config
+    - PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$HOME/liboqs-go/.config
   
 script:
   # Install liboqs
   - sh ./.travis/install_liboqs.sh &>/dev/null
   
-  # Go 
-  - mkdir go
-
   # Install liboqs-go 
-  - go get github.com/open-quantum-safe/liboqs-go/oqs
+  - git clone https://github.com/open-quantum-safe/liboqs-go
 
   # Run the examples
-  - go run $LIBOQSGO_INSTALL_PATH/examples/kem.go 
-  - go run $LIBOQSGO_INSTALL_PATH/examples/sig.go 
+  - go run liboqs-go/examples/kem.go 
+  - go run liboqs-go/examples/sig.go 
   
   # Run the unit tests
-  - go test -v github.com/open-quantum-safe/liboqs-go/oqstests
+  - go test -v liboqs-go/oqstests/*
 
