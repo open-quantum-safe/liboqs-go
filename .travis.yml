@@ -3,6 +3,9 @@ dist: xenial
 language: go
 go:
     - 1.11
+env:
+  - PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$TRAVIS_BUILD_DIR/liboqs-go/.config
+  - GO111MODULE=on  
 
 matrix:
   include:
@@ -12,6 +15,8 @@ matrix:
       env: 
         - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib 
       before_install:
+        - echo $PKG_CONFIG_PATH
+        - echo $HOME
         - export CXX="g++-5" CC="gcc-5"
         - sudo apt-get install autoconf automake
 
@@ -37,11 +42,6 @@ matrix:
 
 notifications:
   email: false
-
-env:
-  global: 
-    - PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$TRAVIS_BUILD_DIR/liboqs-go/.config
-    - GO111MODULE=on  
   
 script:
   # Install liboqs

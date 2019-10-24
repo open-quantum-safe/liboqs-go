@@ -49,7 +49,7 @@ to liboqs' library directory, e.g.
             
 assuming `liboqs.so.*` were installed in `/usr/local/lib` (true assuming you ran `make install` during your liboqs setup).
 
-### Using Go modules (requires Go 1.11 or later)
+### Using Go with modules support (requires Go 1.11 or later)
 Download/clone the `liboqs-go` wrapper repository in the directory of your choice, e.g. `$HOME`, by typing in a terminal/console
 
     cd $HOME && git clone https://github.com/open-quantum-safe/liboqs-go
@@ -88,7 +88,7 @@ To build the unit test executable from the terminal/console, type
 This will build the `oqstests.test` executable in the directory you ran the above command from.
 
 
-### Using Go without module support
+### Using Go without modules support
 Install the latest version of the `liboqs-go` wrapper by typing 
 
     go get github.com/open-quantum-safe/liboqs-go/oqs
