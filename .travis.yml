@@ -2,11 +2,15 @@ dist: xenial
 
 language: go
 go:
-    - 1.11
+  - 1.11
 env:
   global:
     - PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$TRAVIS_BUILD_DIR/.config
     - GO111MODULE=on  
+
+before_install:
+  # Install liboqs
+  - sh ./.travis/install_liboqs.sh &>/dev/null  
 
 matrix:
   include:
@@ -16,9 +20,6 @@ matrix:
       env: 
         - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib 
       before_install:
-        - echo $PKG_CONFIG_PATH
-        - echo $HOME
-        - echo $TRAVIS_BUILD_DIR
         - export CXX="g++-5" CC="gcc-5"
         - sudo apt-get install autoconf automake
 
@@ -46,12 +47,6 @@ notifications:
   email: false
   
 script:
-  # Install liboqs
-  - sh ./.travis/install_liboqs.sh &>/dev/null
-  
-  # Install liboqs-go (and use it as a module) 
-  - git clone https://github.com/open-quantum-safe/liboqs-go
-
   # Run the examples
   - go run liboqs-go/examples/kem.go 
   - go run liboqs-go/examples/sig.go 
