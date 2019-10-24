@@ -51,4 +51,5 @@ script:
   - go run liboqs-go/examples/sig.go 
   
   # Run the unit tests
-  - go test -v liboqs-go/oqstests/*
+  - go test -v liboqs-go/oqstests/* 
+  
