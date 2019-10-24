@@ -50,8 +50,9 @@ notifications:
   
 script:
   # Run the examples
-  - go run liboqs-go/examples/kem.go 
-  - go run liboqs-go/examples/sig.go 
+  - pwd 
+  - go run liboqs-go/examples/kem/kem.go 
+  - go run liboqs-go/examples/sig/sig.go 
   
   # Run the unit tests
   - go test -v liboqs-go/oqstests/* 
