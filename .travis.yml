@@ -1,5 +1,8 @@
-language: cpp
 dist: xenial
+
+language: go
+go:
+    - 1.11
 
 matrix:
   include:
@@ -11,7 +14,6 @@ matrix:
       before_install:
         - export CXX="g++-5" CC="gcc-5"
         - sudo apt-get install autoconf automake
-        - sudo apt-get install golang
 
     # Apple OSX LLVM version 10.0.0 (clang-1000.11.45.5)
     - os: osx
@@ -38,19 +40,14 @@ notifications:
 
 env:
   global: 
-    - PKG_CONFIG_PATH=$PKG_CONFIG_PATH:liboqs-go/.config
+    - PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$TRAVIS_BUILD_DIR/liboqs-go/.config
   
 script:
   # Install liboqs
   - sh ./.travis/install_liboqs.sh &>/dev/null
   
-  # Install liboqs-go 
+  # Install liboqs-go (and use it as a module) 
   - git clone https://github.com/open-quantum-safe/liboqs-go
-
-  - echo $HOME
-  - echo $TRAVIS_BUILD  
-  - echo $PKG_CONFIG_PATH
-  - pwd 
 
   # Run the examples
   - go run liboqs-go/examples/kem.go 
