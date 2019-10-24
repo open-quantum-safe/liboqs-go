@@ -41,6 +41,10 @@ env:
     - PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$HOME/liboqs-go/.config
   
 script:
+  - go version
+  - echo $PKG_CONFIG_PATH
+  - pwd
+  - echo $HOME   
   # Install liboqs
   - sh ./.travis/install_liboqs.sh &>/dev/null
   
