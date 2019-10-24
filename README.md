@@ -72,11 +72,11 @@ Replace `go run` with `go build` if you intend to build the corresponding execut
 
 To run the unit tests from the terminal/console, type (from `$HOME/liboqs-go`)
 	
-	go test -v ./oqstests
+	go test -v oqstests/*
 	
 To build the unit test executable from the terminal/console, type (from the directory in which you want to build the executable)
 
-    go test -c /path/to/liboqs-go/oqstests
+    go test -c /path/to/liboqs-go/oqstests/*
     
 This will build the `oqstests.test` executable in the directory of your choice above.
 
