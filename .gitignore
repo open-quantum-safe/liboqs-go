@@ -16,10 +16,8 @@
 .idea/
 
 # Examples
-examples/kem
-examples/sig
+examples/kem/kem
+examples/sig/sig
 
 # build
 build/
-kem
-sig
