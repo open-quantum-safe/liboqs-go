@@ -9,9 +9,6 @@ env:
     - GO111MODULE=on  
 
 matrix:
-before_install:
-  # Install liboqs
-  - sh ./.travis/install_liboqs.sh &>/dev/null  
   include:
     # Ubuntu Linux 16.04 gcc5.4
     - os: linux
@@ -42,6 +39,11 @@ before_install:
         - export CXX="g++-6" CC="gcc-6"
         - sudo softwareupdate -i "Command Line Tools (macOS High Sierra version 10.13) for Xcode-10.1"
 
+  before_install:
+  # Install liboqs
+  - sh ./.travis/install_liboqs.sh &>/dev/null  
+
+
 notifications:
   email: false
   
@@ -52,4 +54,3 @@ script:
   
   # Run the unit tests
   - go test -v liboqs-go/oqstests/* 
-  
