@@ -81,7 +81,7 @@ To build the unit test executable from the terminal/console, type (from the dire
 This will build the `oqstests.test` executable in the directory of your choice above.
 
 
-### Using traditional Go get
+### Using the traditional Go get
 Install the latest version of the `liboqs-go` wrapper by typing 
 
     go get github.com/open-quantum-safe/liboqs-go/oqs
