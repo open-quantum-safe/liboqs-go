@@ -13,7 +13,7 @@ The wrapper is written in Go, hence in the following it is assumed that you have
 
 ## Pre-requisites
 
-liboqs-go depends on the [liboqs](https://github.com/open-quantum-safe/liboqs) C library; liboqs master branch must first be compiled as a UNIX/Linux/macOS library, see the liboqs [specific platform building instructions](https://github.com/open-quantum-safe/liboqs#quickstart).
+liboqs-go depends on the [liboqs](https://github.com/open-quantum-safe/liboqs) C library; liboqs master branch must first be compiled as a UNIX/Linux/macOS library, see the building instructions [below](https://github.com/open-quantum-safe/liboqs-go#runningbuilding).
 
 In addition, we assume you have access to:
 
@@ -40,7 +40,7 @@ The examples in the [`examples`](https://github.com/open-quantum-safe/liboqs-go/
 
 Running/building
 ----------------
-First, you must build the master branch of liboqs according to the [liboqs building instructions](https://github.com/open-quantum-safe/liboqs#building), followed (optionally) by a `sudo make install` to ensure that the compiled library is system-wide visible (by default it installs under `/usr/local/include` and `/usr/local/lib` under Linux/macOS).
+First, you must build the master branch of liboqs according to the [liboqs building instructions](https://github.com/open-quantum-safe/liboqs#linuxmacos), followed (optionally) by a `sudo make install` to ensure that the compiled library is system-wide visible (by default it installs under `/usr/local/include` and `/usr/local/lib` on Linux/macOS).
 
 If running/building on Linux, you may need to set the `LD_LIBRARY_PATH` environment variable to point to the path
 to liboqs' library directory, e.g.
