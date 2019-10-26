@@ -13,18 +13,6 @@ import (
 	"unsafe"
 )
 
-/**************** Constants ****************/
-
-// STATUS is a type used to describe liboqs errors.
-type STATUS int
-
-const (
-	SUCCESS STATUS = 0  // Success
-	ERROR          = -1 // Failure
-)
-
-/**************** END Constants ****************/
-
 /**************** Misc functions ****************/
 
 // MemCleanse sets to zero the content of a byte slice by invoking the liboqs

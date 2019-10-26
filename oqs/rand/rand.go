@@ -6,7 +6,9 @@ package rand // import "github.com/open-quantum-safe/liboqs-go/oqs/rand"
 #include <oqs/oqs.h>
 */
 import "C"
-import "github.com/open-quantum-safe/liboqs-go/oqs"
+import (
+	"errors"
+)
 
 /**************** Randomness ****************/
 
@@ -22,8 +24,10 @@ func RandomBytes(bytesToRead int) []byte {
 // RandomBytesSwitchAlgorithm switches the core OQS_randombytes to use the
 // specified algorithm. Possible values are "system", "NIST-KAT", "OpenSSL".
 // See <oqs/rand.h> C header for more details.
-func RandomBytesSwitchAlgorithm(algName string) oqs.STATUS {
-	return oqs.STATUS(C.OQS_randombytes_switch_algorithm(C.CString(algName)))
+func RandomBytesSwitchAlgorithm(algName string) {
+	if C.OQS_randombytes_switch_algorithm(C.CString(algName)) != C.OQS_SUCCESS {
+		panic(errors.New("can not switch algorithm"))
+	}
 }
 
 // RandomBytesNistKatInit initializes the NIST DRBG with the entropyInput seed,
