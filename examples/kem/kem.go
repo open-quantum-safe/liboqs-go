@@ -18,7 +18,7 @@ func main() {
 	client := oqs.KeyEncapsulation{}
 	defer client.Clean() // clean up even in case of panic
 
-	client.Init(kemName, []byte{})
+	client.Init(kemName, nil)
 	clientPublicKey := client.GenerateKeypair()
 	fmt.Println("\nKEM details:")
 	fmt.Println(client.GetDetails())
@@ -26,7 +26,7 @@ func main() {
 	server := oqs.KeyEncapsulation{}
 	defer server.Clean() // clean up even in case of panic
 
-	server.Init(kemName, []byte{})
+	server.Init(kemName, nil)
 	ciphertext, sharedSecretServer := server.EncapSecret(clientPublicKey)
 	sharedSecretClient := client.DecapSecret(ciphertext)
 

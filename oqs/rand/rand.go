@@ -1,14 +1,38 @@
-// Package rand provides support for various RNG
+// Package rand provides support for various RNG related functions
 package rand // import "github.com/open-quantum-safe/liboqs-go/oqs/rand"
+
+/**************** Callbacks ****************/
 
 /*
 #cgo pkg-config: liboqs
 #include <oqs/oqs.h>
+typedef void(*algorithm_ptr_fn)(uint8_t*, size_t);
+void algorithmPtr_cgo(uint8_t*, size_t);
 */
 import "C"
+
 import (
 	"errors"
+	"unsafe"
 )
+
+var algorithmPtrCallback func(int) []byte
+
+// algorithmPtr is automatically invoked by RandomBytesCustomAlgorithm.
+//export algorithmPtr
+func algorithmPtr(randomArray *C.uint8_t, bytesToRead C.size_t) {
+	if algorithmPtrCallback == nil {
+		panic(errors.New("algorithm callback is not set"))
+	}
+	result := algorithmPtrCallback((int)(bytesToRead))
+	p := unsafe.Pointer(randomArray)
+	for _, v := range result {
+		*(*C.uint8_t)(p) = C.uint8_t(v)
+		p = unsafe.Pointer(uintptr(p) + 1)
+	}
+}
+
+/**************** END Callbacks ****************/
 
 /**************** Randomness ****************/
 
@@ -32,10 +56,17 @@ func RandomBytesSwitchAlgorithm(algName string) {
 
 // RandomBytesNistKatInit initializes the NIST DRBG with the entropyInput seed,
 // which must by 48 exactly bytes long. The personalizationString is an optional
-// personalization string.
+// personalization string of at least 48 bytes long.
 func RandomBytesNistKatInit(entropyInput [48]byte,
 	personalizationString []byte) {
-	if len(personalizationString) > 0 {
+
+	lenStr := len(personalizationString)
+	if lenStr > 0 {
+		if lenStr < 48 {
+			panic(errors.New("the personalization string must be either empty" +
+				" or at least 48 bytes long"))
+		}
+
 		C.OQS_randombytes_nist_kat_init((*C.uint8_t)(&entropyInput[0]),
 			(*C.uint8_t)(&personalizationString[0]), 256)
 		return
@@ -46,9 +77,12 @@ func RandomBytesNistKatInit(entropyInput [48]byte,
 
 // RandomBytesCustomAlgorithm switches RandomBytes to use the given function.
 // This allows additional custom RNGs besides the provided ones. The provided
-// RNG function must have the same signature as RandomBytes.
-//func RandomBytesCustomAlgorithm(rngFunc func(int) []byte) {
-//	C.OQS_randombytes_custom_algorithm(rngFunc)
-//}
+// RNG function must have the same signature as RandomBytes,
+// i.e. func(int) []byte.
+func RandomBytesCustomAlgorithm(fun func(int) []byte) {
+	algorithmPtrCallback = fun
+	C.OQS_randombytes_custom_algorithm((C.algorithm_ptr_fn)(unsafe.Pointer(C.
+		algorithmPtr_cgo)))
+}
 
 /**************** END Randomness ****************/

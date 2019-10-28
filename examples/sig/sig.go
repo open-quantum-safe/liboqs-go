@@ -17,7 +17,7 @@ func main() {
 	signer := oqs.Signature{}
 	defer signer.Clean() // clean up even in case of panic
 
-	signer.Init(sigName, []byte{})
+	signer.Init(sigName, nil)
 	fmt.Println("\nSignature details:")
 	fmt.Println(signer.GetDetails())
 
@@ -33,7 +33,7 @@ func main() {
 	verifier := oqs.Signature{}
 	defer verifier.Clean() // clean up even in case of panic
 
-	verifier.Init(sigName, []byte{})
+	verifier.Init(sigName, nil)
 	isValid := verifier.Verify(msg, signature, pubKey)
 
 	fmt.Println("\nValid signature? ", isValid)
