@@ -48,7 +48,7 @@ to liboqs' library directory, e.g.
 
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
             
-assuming `liboqs.so.*` were installed in `/usr/local/lib` (true assuming you ran `make install` during your liboqs setup).
+assuming `liboqs.so.*` were installed in `/usr/local/lib` (true if you ran `sudo make install` after building liboqs).
 
 ### Using Go with modules support (requires Go 1.11 or later)
 Download/clone the `liboqs-go` wrapper repository in the directory of your choice, e.g. `$HOME`, by typing in a terminal/console
