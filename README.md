@@ -68,15 +68,11 @@ Finally, you must add/append the `$HOME/liboqs-go/.config` directory to the `PKG
     
 Once you have configured your system as directed above, simply `import "github.com/open-quantum-safe/liboqs-go/oqs"` in the Go application of your choice, initialize the application module with `go mod init <module_name>`, and finally run it with `go run <module_name>` or build it with `go build <module_name>`.
 
-To run the examples from the terminal/console, type
+To run the examples from the terminal/console, type e.g.
 
     go run $HOME/liboqs-go/examples/kem/kem.go 
-    
-or 
-    
-    go run $HOME/liboqs-go/examples/sig/sig.go
 
-Replace `go run` with `go build` if you intend to build the corresponding executables; in this case they will be built in the directory you ran the `go build` command from. 
+Replace `go run` with `go build` if you intend to build the corresponding executable; in this case it will be built in the directory from which you ran the `go build` command. 
 
 To run the unit tests from the terminal/console, type 
 	
@@ -119,15 +115,11 @@ Finally, you must add/append the `$LIBOQSGO_INSTALL_PATH/.config` directory to t
  
 Once you have configured your system as directed above, simply `import "github.com/open-quantum-safe/liboqs-go/oqs"` in the Go application of your choice and run it with `go run <application_name.go>` or build it with `go build <applicaiton_name.go>`.
 
-To run the examples from the terminal/console, type 
+To run the examples from the terminal/console, type e.g.
 
     go run $LIBOQSGO_INSTALL_PATH/examples/kem/kem.go 
     
-or 
-    
-    go run $LIBOQSGO_INSTALL_PATH/examples/sig/sig.go
-
-Replace `go run` with `go build` if you intend to build the corresponding executables; in this case they will be built in the directory you ran the `go build` command from. 
+Replace `go run` with `go build` if you intend to build the corresponding executable; in this case it will be built in the directory from which you ran the `go build` command. 
 
 To run the unit tests from the terminal/console, type
 	
