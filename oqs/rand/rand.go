@@ -18,11 +18,12 @@ import (
 
 var algorithmPtrCallback func(int) []byte
 
-// algorithmPtr is automatically invoked by RandomBytesCustomAlgorithm.
+// algorithmPtr is automatically invoked by RandomBytesCustomAlgorithm. The
+// memory is provided by the caller (C.OQS_randombytes).
 //export algorithmPtr
 func algorithmPtr(randomArray *C.uint8_t, bytesToRead C.size_t) {
 	if algorithmPtrCallback == nil {
-		panic(errors.New("algorithm callback is not set"))
+		panic(errors.New("the RNG algorithm callback is not set"))
 	}
 	result := algorithmPtrCallback((int)(bytesToRead))
 	p := unsafe.Pointer(randomArray)
@@ -37,8 +38,8 @@ func algorithmPtr(randomArray *C.uint8_t, bytesToRead C.size_t) {
 /**************** Randomness ****************/
 
 // RandomBytes generates bytesToRead random bytes. This implementation uses
-// whichever algorithm has been selected by RandomBytesSwitchAlgorithm, the
-// default being "system".
+// either the default RNG algorithm ("system"), or whichever algorithm has been
+// selected by RandomBytesSwitchAlgorithm.
 func RandomBytes(bytesToRead int) []byte {
 	result := make([]byte, bytesToRead)
 	C.OQS_randombytes((*C.uint8_t)(&result[0]), C.size_t(bytesToRead))
@@ -55,8 +56,8 @@ func RandomBytesSwitchAlgorithm(algName string) {
 }
 
 // RandomBytesNistKatInit initializes the NIST DRBG with the entropyInput seed,
-// which must by 48 exactly bytes long. The personalizationString is an optional
-// personalization string of at least 48 bytes long.
+// which must be 48 exactly bytes long. The personalizationString is an optional
+// personalization string, which, if non-empty, must be at least 48 bytes long.
 func RandomBytesNistKatInit(entropyInput [48]byte,
 	personalizationString []byte) {
 

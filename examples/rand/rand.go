@@ -1,3 +1,4 @@
+// various RNGs Go examples
 package main
 
 import (
@@ -18,14 +19,14 @@ func main() {
 	oqsrand.RandomBytesSwitchAlgorithm("NIST-KAT")
 	entropySeed := [48]byte{0: 100, 20: 200, 47: 150}
 	oqsrand.RandomBytesNistKatInit(entropySeed, nil)
-	fmt.Printf("%-18s%v\n", "NIST-KAT: ", oqsrand.RandomBytes(32))
+	fmt.Printf("%-18s% X\n", "NIST-KAT: ", oqsrand.RandomBytes(32))
 
 	oqsrand.RandomBytesCustomAlgorithm(CustomRNG)
-	fmt.Printf("%-18s%v\n", "Custom RNG: ", oqsrand.RandomBytes(32))
+	fmt.Printf("%-18s% X\n", "Custom RNG: ", oqsrand.RandomBytes(32))
 
 	oqsrand.RandomBytesSwitchAlgorithm("OpenSSL")
-	fmt.Printf("%-18s%v\n", "OpenSSL: ", oqsrand.RandomBytes(32))
+	fmt.Printf("%-18s% X\n", "OpenSSL: ", oqsrand.RandomBytes(32))
 
 	oqsrand.RandomBytesSwitchAlgorithm("system")
-	fmt.Printf("%18s%v\n", "System (default): ", oqsrand.RandomBytes(32))
+	fmt.Printf("%18s% X\n", "System (default): ", oqsrand.RandomBytes(32))
 }
