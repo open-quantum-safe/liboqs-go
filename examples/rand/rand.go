@@ -6,13 +6,13 @@ import (
 	oqsrand "github.com/open-quantum-safe/liboqs-go/oqs/rand"
 )
 
-// CustomRNG provides a (trivial) custom random number generator.
-func CustomRNG(bytesToRead int) []byte {
-	result := make([]byte, bytesToRead)
-	for i := range result {
-		result[i] = byte(i)
+// CustomRNG provides a (trivial) custom random number generator; the memory is
+// provided by the caller, i.e. oqsrand.RandomBytes or
+// oqsrand.RandomBytesInPlace
+func CustomRNG(randomArray []byte, bytesToRead int) {
+	for i := range randomArray {
+		randomArray[i] = byte(i)
 	}
-	return result
 }
 
 func main() {

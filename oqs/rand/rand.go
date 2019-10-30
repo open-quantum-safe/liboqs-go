@@ -18,16 +18,19 @@ import (
 
 // algorithmPtrCallback is a global RNG algorithm callback set by
 // RandomBytesCustomAlgorithm.
-var algorithmPtrCallback func(int) []byte
+var algorithmPtrCallback func([]byte, int)
 
 // algorithmPtr is automatically invoked by RandomBytesCustomAlgorithm. When
-// invoked, the memory is provided by the caller, i.e. RandomBytes.
+// invoked, the memory is provided by the caller,
+// i.e. RandomBytes or RandomBytesInPlace.
 //export algorithmPtr
 func algorithmPtr(randomArray *C.uint8_t, bytesToRead C.size_t) {
 	if algorithmPtrCallback == nil {
 		panic(errors.New("the RNG algorithm callback is not set"))
 	}
-	result := algorithmPtrCallback((int)(bytesToRead))
+	// TODO optimize-me!
+	result := make([]byte, int(bytesToRead))
+	algorithmPtrCallback(result, int(bytesToRead))
 	p := unsafe.Pointer(randomArray)
 	for _, v := range result {
 		*(*C.uint8_t)(p) = C.uint8_t(v)
@@ -46,6 +49,17 @@ func RandomBytes(bytesToRead int) []byte {
 	result := make([]byte, bytesToRead)
 	C.OQS_randombytes((*C.uint8_t)(&result[0]), C.size_t(bytesToRead))
 	return result
+}
+
+// RandomBytesInPlace generates bytesToRead random bytes. This implementation
+// uses either the default RNG algorithm ("system"), or whichever algorithm has
+// been selected by RandomBytesSwitchAlgorithm. bytesToRead must not exceed the
+// size of randomArray.
+func RandomBytesInPlace(randomArray []byte, bytesToRead int) {
+	if bytesToRead > len(randomArray) {
+		panic(errors.New("bytesToRead exceeds the size of randomArray"))
+	}
+	C.OQS_randombytes((*C.uint8_t)(&randomArray[0]), C.size_t(bytesToRead))
 }
 
 // RandomBytesSwitchAlgorithm switches the core OQS_randombytes to use the
@@ -80,9 +94,9 @@ func RandomBytesNistKatInit(entropyInput [48]byte,
 
 // RandomBytesCustomAlgorithm switches RandomBytes to use the given function.
 // This allows additional custom RNGs besides the provided ones. The provided
-// RNG function must have the same signature as RandomBytes,
-// i.e. func(int) []byte.
-func RandomBytesCustomAlgorithm(fun func(int) []byte) {
+// RNG function must have the same signature as RandomBytesInPlace,
+// i.e. func([]byte, int).
+func RandomBytesCustomAlgorithm(fun func([]byte, int)) {
 	algorithmPtrCallback = fun
 	C.OQS_randombytes_custom_algorithm((C.algorithm_ptr_fn)(unsafe.Pointer(C.
 		algorithmPtr_cgo)))
