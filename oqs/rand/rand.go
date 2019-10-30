@@ -1,4 +1,4 @@
-// Package rand provides support for various RNG related functions
+// Package rand provides support for various RNG-related functions
 package rand // import "github.com/open-quantum-safe/liboqs-go/oqs/rand"
 
 /**************** Callbacks ****************/
@@ -16,6 +16,8 @@ import (
 	"unsafe"
 )
 
+// algorithmPtrCallback is a global RNG algorithm callback set by
+// oqs::rand::RandomBytesCustomAlgorithm
 var algorithmPtrCallback func(int) []byte
 
 // algorithmPtr is automatically invoked by RandomBytesCustomAlgorithm. The
