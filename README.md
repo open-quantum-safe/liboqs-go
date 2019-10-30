@@ -142,7 +142,7 @@ if using Go modules, or
 
     go doc github.com/open-quantum-safe/liboqs-go/oqs.Signature.Verify
     
-if not using Go modules.    
+if not using Go modules.
  
 For [GoDoc](https://godoc.org) automatically-generated documentation in HTML format, click [here](https://godoc.org/github.com/open-quantum-safe/liboqs-go/oqs).
 
