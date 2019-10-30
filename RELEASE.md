@@ -18,6 +18,6 @@ This release of liboqs-go was released on October 30, 2019. Its release page on 
 What's New
 ----------
 
-This is the second release of liboqs-go. 
+This is the third release of liboqs-go. 
 
 For a list of changes see [CHANGES.txt](https://github.com/open-quantum-safe/liboqs-go/blob/master/CHANGES.txt).
