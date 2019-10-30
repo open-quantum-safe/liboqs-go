@@ -1,4 +1,4 @@
-// Package rand provides support for various RNG-related functions
+// Package rand provides support for various RNG-related functions.
 package rand // import "github.com/open-quantum-safe/liboqs-go/oqs/rand"
 
 /**************** Callbacks ****************/
@@ -17,11 +17,11 @@ import (
 )
 
 // algorithmPtrCallback is a global RNG algorithm callback set by
-// oqs::rand::RandomBytesCustomAlgorithm
+// RandomBytesCustomAlgorithm.
 var algorithmPtrCallback func(int) []byte
 
-// algorithmPtr is automatically invoked by RandomBytesCustomAlgorithm. The
-// memory is provided by the caller (C.OQS_randombytes).
+// algorithmPtr is automatically invoked by RandomBytesCustomAlgorithm. When
+// invoked, the memory is provided by the caller, i.e. RandomBytes.
 //export algorithmPtr
 func algorithmPtr(randomArray *C.uint8_t, bytesToRead C.size_t) {
 	if algorithmPtrCallback == nil {
@@ -50,7 +50,7 @@ func RandomBytes(bytesToRead int) []byte {
 
 // RandomBytesSwitchAlgorithm switches the core OQS_randombytes to use the
 // specified algorithm. Possible values are "system", "NIST-KAT", "OpenSSL".
-// See <oqs/rand.h> C header for more details.
+// See <oqs/rand.h> liboqs header for more details.
 func RandomBytesSwitchAlgorithm(algName string) {
 	if C.OQS_randombytes_switch_algorithm(C.CString(algName)) != C.OQS_SUCCESS {
 		panic(errors.New("can not switch algorithm"))

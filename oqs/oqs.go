@@ -1,4 +1,4 @@
-// Package oqs provides a GO wrapper for the C liboqs quantum-resistant library
+// Package oqs provides a GO wrapper for the C liboqs quantum-resistant library.
 package oqs // import "github.com/open-quantum-safe/liboqs-go/oqs"
 
 /*
@@ -54,7 +54,7 @@ func IsKEMSupported(algName string) bool {
 	return false
 }
 
-// GetKEMName returns the KEM name from its corresponding numerical id.
+// GetKEMName returns the KEM name from its corresponding numerical ID.
 func GetKEMName(algID int) string {
 	if algID >= MaxNumberKEMs() {
 		panic(errors.New("algorithm ID out of range"))
@@ -265,7 +265,7 @@ func IsSIGSupported(algName string) bool {
 	return false
 }
 
-// GetSIGName returns the signature name from its corresponding numerical id.
+// GetSIGName returns the signature name from its corresponding numerical ID.
 func GetSIGName(algID int) string {
 	if algID >= MaxNumberSIGs() {
 		panic(errors.New("algorithm ID out of range"))
