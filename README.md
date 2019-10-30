@@ -143,8 +143,20 @@ if using Go modules, or
     go doc github.com/open-quantum-safe/liboqs-go/oqs.Signature.Verify
     
 if not using Go modules.
+
+For the RNG-related function, type e.g.
+
+    go doc $HOME/liboqs-go/oqs/rand.RandomBytes
+ 
+if using Go modules, or 
+
+    go doc github.com/open-quantum-safe/liboqs-go/oqs/rand.RandomBytes 
+    
+if not using Go modules.    
  
 For [GoDoc](https://godoc.org) automatically-generated documentation in HTML format, click [here](https://godoc.org/github.com/open-quantum-safe/liboqs-go/oqs).
+
+For the RNG-related documentation, click [here](https://godoc.org/github.com/open-quantum-safe/liboqs-go/oqs/rand).
 
 Limitations and security
 ------------------------
