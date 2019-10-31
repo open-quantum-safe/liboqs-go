@@ -90,7 +90,7 @@ Install the latest version of the `liboqs-go` wrapper by typing
 
     go get github.com/open-quantum-safe/liboqs-go/oqs
 
-in a terminal/console. This will install the wrapper in the first directory of your `$GOPATH` environment variable. In my case `$GOPATH` is set to `$HOME/go`, and the Go package manager installs the wrapper in `$HOME/go/src/github.com/open-quantum-safe/liboqs-go`. To update a previously installed Go wrapper, type
+in a terminal/console. This will install the wrapper in the first directory set by your `$GOPATH` environment variable. In my case `$GOPATH` is set to `$HOME/go`, and the Go package manager installs the wrapper in `$HOME/go/src/github.com/open-quantum-safe/liboqs-go`. To update a previously installed Go wrapper, type
 
     go get -u github.com/open-quantum-safe/liboqs-go/oqs
     
