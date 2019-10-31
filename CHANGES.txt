@@ -1,4 +1,4 @@
-Version 0.1.2 - October 30, 2019
+Version 0.1.2 - October 31, 2019
     - Added support for RNGs from <oqs/rand.h>
 
 Version 0.1.1 - October 24, 2019
