@@ -28,7 +28,7 @@ func algorithmPtr(randomArray *C.uint8_t, bytesToRead C.size_t) {
 	if algorithmPtrCallback == nil {
 		panic(errors.New("the RNG algorithm callback is not set"))
 	}
-	// TODO optimize-me!
+	// TODO optimize the copying if possible!
 	result := make([]byte, int(bytesToRead))
 	algorithmPtrCallback(result, int(bytesToRead))
 	p := unsafe.Pointer(randomArray)
@@ -80,8 +80,8 @@ func RandomBytesNistKatInit(entropyInput [48]byte,
 	lenStr := len(personalizationString)
 	if lenStr > 0 {
 		if lenStr < 48 {
-			panic(errors.New("the personalization string must be either empty" +
-				" or at least 48 bytes long"))
+			panic(errors.New("the personalization string must be either " +
+				"empty or at least 48 bytes long"))
 		}
 
 		C.OQS_randombytes_nist_kat_init((*C.uint8_t)(&entropyInput[0]),
