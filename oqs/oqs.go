@@ -19,8 +19,7 @@ import (
 // OQS_MEM_cleanse() function. Use it to clean "hot" memory areas, such as
 // secret keys etc.
 func MemCleanse(v []byte) {
-	C.OQS_MEM_cleanse(unsafe.Pointer(&v[0]),
-		C.size_t(len(v)))
+	C.OQS_MEM_cleanse(unsafe.Pointer(&v[0]), C.size_t(len(v)))
 }
 
 /**************** END Misc functions ****************/
