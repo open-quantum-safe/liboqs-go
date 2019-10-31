@@ -10,7 +10,7 @@ import (
 // provided by the caller, i.e. oqsrand.RandomBytes or
 // oqsrand.RandomBytesInPlace
 func CustomRNG(randomArray []byte, bytesToRead int) {
-	for i := range randomArray {
+	for i := 0; i < bytesToRead; i++ {
 		randomArray[i] = byte(i)
 	}
 }
