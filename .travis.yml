@@ -50,8 +50,8 @@ notifications:
   
 script:
   # Run the examples
-  - pwd 
   - go run examples/kem/kem.go 
+  - go run examples/rand/rand.go 
   - go run examples/sig/sig.go 
   
   # Run the unit tests
