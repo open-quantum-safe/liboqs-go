@@ -14,10 +14,9 @@
 
 # GoLand
 .idea/
+build/
 
 # Examples
 examples/kem/kem
+examples/rand/rand
 examples/sig/sig
-
-# build
-build/
