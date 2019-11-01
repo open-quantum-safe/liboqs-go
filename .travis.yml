@@ -55,4 +55,4 @@ script:
   - go run examples/sig/sig.go 
   
   # Run the unit tests
-  - go test -v oqstests/* 
+  - go test -v oqstests/*
