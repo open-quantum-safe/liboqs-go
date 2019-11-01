@@ -11,7 +11,7 @@ import (
 // oqsrand.RandomBytesInPlace
 func CustomRNG(randomArray []byte, bytesToRead int) {
 	for i := 0; i < bytesToRead; i++ {
-		randomArray[i] = byte(i)
+		randomArray[i] = byte(i % 256)
 	}
 }
 
