@@ -35,8 +35,7 @@ func TestSignature(t *testing.T) {
 func TestUnsupportedSignature(t *testing.T) {
 	defer func() {
 		if r := recover(); r == nil {
-			t.Fatal("Unsupported signature should have emitted a " +
-				"panic")
+			t.Fatal("Unsupported signature should have emitted a panic")
 		}
 	}()
 	signer := oqs.Signature{}
