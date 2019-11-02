@@ -26,24 +26,25 @@ func MemCleanse(v []byte) {
 
 /**************** KEMs ****************/
 
-// List of enabled KEMs, populated by init().
+// List of enabled KEM algorithms, populated by init().
 var enabledKEMs []string
 
-// List of supported KEMs, populated by init().
+// List of supported KEM algorithms, populated by init().
 var supportedKEMs []string
 
-// MaxNumberKEMs returns the maximum number of supported KEMs.
+// MaxNumberKEMs returns the maximum number of supported KEM algorithms.
 func MaxNumberKEMs() int {
 	return int(C.OQS_KEM_alg_count())
 }
 
-// IsKEMEnabled returns true if a KEM is enabled, and false otherwise.
+// IsKEMEnabled returns true if a KEM algorithm is enabled, and false otherwise.
 func IsKEMEnabled(algName string) bool {
 	result := C.OQS_KEM_alg_is_enabled(C.CString(algName))
 	return result != 0
 }
 
-// IsKEMSupported returns true if a KEM is supported, and false otherwise.
+// IsKEMSupported returns true if a KEM algorithm is supported, and false
+// otherwise.
 func IsKEMSupported(algName string) bool {
 	for i := range supportedKEMs {
 		if supportedKEMs[i] == algName {
@@ -53,7 +54,8 @@ func IsKEMSupported(algName string) bool {
 	return false
 }
 
-// GetKEMName returns the KEM name from its corresponding numerical ID.
+// GetKEMName returns the KEM algorithm name from its corresponding numerical
+// ID.
 func GetKEMName(algID int) string {
 	if algID >= MaxNumberKEMs() {
 		panic(errors.New("algorithm ID out of range"))
@@ -61,17 +63,17 @@ func GetKEMName(algID int) string {
 	return C.GoString(C.OQS_KEM_alg_identifier(C.size_t(algID)))
 }
 
-// GetSupportedKEMs returns the list of supported KEMs.
+// GetSupportedKEMs returns the list of supported KEM algorithms.
 func GetSupportedKEMs() []string {
 	return supportedKEMs
 }
 
-// GetEnabledKEMs returns the list of enabled KEMs.
+// GetEnabledKEMs returns the list of enabled KEM algorithms.
 func GetEnabledKEMs() []string {
 	return enabledKEMs
 }
 
-// Initializes the lists of enabledKEMs and supportedKEMs.
+// Initializes the lists enabledKEMs and supportedKEMs.
 func init() {
 	for i := 0; i < MaxNumberKEMs(); i++ {
 		KEMName := GetKEMName(i)
@@ -237,24 +239,26 @@ func (kem *KeyEncapsulation) Clean() {
 
 /**************** Sigs ****************/
 
-// List of enabled signatures, populated by init().
+// List of enabled signature algorithms, populated by init().
 var enabledSigs []string
 
-// List of supported signatures, populated by init().
+// List of supported signature algorithms, populated by init().
 var supportedSigs []string
 
-// MaxNumberSigs returns the maximum number of supported signatures.
+// MaxNumberSigs returns the maximum number of supported signature algorithms.
 func MaxNumberSigs() int {
 	return int(C.OQS_SIG_alg_count())
 }
 
-// IsSigEnabled returns true if a signature is enabled, and false otherwise.
+// IsSigEnabled returns true if a signature algorithm is enabled, and false
+// otherwise.
 func IsSigEnabled(algName string) bool {
 	result := C.OQS_SIG_alg_is_enabled(C.CString(algName))
 	return result != 0
 }
 
-// IsSigSupported returns true if a signature is supported, and false otherwise.
+// IsSigSupported returns true if a signature algorithm is supported, and false
+// otherwise.
 func IsSigSupported(algName string) bool {
 	for i := range supportedSigs {
 		if supportedSigs[i] == algName {
@@ -264,7 +268,8 @@ func IsSigSupported(algName string) bool {
 	return false
 }
 
-// GetSigName returns the signature name from its corresponding numerical ID.
+// GetSigName returns the signature algorithm name from its corresponding
+// numerical ID.
 func GetSigName(algID int) string {
 	if algID >= MaxNumberSigs() {
 		panic(errors.New("algorithm ID out of range"))
@@ -272,17 +277,17 @@ func GetSigName(algID int) string {
 	return C.GoString(C.OQS_SIG_alg_identifier(C.size_t(algID)))
 }
 
-// GetSupportedSigs returns the list of supported signatures.
+// GetSupportedSigs returns the list of supported signature algorithms.
 func GetSupportedSigs() []string {
 	return supportedSigs
 }
 
-// GetEnabledSigs returns the list of enabled signatures.
+// GetEnabledSigs returns the list of enabled signature algorithms.
 func GetEnabledSigs() []string {
 	return enabledSigs
 }
 
-// Initializes the lists of enabledSigs and supportedSigs.
+// Initializes the lists enabledSigs and supportedSigs.
 func init() {
 	for i := 0; i < MaxNumberSigs(); i++ {
 		sigName := GetSigName(i)
