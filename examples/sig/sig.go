@@ -8,10 +8,10 @@ import (
 
 func main() {
 	fmt.Println("Supported signatures:")
-	fmt.Println(oqs.GetSupportedSIGs())
+	fmt.Println(oqs.GetSupportedSigs())
 
 	fmt.Println("\nEnabled signatures:")
-	fmt.Println(oqs.GetEnabledSIGs())
+	fmt.Println(oqs.GetEnabledSigs())
 
 	sigName := "DEFAULT"
 	signer := oqs.Signature{}

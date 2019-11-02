@@ -25,7 +25,7 @@ func testSig(sigName string, msg []byte, t *testing.T) {
 func TestSignature(t *testing.T) {
 	log.SetFlags(log.Ltime | log.Lmicroseconds)
 	msg := []byte("This is our favourite message to sign")
-	for _, sigName := range oqs.GetEnabledSIGs() {
+	for _, sigName := range oqs.GetEnabledSigs() {
 		log.Println(sigName)
 		testSig(sigName, msg, t)
 	}

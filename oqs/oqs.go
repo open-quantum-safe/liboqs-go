@@ -235,65 +235,65 @@ func (kem *KeyEncapsulation) Clean() {
 
 /**************** END KeyEncapsulation ****************/
 
-/**************** SIGs ****************/
+/**************** Sigs ****************/
 
 // List of enabled signatures, populated by init().
-var enabledSIGs []string
+var enabledSigs []string
 
 // List of supported signatures, populated by init().
-var supportedSIGs []string
+var supportedSigs []string
 
-// MaxNumberSIGs returns the maximum number of supported signatures.
-func MaxNumberSIGs() int {
+// MaxNumberSigs returns the maximum number of supported signatures.
+func MaxNumberSigs() int {
 	return int(C.OQS_SIG_alg_count())
 }
 
-// IsSIGEnabled returns true if a signature is enabled, and false otherwise.
-func IsSIGEnabled(algName string) bool {
+// IsSigEnabled returns true if a signature is enabled, and false otherwise.
+func IsSigEnabled(algName string) bool {
 	result := C.OQS_SIG_alg_is_enabled(C.CString(algName))
 	return result != 0
 }
 
-// IsSIGSupported returns true if a signature is supported, and false otherwise.
-func IsSIGSupported(algName string) bool {
-	for i := range supportedSIGs {
-		if supportedSIGs[i] == algName {
+// IsSigSupported returns true if a signature is supported, and false otherwise.
+func IsSigSupported(algName string) bool {
+	for i := range supportedSigs {
+		if supportedSigs[i] == algName {
 			return true
 		}
 	}
 	return false
 }
 
-// GetSIGName returns the signature name from its corresponding numerical ID.
-func GetSIGName(algID int) string {
-	if algID >= MaxNumberSIGs() {
+// GetSigName returns the signature name from its corresponding numerical ID.
+func GetSigName(algID int) string {
+	if algID >= MaxNumberSigs() {
 		panic(errors.New("algorithm ID out of range"))
 	}
 	return C.GoString(C.OQS_SIG_alg_identifier(C.size_t(algID)))
 }
 
-// GetSupportedSIGs returns the list of supported signatures.
-func GetSupportedSIGs() []string {
-	return supportedSIGs
+// GetSupportedSigs returns the list of supported signatures.
+func GetSupportedSigs() []string {
+	return supportedSigs
 }
 
-// GetEnabledSIGs returns the list of enabled signatures.
-func GetEnabledSIGs() []string {
-	return enabledSIGs
+// GetEnabledSigs returns the list of enabled signatures.
+func GetEnabledSigs() []string {
+	return enabledSigs
 }
 
-// Initializes the lists of enabledSIGs and supportedSIGs.
+// Initializes the lists of enabledSigs and supportedSigs.
 func init() {
-	for i := 0; i < MaxNumberSIGs(); i++ {
-		SIGName := GetSIGName(i)
-		supportedSIGs = append(supportedSIGs, SIGName)
-		if IsSIGEnabled(SIGName) {
-			enabledSIGs = append(enabledSIGs, SIGName)
+	for i := 0; i < MaxNumberSigs(); i++ {
+		sigName := GetSigName(i)
+		supportedSigs = append(supportedSigs, sigName)
+		if IsSigEnabled(sigName) {
+			enabledSigs = append(enabledSigs, sigName)
 		}
 	}
 }
 
-/**************** END SIGs ****************/
+/**************** END Sigs ****************/
 
 /**************** Signature ****************/
 
@@ -340,9 +340,9 @@ func (sig Signature) String() string {
 // Signature.GenerateKeyPair method to generate the pair of secret key/public
 // key.
 func (sig *Signature) Init(algName string, secretKey []byte) {
-	if !IsSIGEnabled(algName) {
+	if !IsSigEnabled(algName) {
 		// perhaps it's supported
-		if IsSIGSupported(algName) {
+		if IsSigSupported(algName) {
 			panic(errors.New(`"` + algName + `" is not enabled by OQS`))
 		} else {
 			panic(errors.New(`"` + algName + `" is not supported by OQS`))
