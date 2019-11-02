@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-// testKem tests a specific KEM.
+// testKEM tests a specific KEM.
 func testKEM(kemName string, t *testing.T) {
 	var client, server oqs.KeyEncapsulation
 	defer client.Clean()
