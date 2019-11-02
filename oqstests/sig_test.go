@@ -11,8 +11,8 @@ func testSig(sigName string, msg []byte, t *testing.T) {
 	var signer, verifier oqs.Signature
 	defer signer.Clean()
 	defer verifier.Clean()
-	signer.Init(sigName, []byte{})
-	verifier.Init(sigName, []byte{})
+	signer.Init(sigName, nil)
+	verifier.Init(sigName, nil)
 	pubKey := signer.GenerateKeypair()
 	signature := signer.Sign(msg)
 	isValid := verifier.Verify(msg, signature, pubKey)
@@ -40,5 +40,5 @@ func TestUnsupportedSignature(t *testing.T) {
 	}()
 	signer := oqs.Signature{}
 	defer signer.Clean()
-	signer.Init("unsupported_sig", []byte{})
+	signer.Init("unsupported_sig", nil)
 }

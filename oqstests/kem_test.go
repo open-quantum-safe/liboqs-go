@@ -9,12 +9,12 @@ import (
 )
 
 // testKem tests a specific KEM.
-func testKem(kemName string, t *testing.T) {
+func testKEM(kemName string, t *testing.T) {
 	var client, server oqs.KeyEncapsulation
 	defer client.Clean()
 	defer server.Clean()
-	client.Init(kemName, []byte{})
-	server.Init(kemName, []byte{})
+	client.Init(kemName, nil)
+	server.Init(kemName, nil)
 	clientPublicKey := client.GenerateKeypair()
 	ciphertext, sharedSecretServer := server.EncapSecret(clientPublicKey)
 	sharedSecretClient := client.DecapSecret(ciphertext)
@@ -28,7 +28,7 @@ func TestKeyEncapsulation(t *testing.T) {
 	log.SetFlags(log.Ltime | log.Lmicroseconds)
 	for _, kemName := range oqs.GetEnabledKEMs() {
 		log.Println(kemName)
-		testKem(kemName, t)
+		testKEM(kemName, t)
 	}
 }
 
@@ -41,5 +41,5 @@ func TestUnsupportedKeyEncapsulation(t *testing.T) {
 	}()
 	client := oqs.KeyEncapsulation{}
 	defer client.Clean()
-	client.Init("unsupported_kem", []byte{})
+	client.Init("unsupported_kem", nil)
 }
