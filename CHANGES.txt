@@ -1,3 +1,7 @@
+Version 0.2.0 - November 2, 2019
+    - Minor API change to account for Go naming conventions
+    - Concurrent unit testing
+
 Version 0.1.2 - October 31, 2019
     - Added support for RNGs from <oqs/rand.h>
 

@@ -13,13 +13,11 @@ The **Open Quantum Safe (OQS) project** has the goal of developing and prototypi
 Release notes
 =============
 
-This release of liboqs-go was released on October 31, 2019. Its release page on GitHub is https://github.com/open-quantum-safe/liboqs-go/releases/tag/0.1.2.
+This release of liboqs-go was released on November 2, 2019. Its release page on GitHub is https://github.com/open-quantum-safe/liboqs-go/releases/tag/0.2.0.
 
 What's New
 ----------
 
-This is the third release of liboqs-go. 
+This is the fourth release of liboqs-go. 
 
 For a list of changes see [CHANGES.txt](https://github.com/open-quantum-safe/liboqs-go/blob/master/CHANGES.txt).
-
-This release adds support for \<oqs/rand.h\> RNG-related functions.
