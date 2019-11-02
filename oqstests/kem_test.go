@@ -30,8 +30,8 @@ func testKEM(kemName string, t *testing.T) {
 
 // TestKeyEncapsulation tests all enabled KEMs.
 func TestKeyEncapsulation(t *testing.T) {
-	wg.Add(len(oqs.GetEnabledKEMs()))
-	for _, kemName := range oqs.GetEnabledKEMs() {
+	wg.Add(len(oqs.EnabledKEMs()))
+	for _, kemName := range oqs.EnabledKEMs() {
 		fmt.Println(kemName)
 		go testKEM(kemName, t)
 	}

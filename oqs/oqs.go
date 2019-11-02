@@ -54,29 +54,29 @@ func IsKEMSupported(algName string) bool {
 	return false
 }
 
-// GetKEMName returns the KEM algorithm name from its corresponding numerical
+// KEMName returns the KEM algorithm name from its corresponding numerical
 // ID.
-func GetKEMName(algID int) string {
+func KEMName(algID int) string {
 	if algID >= MaxNumberKEMs() {
 		panic(errors.New("algorithm ID out of range"))
 	}
 	return C.GoString(C.OQS_KEM_alg_identifier(C.size_t(algID)))
 }
 
-// GetSupportedKEMs returns the list of supported KEM algorithms.
-func GetSupportedKEMs() []string {
+// SupportedKEMs returns the list of supported KEM algorithms.
+func SupportedKEMs() []string {
 	return supportedKEMs
 }
 
-// GetEnabledKEMs returns the list of enabled KEM algorithms.
-func GetEnabledKEMs() []string {
+// EnabledKEMs returns the list of enabled KEM algorithms.
+func EnabledKEMs() []string {
 	return enabledKEMs
 }
 
 // Initializes the lists enabledKEMs and supportedKEMs.
 func init() {
 	for i := 0; i < MaxNumberKEMs(); i++ {
-		KEMName := GetKEMName(i)
+		KEMName := KEMName(i)
 		supportedKEMs = append(supportedKEMs, KEMName)
 		if IsKEMEnabled(KEMName) {
 			enabledKEMs = append(enabledKEMs, KEMName)
@@ -102,7 +102,7 @@ type KeyEncapsulationDetails struct {
 
 // String converts the KEM algorithm details to a string representation.
 // Use this method to pretty-print the KEM algorithm details, e.g.
-// fmt.Println(client.GetDetails())
+// fmt.Println(client.Details())
 func (kemDetails KeyEncapsulationDetails) String() string {
 	return fmt.Sprintf("Name: %s\nVersion: %s\nClaimed NIST level: %d\n"+
 		"Is IND_CCA: %v\nLength public key (bytes): %d\nLength secret key ("+
@@ -153,8 +153,8 @@ func (kem *KeyEncapsulation) Init(algName string, secretKey []byte) {
 	kem.algDetails.LengthSharedSecret = int(kem.kem.length_shared_secret)
 }
 
-// GetDetails returns the KEM algorithm details.
-func (kem *KeyEncapsulation) GetDetails() KeyEncapsulationDetails {
+// Details returns the KEM algorithm details.
+func (kem *KeyEncapsulation) Details() KeyEncapsulationDetails {
 	return kem.algDetails
 }
 
@@ -268,29 +268,29 @@ func IsSigSupported(algName string) bool {
 	return false
 }
 
-// GetSigName returns the signature algorithm name from its corresponding
+// SigName returns the signature algorithm name from its corresponding
 // numerical ID.
-func GetSigName(algID int) string {
+func SigName(algID int) string {
 	if algID >= MaxNumberSigs() {
 		panic(errors.New("algorithm ID out of range"))
 	}
 	return C.GoString(C.OQS_SIG_alg_identifier(C.size_t(algID)))
 }
 
-// GetSupportedSigs returns the list of supported signature algorithms.
-func GetSupportedSigs() []string {
+// SupportedSigs returns the list of supported signature algorithms.
+func SupportedSigs() []string {
 	return supportedSigs
 }
 
-// GetEnabledSigs returns the list of enabled signature algorithms.
-func GetEnabledSigs() []string {
+// EnabledSigs returns the list of enabled signature algorithms.
+func EnabledSigs() []string {
 	return enabledSigs
 }
 
 // Initializes the lists enabledSigs and supportedSigs.
 func init() {
 	for i := 0; i < MaxNumberSigs(); i++ {
-		sigName := GetSigName(i)
+		sigName := SigName(i)
 		supportedSigs = append(supportedSigs, sigName)
 		if IsSigEnabled(sigName) {
 			enabledSigs = append(enabledSigs, sigName)
@@ -315,7 +315,7 @@ type SignatureDetails struct {
 
 // String converts the signature algorithm details to a string representation.
 // Use this method to pretty-print the signature algorithm details, e.g.
-// fmt.Println(signer.GetDetails())
+// fmt.Println(signer.Details())
 func (sigDetails SignatureDetails) String() string {
 	return fmt.Sprintf("Name: %s\nVersion: %s\nClaimed NIST level: %d\n"+
 		"Is EUF_CMA: %v\nLength public key (bytes): %d\nLength secret key ("+
@@ -364,8 +364,8 @@ func (sig *Signature) Init(algName string, secretKey []byte) {
 	sig.algDetails.MaxLengthSignature = int(sig.sig.length_signature)
 }
 
-// GetDetails returns the signature algorithm details.
-func (sig *Signature) GetDetails() SignatureDetails {
+// Details returns the signature algorithm details.
+func (sig *Signature) Details() SignatureDetails {
 	return sig.algDetails
 }
 

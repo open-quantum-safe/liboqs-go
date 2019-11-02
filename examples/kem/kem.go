@@ -9,10 +9,10 @@ import (
 
 func main() {
 	fmt.Println("Supported KEMs:")
-	fmt.Println(oqs.GetSupportedKEMs())
+	fmt.Println(oqs.SupportedKEMs())
 
 	fmt.Println("\nEnabled KEMs:")
-	fmt.Println(oqs.GetEnabledKEMs())
+	fmt.Println(oqs.EnabledKEMs())
 
 	kemName := "DEFAULT"
 	client := oqs.KeyEncapsulation{}
@@ -21,7 +21,7 @@ func main() {
 	client.Init(kemName, nil)
 	clientPublicKey := client.GenerateKeypair()
 	fmt.Println("\nKEM details:")
-	fmt.Println(client.GetDetails())
+	fmt.Println(client.Details())
 
 	server := oqs.KeyEncapsulation{}
 	defer server.Clean() // clean up even in case of panic

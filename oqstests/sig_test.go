@@ -24,9 +24,9 @@ func testSig(sigName string, msg []byte, t *testing.T) {
 
 // TestSignature tests all enabled signatures.
 func TestSignature(t *testing.T) {
-	wg.Add(len(oqs.GetEnabledKEMs()))
+	wg.Add(len(oqs.EnabledKEMs()))
 	msg := []byte("This is our favourite message to sign")
-	for _, sigName := range oqs.GetEnabledSigs() {
+	for _, sigName := range oqs.EnabledSigs() {
 		fmt.Println(sigName)
 		go testSig(sigName, msg, t)
 	}
