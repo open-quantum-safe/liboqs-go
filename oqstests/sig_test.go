@@ -35,10 +35,11 @@ func TestSignature(t *testing.T) {
 func TestUnsupportedSignature(t *testing.T) {
 	defer func() {
 		if r := recover(); r == nil {
-			t.Errorf("Unsupported signature should have emitted a " +
+			t.Fatal("Unsupported signature should have emitted a " +
 				"panic")
 		}
 	}()
 	signer := oqs.Signature{}
+	defer signer.Clean()
 	signer.Init("unsupported_sig", []byte{})
 }

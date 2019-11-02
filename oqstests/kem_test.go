@@ -36,9 +36,10 @@ func TestKeyEncapsulation(t *testing.T) {
 func TestUnsupportedKeyEncapsulation(t *testing.T) {
 	defer func() {
 		if r := recover(); r == nil {
-			t.Errorf("Unsupported KEM should have emitted a panic")
+			t.Fatal("Unsupported KEM should have emitted a panic")
 		}
 	}()
 	client := oqs.KeyEncapsulation{}
+	defer client.Clean()
 	client.Init("unsupported_kem", []byte{})
 }
