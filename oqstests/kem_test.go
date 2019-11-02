@@ -1,34 +1,38 @@
-// Package oqstests provides unit testing for the oqs Go package
+// Package oqstests provides unit testing for the oqs Go package.
 package oqstests
 
 import (
 	"bytes"
-	"fmt"
 	"github.com/open-quantum-safe/liboqs-go/oqs"
+	"log"
 	"testing"
 )
 
-// Test all enabled KEMs
-func TestKeyEncapsulation(t *testing.T) {
+// testKem tests a specific KEM.
+func testKem(kemName string, t *testing.T) {
+	log.Println(kemName)
 	var client, server oqs.KeyEncapsulation
-
-	for _, kemName := range oqs.GetEnabledKEMs() {
-		fmt.Println(kemName)
-		client.Init(kemName, []byte{})
-		server.Init(kemName, []byte{})
-		clientPublicKey := client.GenerateKeypair()
-		ciphertext, sharedSecretServer := server.EncapSecret(clientPublicKey)
-		sharedSecretClient := client.DecapSecret(ciphertext)
-		isValid := bytes.Compare(sharedSecretClient, sharedSecretServer) == 0
-		if !isValid {
-			t.Fatal("Shared secrets do not coincide")
-		}
-		client.Clean()
-		server.Clean()
+	defer client.Clean()
+	defer server.Clean()
+	client.Init(kemName, []byte{})
+	server.Init(kemName, []byte{})
+	clientPublicKey := client.GenerateKeypair()
+	ciphertext, sharedSecretServer := server.EncapSecret(clientPublicKey)
+	sharedSecretClient := client.DecapSecret(ciphertext)
+	if !bytes.Equal(sharedSecretClient, sharedSecretServer) {
+		t.Fatal("Shared secrets do not coincide")
 	}
 }
 
-// Test that an unsupported KEM emits a panic
+// TestKeyEncapsulation tests all enabled KEMs.
+func TestKeyEncapsulation(t *testing.T) {
+	log.SetFlags(log.Ltime | log.Lmicroseconds)
+	for _, kemName := range oqs.GetEnabledKEMs() {
+		testKem(kemName, t)
+	}
+}
+
+// TestUnsupportedKeyEncapsulation tests that an unsupported KEM emits a panic.
 func TestUnsupportedKeyEncapsulation(t *testing.T) {
 	defer func() {
 		if r := recover(); r == nil {
