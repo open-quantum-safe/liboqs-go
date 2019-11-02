@@ -1,4 +1,4 @@
-liboqs-go version 0.1.2
+liboqs-go version 0.2.0
 =======================
 
 About
