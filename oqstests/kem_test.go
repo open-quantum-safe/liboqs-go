@@ -10,7 +10,6 @@ import (
 
 // testKem tests a specific KEM.
 func testKem(kemName string, t *testing.T) {
-	log.Println(kemName)
 	var client, server oqs.KeyEncapsulation
 	defer client.Clean()
 	defer server.Clean()
@@ -28,6 +27,7 @@ func testKem(kemName string, t *testing.T) {
 func TestKeyEncapsulation(t *testing.T) {
 	log.SetFlags(log.Ltime | log.Lmicroseconds)
 	for _, kemName := range oqs.GetEnabledKEMs() {
+		log.Println(kemName)
 		testKem(kemName, t)
 	}
 }

@@ -8,7 +8,6 @@ import (
 
 // testSig tests a specific signature.
 func testSig(sigName string, msg []byte, t *testing.T) {
-	log.Println(sigName)
 	var signer, verifier oqs.Signature
 	defer signer.Clean()
 	defer verifier.Clean()
@@ -27,6 +26,7 @@ func TestSignature(t *testing.T) {
 	log.SetFlags(log.Ltime | log.Lmicroseconds)
 	msg := []byte("This is our favourite message to sign")
 	for _, sigName := range oqs.GetEnabledSIGs() {
+		log.Println(sigName)
 		testSig(sigName, msg, t)
 	}
 }
