@@ -54,8 +54,7 @@ func IsKEMSupported(algName string) bool {
 	return false
 }
 
-// KEMName returns the KEM algorithm name from its corresponding numerical
-// ID.
+// KEMName returns the KEM algorithm name from its corresponding numerical ID.
 func KEMName(algID int) string {
 	if algID >= MaxNumberKEMs() {
 		panic(errors.New("algorithm ID out of range"))
@@ -100,8 +99,8 @@ type KeyEncapsulationDetails struct {
 	Version            string
 }
 
-// String converts the KEM algorithm details to a string representation.
-// Use this method to pretty-print the KEM algorithm details, e.g.
+// String converts the KEM algorithm details to a string representation. Use
+// this method to pretty-print the KEM algorithm details, e.g.
 // fmt.Println(client.Details())
 func (kemDetails KeyEncapsulationDetails) String() string {
 	return fmt.Sprintf("Name: %s\nVersion: %s\nClaimed NIST level: %d\n"+
@@ -120,9 +119,8 @@ type KeyEncapsulation struct {
 	algDetails KeyEncapsulationDetails
 }
 
-// String converts the KEM algorithm name to a string representation.
-// Use this method to pretty-print the KEM algorithm name, e.g.
-// fmt.Println(client)
+// String converts the KEM algorithm name to a string representation. Use this
+// method to pretty-print the KEM algorithm name, e.g. fmt.Println(client)
 func (kem KeyEncapsulation) String() string {
 	return fmt.Sprintf("Key encapsulation mechanism: %s",
 		kem.algDetails.Name)
