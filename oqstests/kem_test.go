@@ -3,13 +3,18 @@ package oqstests
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/open-quantum-safe/liboqs-go/oqs"
-	"log"
+	"sync"
 	"testing"
 )
 
+// Group goroutines and wait for all of them to finish.
+var wg sync.WaitGroup
+
 // testKEM tests a specific KEM.
 func testKEM(kemName string, t *testing.T) {
+	defer wg.Done()
 	var client, server oqs.KeyEncapsulation
 	defer client.Clean()
 	defer server.Clean()
@@ -19,17 +24,18 @@ func testKEM(kemName string, t *testing.T) {
 	ciphertext, sharedSecretServer := server.EncapSecret(clientPublicKey)
 	sharedSecretClient := client.DecapSecret(ciphertext)
 	if !bytes.Equal(sharedSecretClient, sharedSecretServer) {
-		t.Fatal("Shared secrets do not coincide")
+		t.Fatal(kemName + ": shared secrets do not coincide")
 	}
 }
 
 // TestKeyEncapsulation tests all enabled KEMs.
 func TestKeyEncapsulation(t *testing.T) {
-	log.SetFlags(log.Ltime | log.Lmicroseconds)
+	wg.Add(len(oqs.GetEnabledKEMs()))
 	for _, kemName := range oqs.GetEnabledKEMs() {
-		log.Println(kemName)
-		testKEM(kemName, t)
+		fmt.Println(kemName)
+		go testKEM(kemName, t)
 	}
+	wg.Wait()
 }
 
 // TestUnsupportedKeyEncapsulation tests that an unsupported KEM emits a panic.

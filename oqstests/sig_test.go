@@ -1,13 +1,14 @@
 package oqstests
 
 import (
+	"fmt"
 	"github.com/open-quantum-safe/liboqs-go/oqs"
-	"log"
 	"testing"
 )
 
 // testSig tests a specific signature.
 func testSig(sigName string, msg []byte, t *testing.T) {
+	defer wg.Done()
 	var signer, verifier oqs.Signature
 	defer signer.Clean()
 	defer verifier.Clean()
@@ -17,18 +18,19 @@ func testSig(sigName string, msg []byte, t *testing.T) {
 	signature := signer.Sign(msg)
 	isValid := verifier.Verify(msg, signature, pubKey)
 	if !isValid {
-		t.Fatal("Signature verification failed")
+		t.Fatal(sigName + ": signature verification failed")
 	}
 }
 
 // TestSignature tests all enabled signatures.
 func TestSignature(t *testing.T) {
-	log.SetFlags(log.Ltime | log.Lmicroseconds)
+	wg.Add(len(oqs.GetEnabledKEMs()))
 	msg := []byte("This is our favourite message to sign")
 	for _, sigName := range oqs.GetEnabledSigs() {
-		log.Println(sigName)
-		testSig(sigName, msg, t)
+		fmt.Println(sigName)
+		go testSig(sigName, msg, t)
 	}
+	wg.Wait()
 }
 
 // TestUnsupportedSignature tests that an unsupported signature emits a panic.
