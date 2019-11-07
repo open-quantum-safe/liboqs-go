@@ -1,3 +1,5 @@
+// key encapsulation TCP client Go example
+// run with "go run client_kem.go <host address> <port number>"
 package main
 
 import (
@@ -12,36 +14,41 @@ import (
 
 func main() {
 	if len(os.Args) != 3 {
-		fmt.Println("specify both address and port number")
-		return
+		fmt.Println("Usage: client_kem <address> <port number>")
+		os.Exit(-1)
 	}
 	address := os.Args[1]
 	port := os.Args[2]
 
 	fmt.Println("Launching KEM client on", address+":"+port)
-
-	// connect to this socket
 	conn, err := net.Dial("tcp", address+":"+port)
+	defer conn.Close()
 	if err != nil {
 		panic(errors.New("client cannot connect to " + address + ":" + port))
 	}
 
+	// construct the KEM client
 	client := oqs.KeyEncapsulation{}
 	defer client.Clean() // clean up even in case of panic
 
 	// receive the KEM name from the server
-	kemName, _ := bufio.NewReader(conn).ReadString('\n')
-	kemName = kemName[:len(kemName)-1]
+	kemName, err := bufio.NewReader(conn).ReadString('\n')
+	if err != nil {
+		panic(errors.New("client cannot receive the KEM name from the server"))
+	}
+	kemName = kemName[:len(kemName)-1] // remove the '\n'
+
+	// initialize the KEM client and generate the key pairs
 	client.Init(kemName, nil)
 	clientPublicKey := client.GenerateKeypair()
 
-	// send to socket
+	// send the client public key to the server
 	_, err = conn.Write([]byte(clientPublicKey))
 	if err != nil {
 		panic(errors.New("client cannot send the public key to the server"))
 	}
 
-	// listen for reply
+	// listen for reply from the server, e.g. for the encapsulated secret
 	ciphertext := make([]byte, client.Details().LengthCiphertext)
 	n, err := io.ReadFull(conn, ciphertext)
 	if err != nil {
@@ -57,6 +64,4 @@ func main() {
 	fmt.Println(client.Details())
 	fmt.Printf("\nClient shared secret:\n% X ... % X\n",
 		sharedSecretClient[0:8], sharedSecretClient[len(sharedSecretClient)-8:])
-
-	conn.Close()
 }
