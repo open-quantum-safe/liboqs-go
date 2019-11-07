@@ -7,9 +7,33 @@ import (
 	"fmt"
 	"github.com/open-quantum-safe/liboqs-go/oqs"
 	"io"
+	"log"
 	"net"
 	"os"
+	"sync"
 )
+
+// thread-safe counter
+type Counter struct {
+	mu  sync.Mutex
+	val uint64
+}
+
+func (c *Counter) Add() {
+	c.mu.Lock()
+	c.val++
+	c.mu.Unlock()
+}
+
+func (c *Counter) Val() uint64 {
+	c.mu.Lock()
+	val := c.val
+	c.mu.Unlock()
+	return val
+}
+
+// thread-safe connection counter
+var counter Counter
 
 func main() {
 	if len(os.Args) == 1 {
@@ -22,11 +46,12 @@ func main() {
 		kemName = os.Args[2]
 	}
 
+	log.SetOutput(os.Stdout) // log to stdout instead the default stderr
 	fmt.Println("Launching KEM", kemName, "server on port", port)
 	{
 		kem := oqs.KeyEncapsulation{}
 		kem.Init(kemName, nil)
-		fmt.Println(kem.Details())
+		fmt.Printf("%v\n\n", kem.Details())
 		kem.Clean()
 	}
 
@@ -81,6 +106,10 @@ func handleConnection(conn net.Conn, kemName string) {
 			Details().LengthCiphertext) + " bytes, but instead wrote " + string(n)))
 	}
 
-	fmt.Printf("\nServer shared secret:\n% X ... % X\n",
-		sharedSecretServer[0:8], sharedSecretServer[len(sharedSecretServer)-8:])
+	log.Printf("\nConnection #%d - server shared secret:\n% X ... % X\n\n",
+		counter.Val(), sharedSecretServer[0:8],
+		sharedSecretServer[len(sharedSecretServer)-8:])
+
+	// increment the connection number
+	counter.Add()
 }
