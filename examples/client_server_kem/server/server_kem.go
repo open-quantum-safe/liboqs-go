@@ -13,23 +13,23 @@ import (
 	"sync"
 )
 
-// thread-safe counter
+// Counter is a thread-safe counter
 type Counter struct {
 	mu  sync.Mutex
-	val uint64
+	cnt uint64
 }
 
-func (c *Counter) Add() {
+func (c *Counter) add() {
 	c.mu.Lock()
-	c.val++
+	c.cnt++
 	c.mu.Unlock()
 }
 
-func (c *Counter) Val() uint64 {
+func (c *Counter) val() uint64 {
 	c.mu.Lock()
-	val := c.val
+	cnt := c.cnt
 	c.mu.Unlock()
-	return val
+	return cnt
 }
 
 // thread-safe connection counter
@@ -107,9 +107,9 @@ func handleConnection(conn net.Conn, kemName string) {
 	}
 
 	log.Printf("\nConnection #%d - server shared secret:\n% X ... % X\n\n",
-		counter.Val(), sharedSecretServer[0:8],
+		counter.val(), sharedSecretServer[0:8],
 		sharedSecretServer[len(sharedSecretServer)-8:])
 
 	// increment the connection number
-	counter.Add()
+	counter.add()
 }
