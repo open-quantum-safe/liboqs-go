@@ -13,20 +13,20 @@ import (
 	"sync"
 )
 
-// Counter is a thread-safe counter
+// Counter is a thread-safe counter.
 type Counter struct {
 	mu  sync.Mutex
 	cnt uint64
 }
 
-// Add increments the counter
+// Add increments the counter.
 func (c *Counter) Add() {
 	c.mu.Lock()
 	c.cnt++
 	c.mu.Unlock()
 }
 
-// Val retrieves the counter's value
+// Val retrieves the counter's value.
 func (c *Counter) Val() uint64 {
 	c.mu.Lock()
 	cnt := c.cnt
@@ -34,7 +34,7 @@ func (c *Counter) Val() uint64 {
 	return cnt
 }
 
-// counter is a thread-safe connection counter
+// counter is a thread-safe connection counter.
 var counter Counter
 
 func main() {
