@@ -29,7 +29,7 @@ liboqs-go is a Go package. The project contains the following files and director
 
  - **`oqs/oqs.go`: main package file for the wrapper**
  - `.config/liboqs.pc`: `pkg-config` configuration file needed by `cgo`
- - `examples`: usage examples, including a client/server KEM
+ - `examples`: usage examples, including a client/server KEM over TCP/IP
  - `oqstests`: unit tests
 
 Usage
