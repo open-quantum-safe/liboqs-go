@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-// wg groups goroutines and blocks the caller until all of them finish.
+// wg groups goroutines and blocks the caller until all goroutines finish.
 var wg sync.WaitGroup
 
 // testKEM tests a specific KEM.
