@@ -19,14 +19,14 @@ type Counter struct {
 	cnt uint64
 }
 
-// add increments the counter
+// Add increments the counter
 func (c *Counter) Add() {
 	c.mu.Lock()
 	c.cnt++
 	c.mu.Unlock()
 }
 
-// val retrieves the counter's value
+// Val retrieves the counter's value
 func (c *Counter) Val() uint64 {
 	c.mu.Lock()
 	cnt := c.cnt
