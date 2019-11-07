@@ -46,6 +46,8 @@ func main() {
 }
 
 func handleConnection(conn net.Conn, kemName string) {
+	defer conn.Close() // clean up even in case of panic
+
 	// send KEM name to client first
 	_, err := fmt.Fprintln(conn, kemName)
 	if err != nil {
@@ -78,7 +80,6 @@ func handleConnection(conn net.Conn, kemName string) {
 		panic(errors.New("server expected to write " + string(server.
 			Details().LengthCiphertext) + " bytes, but instead wrote " + string(n)))
 	}
-	conn.Close()
 
 	fmt.Printf("\nServer shared secret:\n% X ... % X\n",
 		sharedSecretServer[0:8], sharedSecretServer[len(sharedSecretServer)-8:])

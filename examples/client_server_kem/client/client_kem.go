@@ -22,10 +22,10 @@ func main() {
 
 	fmt.Println("Launching KEM client on", address+":"+port)
 	conn, err := net.Dial("tcp", address+":"+port)
-	defer conn.Close()
 	if err != nil {
 		panic(errors.New("client cannot connect to " + address + ":" + port))
 	}
+	defer conn.Close() // clean up even in case of panic
 
 	// construct the KEM client
 	client := oqs.KeyEncapsulation{}
@@ -43,7 +43,7 @@ func main() {
 	clientPublicKey := client.GenerateKeypair()
 
 	// send the client public key to the server
-	_, err = conn.Write([]byte(clientPublicKey))
+	_, err = conn.Write(clientPublicKey)
 	if err != nil {
 		panic(errors.New("client cannot send the public key to the server"))
 	}
