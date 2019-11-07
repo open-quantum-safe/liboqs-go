@@ -19,20 +19,22 @@ type Counter struct {
 	cnt uint64
 }
 
-func (c *Counter) add() {
+// add increments the counter
+func (c *Counter) Add() {
 	c.mu.Lock()
 	c.cnt++
 	c.mu.Unlock()
 }
 
-func (c *Counter) val() uint64 {
+// val retrieves the counter's value
+func (c *Counter) Val() uint64 {
 	c.mu.Lock()
 	cnt := c.cnt
 	c.mu.Unlock()
 	return cnt
 }
 
-// thread-safe connection counter
+// counter is a thread-safe connection counter
 var counter Counter
 
 func main() {
@@ -107,9 +109,9 @@ func handleConnection(conn net.Conn, kemName string) {
 	}
 
 	log.Printf("\nConnection #%d - server shared secret:\n% X ... % X\n\n",
-		counter.val(), sharedSecretServer[0:8],
+		counter.Val(), sharedSecretServer[0:8],
 		sharedSecretServer[len(sharedSecretServer)-8:])
 
 	// increment the connection number
-	counter.add()
+	counter.Add()
 }
