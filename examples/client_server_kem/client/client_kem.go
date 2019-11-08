@@ -1,5 +1,4 @@
 // key encapsulation TCP client Go example
-// run with "go run client_kem.go <host address> <port number>"
 package main
 
 import (
