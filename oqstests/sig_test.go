@@ -3,12 +3,16 @@ package oqstests
 import (
 	"fmt"
 	"github.com/open-quantum-safe/liboqs-go/oqs"
+	"sync"
 	"testing"
 )
 
+// wgSig groups goroutines and blocks the caller until all goroutines finish.
+var wgSig sync.WaitGroup
+
 // testSig tests a specific signature.
 func testSig(sigName string, msg []byte, t *testing.T) {
-	defer wg.Done()
+	defer wgSig.Done()
 	var signer, verifier oqs.Signature
 	defer signer.Clean()
 	defer verifier.Clean()
@@ -24,13 +28,13 @@ func testSig(sigName string, msg []byte, t *testing.T) {
 
 // TestSignature tests all enabled signatures.
 func TestSignature(t *testing.T) {
-	wg.Add(len(oqs.EnabledKEMs()))
+	wgSig.Add(len(oqs.EnabledKEMs()))
 	msg := []byte("This is our favourite message to sign")
 	for _, sigName := range oqs.EnabledSigs() {
 		fmt.Println(sigName)
 		go testSig(sigName, msg, t)
 	}
-	wg.Wait()
+	wgSig.Wait()
 }
 
 // TestUnsupportedSignature tests that an unsupported signature emits a panic.

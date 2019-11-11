@@ -9,12 +9,12 @@ import (
 	"testing"
 )
 
-// wg groups goroutines and blocks the caller until all goroutines finish.
-var wg sync.WaitGroup
+// wgKEM groups goroutines and blocks the caller until all goroutines finish.
+var wgKEM sync.WaitGroup
 
 // testKEM tests a specific KEM.
 func testKEM(kemName string, t *testing.T) {
-	defer wg.Done()
+	defer wgKEM.Done()
 	var client, server oqs.KeyEncapsulation
 	defer client.Clean()
 	defer server.Clean()
@@ -30,12 +30,12 @@ func testKEM(kemName string, t *testing.T) {
 
 // TestKeyEncapsulation tests all enabled KEMs.
 func TestKeyEncapsulation(t *testing.T) {
-	wg.Add(len(oqs.EnabledKEMs()))
+	wgKEM.Add(len(oqs.EnabledKEMs()))
 	for _, kemName := range oqs.EnabledKEMs() {
 		fmt.Println(kemName)
 		go testKEM(kemName, t)
 	}
-	wg.Wait()
+	wgKEM.Wait()
 }
 
 // TestUnsupportedKeyEncapsulation tests that an unsupported KEM emits a panic.
