@@ -1,6 +1,6 @@
 package rand
 
-// C callbacks, DO NOT MODIFY
+// C callbacks, DO NOT CHANGE
 
 /*
 #include <stdint.h>
