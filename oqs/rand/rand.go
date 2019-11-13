@@ -6,7 +6,7 @@ package rand // import "github.com/open-quantum-safe/liboqs-go/oqs/rand"
 /*
 #cgo pkg-config: liboqs
 #include <oqs/oqs.h>
-typedef void(*algorithm_ptr_fn)(uint8_t*, size_t);
+typedef void (*algorithm_ptr)(uint8_t*, size_t);
 void algorithmPtr_cgo(uint8_t*, size_t);
 */
 import "C"
@@ -98,7 +98,7 @@ func RandomBytesNistKatInit(entropyInput [48]byte,
 // i.e. func([]byte, int).
 func RandomBytesCustomAlgorithm(fun func([]byte, int)) {
 	algorithmPtrCallback = fun
-	C.OQS_randombytes_custom_algorithm((C.algorithm_ptr_fn)(unsafe.Pointer(C.
+	C.OQS_randombytes_custom_algorithm((C.algorithm_ptr)(unsafe.Pointer(C.
 		algorithmPtr_cgo)))
 }
 
