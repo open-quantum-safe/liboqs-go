@@ -76,7 +76,6 @@ func RandomBytesSwitchAlgorithm(algName string) {
 // personalization string, which, if non-empty, must be at least 48 bytes long.
 func RandomBytesNistKatInit(entropyInput [48]byte,
 	personalizationString []byte) {
-
 	lenStr := len(personalizationString)
 	if lenStr > 0 {
 		if lenStr < 48 {
