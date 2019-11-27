@@ -18,7 +18,7 @@ func testSig(sigName string, msg []byte, t *testing.T) {
 	defer verifier.Clean()
 	signer.Init(sigName, nil)
 	verifier.Init(sigName, nil)
-	pubKey := signer.GenerateKeypair()
+	pubKey := signer.GenerateKeyPair()
 	signature := signer.Sign(msg)
 	isValid := verifier.Verify(msg, signature, pubKey)
 	if !isValid {

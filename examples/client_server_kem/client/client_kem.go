@@ -39,7 +39,7 @@ func main() {
 
 	// initialize the KEM client and generate the key pairs
 	client.Init(kemName, nil)
-	clientPublicKey := client.GenerateKeypair()
+	clientPublicKey := client.GenerateKeyPair()
 
 	// send the client public key to the server
 	_, err = conn.Write(clientPublicKey)

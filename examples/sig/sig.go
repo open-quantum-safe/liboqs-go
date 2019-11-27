@@ -22,7 +22,7 @@ func main() {
 	fmt.Println(signer.Details())
 
 	msg := []byte("This is the message to sign")
-	pubKey := signer.GenerateKeypair()
+	pubKey := signer.GenerateKeyPair()
 	fmt.Printf("\nSigner public key:\n% X ... % X\n", pubKey[0:8],
 		pubKey[len(pubKey)-8:])
 

@@ -19,7 +19,7 @@ func main() {
 	defer client.Clean() // clean up even in case of panic
 
 	client.Init(kemName, nil)
-	clientPublicKey := client.GenerateKeypair()
+	clientPublicKey := client.GenerateKeyPair()
 	fmt.Println("\nKEM details:")
 	fmt.Println(client.Details())
 

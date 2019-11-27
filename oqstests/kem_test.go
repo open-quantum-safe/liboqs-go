@@ -20,7 +20,7 @@ func testKEM(kemName string, t *testing.T) {
 	defer server.Clean()
 	client.Init(kemName, nil)
 	server.Init(kemName, nil)
-	clientPublicKey := client.GenerateKeypair()
+	clientPublicKey := client.GenerateKeyPair()
 	ciphertext, sharedSecretServer := server.EncapSecret(clientPublicKey)
 	sharedSecretClient := client.DecapSecret(ciphertext)
 	if !bytes.Equal(sharedSecretClient, sharedSecretServer) {

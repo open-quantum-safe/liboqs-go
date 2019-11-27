@@ -156,11 +156,11 @@ func (kem *KeyEncapsulation) Details() KeyEncapsulationDetails {
 	return kem.algDetails
 }
 
-// GenerateKeypair generates a pair of secret key/public key and returns the
+// GenerateKeyPair generates a pair of secret key/public key and returns the
 // public key. The secret key is stored inside the kem receiver. The secret key
 // is not directly accessible, unless one exports it with
 // KeyEncapsulation.ExportSecretKey method.
-func (kem *KeyEncapsulation) GenerateKeypair() []byte {
+func (kem *KeyEncapsulation) GenerateKeyPair() []byte {
 	publicKey := make([]byte, kem.algDetails.LengthPublicKey)
 	kem.secretKey = make([]byte, kem.algDetails.LengthSecretKey)
 
@@ -208,7 +208,7 @@ func (kem *KeyEncapsulation) DecapSecret(ciphertext []byte) []byte {
 
 	if len(kem.secretKey) != kem.algDetails.LengthSecretKey {
 		panic(errors.New("incorrect secret key length, make sure you " +
-			"specify one in Init() or run GenerateKeypair()"))
+			"specify one in Init() or run GenerateKeyPair()"))
 
 	}
 
@@ -369,11 +369,11 @@ func (sig *Signature) Details() SignatureDetails {
 	return sig.algDetails
 }
 
-// GenerateKeypair generates a pair of secret key/public key and returns the
+// GenerateKeyPair generates a pair of secret key/public key and returns the
 // public key. The secret key is stored inside the sig receiver. The secret key
 // is not directly accessible, unless one exports it with
 // Signature.ExportSecretKey method.
-func (sig *Signature) GenerateKeypair() []byte {
+func (sig *Signature) GenerateKeyPair() []byte {
 	publicKey := make([]byte, sig.algDetails.LengthPublicKey)
 	sig.secretKey = make([]byte, sig.algDetails.LengthSecretKey)
 
@@ -395,7 +395,7 @@ func (sig *Signature) ExportSecretKey() []byte {
 func (sig *Signature) Sign(message []byte) []byte {
 	if len(sig.secretKey) != sig.algDetails.LengthSecretKey {
 		panic(errors.New("incorrect secret key length, make sure you " +
-			"specify one in Init() or run GenerateKeypair()"))
+			"specify one in Init() or run GenerateKeyPair()"))
 	}
 
 	signature := make([]byte, sig.algDetails.MaxLengthSignature)
