@@ -101,7 +101,7 @@ type KeyEncapsulationDetails struct {
 
 // String converts the KEM algorithm details to a string representation. Use
 // this method to pretty-print the KEM algorithm details, e.g.
-// fmt.Println(client.Details())
+// fmt.Println(client.Details()).
 func (kemDetails KeyEncapsulationDetails) String() string {
 	return fmt.Sprintf("Name: %s\nVersion: %s\nClaimed NIST level: %d\n"+
 		"Is IND_CCA: %v\nLength public key (bytes): %d\nLength secret key ("+
@@ -120,7 +120,7 @@ type KeyEncapsulation struct {
 }
 
 // String converts the KEM algorithm name to a string representation. Use this
-// method to pretty-print the KEM algorithm name, e.g. fmt.Println(client)
+// method to pretty-print the KEM algorithm name, e.g. fmt.Println(client).
 func (kem KeyEncapsulation) String() string {
 	return fmt.Sprintf("Key encapsulation mechanism: %s",
 		kem.algDetails.Name)
@@ -313,7 +313,7 @@ type SignatureDetails struct {
 
 // String converts the signature algorithm details to a string representation.
 // Use this method to pretty-print the signature algorithm details, e.g.
-// fmt.Println(signer.Details())
+// fmt.Println(signer.Details()).
 func (sigDetails SignatureDetails) String() string {
 	return fmt.Sprintf("Name: %s\nVersion: %s\nClaimed NIST level: %d\n"+
 		"Is EUF_CMA: %v\nLength public key (bytes): %d\nLength secret key ("+
@@ -332,7 +332,7 @@ type Signature struct {
 
 // String converts the signature algorithm name to a string representation.
 // Use this method to pretty-print the signature algorithm name, e.g.
-// fmt.Println(signer)
+// fmt.Println(signer).
 func (sig Signature) String() string {
 	return fmt.Sprintf("Signature mechanism: %s",
 		sig.algDetails.Name)
