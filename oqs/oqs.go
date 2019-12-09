@@ -135,9 +135,8 @@ func (kem *KeyEncapsulation) Init(algName string, secretKey []byte) error {
 		// perhaps it's supported
 		if IsKEMSupported(algName) {
 			return errors.New(`"` + algName + `" KEM is not enabled by OQS`)
-		} else {
-			return errors.New(`"` + algName + `" KEM is not supported by OQS`)
 		}
+		return errors.New(`"` + algName + `" KEM is not supported by OQS`)
 	}
 	kem.kem = C.OQS_KEM_new(C.CString(algName))
 	kem.secretKey = secretKey
@@ -349,10 +348,10 @@ func (sig *Signature) Init(algName string, secretKey []byte) error {
 		if IsSigSupported(algName) {
 			return errors.New(`"` + algName +
 				`" signature mechanism is not enabled by OQS`)
-		} else {
-			return errors.New(`"` + algName +
-				`" signature mechanism is not supported by OQS`)
 		}
+		return errors.New(`"` + algName +
+			`" signature mechanism is not supported by OQS`)
+
 	}
 	sig.sig = C.OQS_SIG_new(C.CString(algName))
 	sig.secretKey = secretKey
