@@ -18,8 +18,9 @@ func testKEM(kemName string, t *testing.T) {
 	var client, server oqs.KeyEncapsulation
 	defer client.Clean()
 	defer server.Clean()
-	client.Init(kemName, nil)
-	server.Init(kemName, nil)
+	// ignore potential errors everywhere
+	_ = client.Init(kemName, nil)
+	_ = server.Init(kemName, nil)
 	clientPublicKey, _ := client.GenerateKeyPair()
 	ciphertext, sharedSecretServer, _ := server.EncapSecret(clientPublicKey)
 	sharedSecretClient, _ := client.DecapSecret(ciphertext)

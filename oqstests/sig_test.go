@@ -16,8 +16,9 @@ func testSig(sigName string, msg []byte, t *testing.T) {
 	var signer, verifier oqs.Signature
 	defer signer.Clean()
 	defer verifier.Clean()
-	signer.Init(sigName, nil)
-	verifier.Init(sigName, nil)
+	// ignore potential errors everywhere
+	_ = signer.Init(sigName, nil)
+	_ = verifier.Init(sigName, nil)
 	pubKey, _ := signer.GenerateKeyPair()
 	signature, _ := signer.Sign(msg)
 	isValid, _ := verifier.Verify(msg, signature, pubKey)
