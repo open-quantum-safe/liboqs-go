@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/open-quantum-safe/liboqs-go/oqs"
 	"io"
+	"log"
 	"net"
 	"os"
 )
@@ -22,7 +23,8 @@ func main() {
 	fmt.Println("Launching KEM client on", address+":"+port)
 	conn, err := net.Dial("tcp", address+":"+port)
 	if err != nil {
-		panic(errors.New("client cannot connect to " + address + ":" + port))
+		log.Fatal(errors.New("client cannot connect " +
+			"to " + address + ":" + port))
 	}
 	defer conn.Close() // clean up even in case of panic
 
@@ -33,32 +35,43 @@ func main() {
 	// receive the KEM name from the server
 	kemName, err := bufio.NewReader(conn).ReadString('\n')
 	if err != nil {
-		panic(errors.New("client cannot receive the KEM name from the server"))
+		log.Fatal(errors.New("client cannot receive the " +
+			"KEM name from the server"))
 	}
 	kemName = kemName[:len(kemName)-1] // remove the '\n'
 
 	// initialize the KEM client and generate the key pairs
-	client.Init(kemName, nil)
-	clientPublicKey := client.GenerateKeyPair()
+	if err := client.Init(kemName, nil); err != nil {
+		log.Fatal(err)
+	}
+	clientPublicKey, err := client.GenerateKeyPair()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// send the client public key to the server
 	_, err = conn.Write(clientPublicKey)
 	if err != nil {
-		panic(errors.New("client cannot send the public key to the server"))
+		log.Fatal(errors.New("client cannot send the public key to the " +
+			"server"))
 	}
 
 	// listen for reply from the server, e.g. for the encapsulated secret
 	ciphertext := make([]byte, client.Details().LengthCiphertext)
 	n, err := io.ReadFull(conn, ciphertext)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	} else if n != client.Details().LengthCiphertext {
-		panic(errors.New("client expected to read " + string(client.Details().
-			LengthCiphertext) + " bytes, but instead read " + string(n)))
+		log.Fatal(errors.New("client expected to read " +
+			string(client.Details().LengthCiphertext) + " bytes, but instead " +
+			"read " + string(n)))
 	}
 
 	// decapsulate the secret and extract the shared secret
-	sharedSecretClient := client.DecapSecret(ciphertext)
+	sharedSecretClient, err := client.DecapSecret(ciphertext)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	fmt.Println(client.Details())
 	fmt.Printf("\nClient shared secret:\n% X ... % X\n",

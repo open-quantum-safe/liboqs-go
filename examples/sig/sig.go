@@ -4,6 +4,7 @@ package main
 import (
 	"fmt"
 	"github.com/open-quantum-safe/liboqs-go/oqs"
+	"log"
 )
 
 func main() {
@@ -17,24 +18,36 @@ func main() {
 	signer := oqs.Signature{}
 	defer signer.Clean() // clean up even in case of panic
 
-	signer.Init(sigName, nil)
+	if err := signer.Init(sigName, nil); err != nil {
+		log.Fatal(err)
+	}
+
 	fmt.Println("\nSignature details:")
 	fmt.Println(signer.Details())
 
 	msg := []byte("This is the message to sign")
-	pubKey := signer.GenerateKeyPair()
+	pubKey, err := signer.GenerateKeyPair()
+	if err != nil {
+		log.Fatal(err)
+	}
 	fmt.Printf("\nSigner public key:\n% X ... % X\n", pubKey[0:8],
 		pubKey[len(pubKey)-8:])
 
-	signature := signer.Sign(msg)
+	signature, _ := signer.Sign(msg)
 	fmt.Printf("\nSignature:\n% X ... % X\n", signature[0:8],
 		signature[len(signature)-8:])
 
 	verifier := oqs.Signature{}
 	defer verifier.Clean() // clean up even in case of panic
 
-	verifier.Init(sigName, nil)
-	isValid := verifier.Verify(msg, signature, pubKey)
+	if err := verifier.Init(sigName, nil); err != nil {
+		log.Fatal(err)
+	}
+
+	isValid, err := verifier.Verify(msg, signature, pubKey)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	fmt.Println("\nValid signature? ", isValid)
 }

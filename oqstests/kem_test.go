@@ -20,9 +20,9 @@ func testKEM(kemName string, t *testing.T) {
 	defer server.Clean()
 	client.Init(kemName, nil)
 	server.Init(kemName, nil)
-	clientPublicKey := client.GenerateKeyPair()
-	ciphertext, sharedSecretServer := server.EncapSecret(clientPublicKey)
-	sharedSecretClient := client.DecapSecret(ciphertext)
+	clientPublicKey, _ := client.GenerateKeyPair()
+	ciphertext, sharedSecretServer, _ := server.EncapSecret(clientPublicKey)
+	sharedSecretClient, _ := client.DecapSecret(ciphertext)
 	if !bytes.Equal(sharedSecretClient, sharedSecretServer) {
 		t.Fatal(kemName + ": shared secrets do not coincide")
 	}
@@ -38,14 +38,11 @@ func TestKeyEncapsulation(t *testing.T) {
 	wgKEM.Wait()
 }
 
-// TestUnsupportedKeyEncapsulation tests that an unsupported KEM emits a panic.
+// TestUnsupportedKeyEncapsulation tests that an unsupported KEM emits an error.
 func TestUnsupportedKeyEncapsulation(t *testing.T) {
-	defer func() {
-		if r := recover(); r == nil {
-			t.Fatal("Unsupported KEM should have emitted a panic")
-		}
-	}()
 	client := oqs.KeyEncapsulation{}
 	defer client.Clean()
-	client.Init("unsupported_kem", nil)
+	if err := client.Init("unsupported_kem", nil); err == nil {
+		t.Fatal("Unsupported KEM should have emitted an error")
+	}
 }

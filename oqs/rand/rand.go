@@ -65,30 +65,32 @@ func RandomBytesInPlace(randomArray []byte, bytesToRead int) {
 // RandomBytesSwitchAlgorithm switches the core OQS_randombytes to use the
 // specified algorithm. Possible values are "system", "NIST-KAT", "OpenSSL".
 // See <oqs/rand.h> liboqs header for more details.
-func RandomBytesSwitchAlgorithm(algName string) {
+func RandomBytesSwitchAlgorithm(algName string) error {
 	if C.OQS_randombytes_switch_algorithm(C.CString(algName)) != C.OQS_SUCCESS {
-		panic(errors.New("can not switch algorithm"))
+		return errors.New("can not switch algorithm")
 	}
+	return nil
 }
 
 // RandomBytesNistKatInit initializes the NIST DRBG with the entropyInput seed,
 // which must be 48 exactly bytes long. The personalizationString is an optional
 // personalization string, which, if non-empty, must be at least 48 bytes long.
 func RandomBytesNistKatInit(entropyInput [48]byte,
-	personalizationString []byte) {
+	personalizationString []byte) error {
 	lenStr := len(personalizationString)
 	if lenStr > 0 {
 		if lenStr < 48 {
-			panic(errors.New("the personalization string must be either " +
-				"empty or at least 48 bytes long"))
+			return errors.New("the personalization string must be either " +
+				"empty or at least 48 bytes long")
 		}
 
 		C.OQS_randombytes_nist_kat_init((*C.uint8_t)(&entropyInput[0]),
 			(*C.uint8_t)(&personalizationString[0]), 256)
-		return
+		return nil
 	}
 	C.OQS_randombytes_nist_kat_init((*C.uint8_t)(&entropyInput[0]),
 		(*C.uint8_t)(nil), 256)
+	return nil
 }
 
 // RandomBytesCustomAlgorithm switches RandomBytes to use the given function.
