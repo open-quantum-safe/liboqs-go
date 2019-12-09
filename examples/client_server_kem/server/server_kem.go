@@ -38,8 +38,7 @@ var counter Counter
 
 func main() {
 	if len(os.Args) == 1 {
-		fmt.Println("Usage: server_kem <port number> [KEM name (optional)]")
-		os.Exit(-1)
+		log.Fatal("Usage: server_kem <port number> [KEM name (optional)]")
 	}
 	port := os.Args[1]
 	kemName := "DEFAULT"
@@ -51,20 +50,22 @@ func main() {
 	fmt.Println("Launching KEM", kemName, "server on port", port)
 	{
 		kem := oqs.KeyEncapsulation{}
-		kem.Init(kemName, nil)
+		if err := kem.Init(kemName, nil); err != nil {
+			log.Fatal(err)
+		}
 		fmt.Printf("%v\n\n", kem.Details())
 		kem.Clean()
 	}
 
 	ln, err := net.Listen("tcp", ":"+port)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	// listen indefinitely (until explicitly stopped, e.g. with CTRL+C in UNIX)
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
 		// handle connections concurrently
 		go handleConnection(conn, kemName)
@@ -77,33 +78,39 @@ func handleConnection(conn net.Conn, kemName string) {
 	// send KEM name to client first
 	_, err := fmt.Fprintln(conn, kemName)
 	if err != nil {
-		panic(errors.New("server cannot send the KEM name to the client"))
+		log.Fatal(errors.New("server cannot send the KEM name to the client"))
 	}
 
 	// construct and initialize the KEM server
 	server := oqs.KeyEncapsulation{}
 	defer server.Clean() // clean up even in case of panic
-	server.Init(kemName, nil)
+	if err := server.Init(kemName, nil); err != nil {
+		log.Fatal(err)
+	}
 
 	// read the public key sent by the client
 	clientPublicKey := make([]byte, server.Details().LengthPublicKey)
 	n, err := io.ReadFull(conn, clientPublicKey)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	} else if n != server.Details().LengthPublicKey {
-		panic(errors.New("server expected to read " + string(server.Details().
-			LengthPublicKey) + " bytes, but instead read " + string(n)))
+		log.Fatal(errors.New("server expected to read " +
+			string(server.Details().LengthPublicKey) + " bytes, but instead " +
+			"read " + string(n)))
 	}
 
 	// encapsulate the secret
-	ciphertext, sharedSecretServer := server.EncapSecret(clientPublicKey)
+	ciphertext, sharedSecretServer, err := server.EncapSecret(clientPublicKey)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// then send ciphertext to client and close the connection
 	n, err = conn.Write(ciphertext)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	} else if n != server.Details().LengthCiphertext {
-		panic(errors.New("server expected to write " + string(server.
+		log.Fatal(errors.New("server expected to write " + string(server.
 			Details().LengthCiphertext) + " bytes, but instead wrote " + string(n)))
 	}
 

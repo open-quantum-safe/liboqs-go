@@ -16,11 +16,12 @@ func testSig(sigName string, msg []byte, t *testing.T) {
 	var signer, verifier oqs.Signature
 	defer signer.Clean()
 	defer verifier.Clean()
-	signer.Init(sigName, nil)
-	verifier.Init(sigName, nil)
-	pubKey := signer.GenerateKeyPair()
-	signature := signer.Sign(msg)
-	isValid := verifier.Verify(msg, signature, pubKey)
+	// ignore potential errors everywhere
+	_ = signer.Init(sigName, nil)
+	_ = verifier.Init(sigName, nil)
+	pubKey, _ := signer.GenerateKeyPair()
+	signature, _ := signer.Sign(msg)
+	isValid, _ := verifier.Verify(msg, signature, pubKey)
 	if !isValid {
 		t.Fatal(sigName + ": signature verification failed")
 	}
@@ -37,14 +38,11 @@ func TestSignature(t *testing.T) {
 	wgSig.Wait()
 }
 
-// TestUnsupportedSignature tests that an unsupported signature emits a panic.
+// TestUnsupportedSignature tests that an unsupported signature emits an error.
 func TestUnsupportedSignature(t *testing.T) {
-	defer func() {
-		if r := recover(); r == nil {
-			t.Fatal("Unsupported signature should have emitted a panic")
-		}
-	}()
 	signer := oqs.Signature{}
 	defer signer.Clean()
-	signer.Init("unsupported_sig", nil)
+	if err := signer.Init("unsupported_sig", nil); err == nil {
+		t.Fatal("Unsupported signature should have emitted an error")
+	}
 }

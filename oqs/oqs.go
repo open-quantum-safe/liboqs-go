@@ -55,11 +55,11 @@ func IsKEMSupported(algName string) bool {
 }
 
 // KEMName returns the KEM algorithm name from its corresponding numerical ID.
-func KEMName(algID int) string {
+func KEMName(algID int) (string, error) {
 	if algID >= MaxNumberKEMs() {
-		panic(errors.New("algorithm ID out of range"))
+		return "", errors.New("algorithm ID out of range")
 	}
-	return C.GoString(C.OQS_KEM_alg_identifier(C.size_t(algID)))
+	return C.GoString(C.OQS_KEM_alg_identifier(C.size_t(algID))), nil
 }
 
 // SupportedKEMs returns the list of supported KEM algorithms.
@@ -75,7 +75,7 @@ func EnabledKEMs() []string {
 // Initializes the lists enabledKEMs and supportedKEMs.
 func init() {
 	for i := 0; i < MaxNumberKEMs(); i++ {
-		KEMName := KEMName(i)
+		KEMName, _ := KEMName(i)
 		supportedKEMs = append(supportedKEMs, KEMName)
 		if IsKEMEnabled(KEMName) {
 			enabledKEMs = append(enabledKEMs, KEMName)
@@ -130,13 +130,13 @@ func (kem KeyEncapsulation) String() string {
 // key. If the secret key is null, then the user must invoke the
 // KeyEncapsulation.GenerateKeyPair method to generate the pair of
 // secret key/public key.
-func (kem *KeyEncapsulation) Init(algName string, secretKey []byte) {
+func (kem *KeyEncapsulation) Init(algName string, secretKey []byte) error {
 	if !IsKEMEnabled(algName) {
 		// perhaps it's supported
 		if IsKEMSupported(algName) {
-			panic(errors.New(`"` + algName + `" KEM is not enabled by OQS`))
+			return errors.New(`"` + algName + `" KEM is not enabled by OQS`)
 		} else {
-			panic(errors.New(`"` + algName + `" KEM is not supported by OQS`))
+			return errors.New(`"` + algName + `" KEM is not supported by OQS`)
 		}
 	}
 	kem.kem = C.OQS_KEM_new(C.CString(algName))
@@ -149,6 +149,7 @@ func (kem *KeyEncapsulation) Init(algName string, secretKey []byte) {
 	kem.algDetails.LengthSecretKey = int(kem.kem.length_secret_key)
 	kem.algDetails.LengthCiphertext = int(kem.kem.length_ciphertext)
 	kem.algDetails.LengthSharedSecret = int(kem.kem.length_shared_secret)
+	return nil
 }
 
 // Details returns the KEM algorithm details.
@@ -160,17 +161,17 @@ func (kem *KeyEncapsulation) Details() KeyEncapsulationDetails {
 // public key. The secret key is stored inside the kem receiver. The secret key
 // is not directly accessible, unless one exports it with
 // KeyEncapsulation.ExportSecretKey method.
-func (kem *KeyEncapsulation) GenerateKeyPair() []byte {
+func (kem *KeyEncapsulation) GenerateKeyPair() ([]byte, error) {
 	publicKey := make([]byte, kem.algDetails.LengthPublicKey)
 	kem.secretKey = make([]byte, kem.algDetails.LengthSecretKey)
 
 	rv := C.OQS_KEM_keypair(kem.kem, (*C.uint8_t)(&publicKey[0]),
 		(*C.uint8_t)(&kem.secretKey[0]))
 	if rv != C.OQS_SUCCESS {
-		panic(errors.New("can not generate keypair"))
+		return nil, errors.New("can not generate keypair")
 	}
 
-	return publicKey
+	return publicKey, nil
 }
 
 // ExportSecretKey exports the corresponding secret key from the kem receiver.
@@ -181,9 +182,9 @@ func (kem *KeyEncapsulation) ExportSecretKey() []byte {
 // EncapSecret encapsulates a secret using a public key and returns the
 // corresponding ciphertext and shared secret.
 func (kem *KeyEncapsulation) EncapSecret(publicKey []byte) (ciphertext,
-	sharedSecret []byte) {
+	sharedSecret []byte, err error) {
 	if len(publicKey) != kem.algDetails.LengthPublicKey {
-		panic(errors.New("incorrect public key length"))
+		return nil, nil, errors.New("incorrect public key length")
 	}
 
 	ciphertext = make([]byte, kem.algDetails.LengthCiphertext)
@@ -193,22 +194,22 @@ func (kem *KeyEncapsulation) EncapSecret(publicKey []byte) (ciphertext,
 		(*C.uint8_t)(&sharedSecret[0]), (*C.uint8_t)(&publicKey[0]))
 
 	if rv != C.OQS_SUCCESS {
-		panic(errors.New("can not encapsulate secret"))
+		return nil, nil, errors.New("can not encapsulate secret")
 	}
 
-	return ciphertext, sharedSecret
+	return ciphertext, sharedSecret, nil
 }
 
 // DecapSecret decapsulates a ciphertexts and returns the corresponding shared
 // secret.
-func (kem *KeyEncapsulation) DecapSecret(ciphertext []byte) []byte {
+func (kem *KeyEncapsulation) DecapSecret(ciphertext []byte) ([]byte, error) {
 	if len(ciphertext) != kem.algDetails.LengthCiphertext {
-		panic(errors.New("incorrect ciphertext length"))
+		return nil, errors.New("incorrect ciphertext length")
 	}
 
 	if len(kem.secretKey) != kem.algDetails.LengthSecretKey {
-		panic(errors.New("incorrect secret key length, make sure you " +
-			"specify one in Init() or run GenerateKeyPair()"))
+		return nil, errors.New("incorrect secret key length, make sure you " +
+			"specify one in Init() or run GenerateKeyPair()")
 
 	}
 
@@ -217,10 +218,10 @@ func (kem *KeyEncapsulation) DecapSecret(ciphertext []byte) []byte {
 		(*C.uchar)(&ciphertext[0]), (*C.uint8_t)(&kem.secretKey[0]))
 
 	if rv != C.OQS_SUCCESS {
-		panic(errors.New("can not decapsulate secret"))
+		return nil, errors.New("can not decapsulate secret")
 	}
 
-	return sharedSecret
+	return sharedSecret, nil
 }
 
 // Clean zeroes-in the stored secret key and resets the kem receiver. One can
@@ -268,11 +269,11 @@ func IsSigSupported(algName string) bool {
 
 // SigName returns the signature algorithm name from its corresponding
 // numerical ID.
-func SigName(algID int) string {
+func SigName(algID int) (string, error) {
 	if algID >= MaxNumberSigs() {
-		panic(errors.New("algorithm ID out of range"))
+		return "", errors.New("algorithm ID out of range")
 	}
-	return C.GoString(C.OQS_SIG_alg_identifier(C.size_t(algID)))
+	return C.GoString(C.OQS_SIG_alg_identifier(C.size_t(algID))), nil
 }
 
 // SupportedSigs returns the list of supported signature algorithms.
@@ -288,7 +289,7 @@ func EnabledSigs() []string {
 // Initializes the lists enabledSigs and supportedSigs.
 func init() {
 	for i := 0; i < MaxNumberSigs(); i++ {
-		sigName := SigName(i)
+		sigName, _ := SigName(i)
 		supportedSigs = append(supportedSigs, sigName)
 		if IsSigEnabled(sigName) {
 			enabledSigs = append(enabledSigs, sigName)
@@ -342,15 +343,15 @@ func (sig Signature) String() string {
 // secret key. If the secret key is null, then the user must invoke the
 // Signature.GenerateKeyPair method to generate the pair of secret key/public
 // key.
-func (sig *Signature) Init(algName string, secretKey []byte) {
+func (sig *Signature) Init(algName string, secretKey []byte) error {
 	if !IsSigEnabled(algName) {
 		// perhaps it's supported
 		if IsSigSupported(algName) {
-			panic(errors.New(`"` + algName +
-				`" signature mechanism is not enabled by OQS`))
+			return errors.New(`"` + algName +
+				`" signature mechanism is not enabled by OQS`)
 		} else {
-			panic(errors.New(`"` + algName +
-				`" signature mechanism is not supported by OQS`))
+			return errors.New(`"` + algName +
+				`" signature mechanism is not supported by OQS`)
 		}
 	}
 	sig.sig = C.OQS_SIG_new(C.CString(algName))
@@ -362,6 +363,7 @@ func (sig *Signature) Init(algName string, secretKey []byte) {
 	sig.algDetails.LengthPublicKey = int(sig.sig.length_public_key)
 	sig.algDetails.LengthSecretKey = int(sig.sig.length_secret_key)
 	sig.algDetails.MaxLengthSignature = int(sig.sig.length_signature)
+	return nil
 }
 
 // Details returns the signature algorithm details.
@@ -373,17 +375,17 @@ func (sig *Signature) Details() SignatureDetails {
 // public key. The secret key is stored inside the sig receiver. The secret key
 // is not directly accessible, unless one exports it with
 // Signature.ExportSecretKey method.
-func (sig *Signature) GenerateKeyPair() []byte {
+func (sig *Signature) GenerateKeyPair() ([]byte, error) {
 	publicKey := make([]byte, sig.algDetails.LengthPublicKey)
 	sig.secretKey = make([]byte, sig.algDetails.LengthSecretKey)
 
 	rv := C.OQS_SIG_keypair(sig.sig, (*C.uint8_t)(&publicKey[0]),
 		(*C.uint8_t)(&sig.secretKey[0]))
 	if rv != C.OQS_SUCCESS {
-		panic(errors.New("can not generate keypair"))
+		return nil, errors.New("can not generate keypair")
 	}
 
-	return publicKey
+	return publicKey, nil
 }
 
 // ExportSecretKey exports the corresponding secret key from the sig receiver.
@@ -392,10 +394,10 @@ func (sig *Signature) ExportSecretKey() []byte {
 }
 
 // Sign signs a message and returns the corresponding signature.
-func (sig *Signature) Sign(message []byte) []byte {
+func (sig *Signature) Sign(message []byte) ([]byte, error) {
 	if len(sig.secretKey) != sig.algDetails.LengthSecretKey {
-		panic(errors.New("incorrect secret key length, make sure you " +
-			"specify one in Init() or run GenerateKeyPair()"))
+		return nil, errors.New("incorrect secret key length, make sure you " +
+			"specify one in Init() or run GenerateKeyPair()")
 	}
 
 	signature := make([]byte, sig.algDetails.MaxLengthSignature)
@@ -405,22 +407,22 @@ func (sig *Signature) Sign(message []byte) []byte {
 		C.size_t(len(message)), (*C.uint8_t)(&sig.secretKey[0]))
 
 	if rv != C.OQS_SUCCESS {
-		panic(errors.New("can not sign message"))
+		return nil, errors.New("can not sign message")
 	}
 
-	return signature[:lenSig]
+	return signature[:lenSig], nil
 }
 
 // Verify verifies the validity of a signed message, returning true if the
 // signature is valid, and false otherwise.
 func (sig *Signature) Verify(message []byte, signature []byte,
-	publicKey []byte) bool {
+	publicKey []byte) (bool, error) {
 	if len(publicKey) != sig.algDetails.LengthPublicKey {
-		panic(errors.New("incorrect public key length"))
+		return false, errors.New("incorrect public key length")
 	}
 
 	if len(signature) > sig.algDetails.MaxLengthSignature {
-		panic(errors.New("incorrect signature size"))
+		return false, errors.New("incorrect signature size")
 	}
 
 	rv := C.OQS_SIG_verify(sig.sig, (*C.uint8_t)(&message[0]),
@@ -428,10 +430,10 @@ func (sig *Signature) Verify(message []byte, signature []byte,
 		C.size_t(len(signature)), (*C.uint8_t)(&publicKey[0]))
 
 	if rv != C.OQS_SUCCESS {
-		return false
+		return false, nil
 	}
 
-	return true
+	return true, nil
 }
 
 // Clean zeroes-in the stored secret key and resets the sig receiver. One can
