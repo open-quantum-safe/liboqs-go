@@ -26,7 +26,8 @@ var algorithmPtrCallback func([]byte, int)
 //export algorithmPtr
 func algorithmPtr(randomArray *C.uint8_t, bytesToRead C.size_t) {
 	if algorithmPtrCallback == nil {
-		panic(errors.New("the RNG algorithm callback is not set"))
+		panic(errors.New("the RNG algorithm callback is not set, " +
+			"first invoke RandomBytesCustomAlgorithm"))
 	}
 	// TODO optimize the copying if possible!
 	result := make([]byte, int(bytesToRead))
@@ -67,7 +68,7 @@ func RandomBytesInPlace(randomArray []byte, bytesToRead int) {
 // See <oqs/rand.h> liboqs header for more details.
 func RandomBytesSwitchAlgorithm(algName string) error {
 	if C.OQS_randombytes_switch_algorithm(C.CString(algName)) != C.OQS_SUCCESS {
-		return errors.New("can not switch algorithm")
+		return errors.New("can not switch to \"" + algName + "\" algorithm")
 	}
 	return nil
 }
