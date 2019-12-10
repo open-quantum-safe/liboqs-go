@@ -49,5 +49,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println("\nValid signature? ", isValid)
+	fmt.Println("\nValid signature?", isValid)
 }
