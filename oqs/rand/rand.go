@@ -25,10 +25,6 @@ var algorithmPtrCallback func([]byte, int)
 // RandomBytesInPlace.
 //export algorithmPtr
 func algorithmPtr(randomArray *C.uint8_t, bytesToRead C.size_t) {
-	if algorithmPtrCallback == nil {
-		panic(errors.New("the RNG algorithm callback is not set, " +
-			"first invoke RandomBytesCustomAlgorithm"))
-	}
 	// TODO optimize the copying if possible!
 	result := make([]byte, int(bytesToRead))
 	algorithmPtrCallback(result, int(bytesToRead))
@@ -54,11 +50,11 @@ func RandomBytes(bytesToRead int) []byte {
 
 // RandomBytesInPlace generates bytesToRead random bytes. This implementation
 // uses either the default RNG algorithm ("system"), or whichever algorithm has
-// been selected by RandomBytesSwitchAlgorithm. bytesToRead must not exceed the
-// size of randomArray.
+// been selected by RandomBytesSwitchAlgorithm. If bytesToRead exceeds the size
+// of randomArray, only len(randomArray) bytes are read.
 func RandomBytesInPlace(randomArray []byte, bytesToRead int) {
 	if bytesToRead > len(randomArray) {
-		panic(errors.New("bytesToRead exceeds the size of randomArray"))
+		bytesToRead = len(randomArray)
 	}
 	C.OQS_randombytes((*C.uint8_t)(&randomArray[0]), C.size_t(bytesToRead))
 }
@@ -98,10 +94,14 @@ func RandomBytesNistKatInit(entropyInput [48]byte,
 // This allows additional custom RNGs besides the provided ones. The provided
 // RNG function must have the same signature as RandomBytesInPlace,
 // i.e. func([]byte, int).
-func RandomBytesCustomAlgorithm(fun func([]byte, int)) {
+func RandomBytesCustomAlgorithm(fun func([]byte, int)) error {
+	if fun == nil {
+		return errors.New("the RNG algorithm callback can not be nil")
+	}
 	algorithmPtrCallback = fun
 	C.OQS_randombytes_custom_algorithm((C.algorithm_ptr)(unsafe.Pointer(C.
 		algorithmPtr_cgo)))
+	return nil
 }
 
 /**************** END Randomness ****************/

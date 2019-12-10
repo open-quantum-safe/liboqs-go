@@ -26,7 +26,9 @@ func main() {
 	}
 	fmt.Printf("%-18s% X\n", "NIST-KAT: ", oqsrand.RandomBytes(32))
 
-	oqsrand.RandomBytesCustomAlgorithm(CustomRNG)
+	if err := oqsrand.RandomBytesCustomAlgorithm(CustomRNG); err != nil {
+		log.Fatal(err)
+	}
 	fmt.Printf("%-18s% X\n", "Custom RNG: ", oqsrand.RandomBytes(32))
 
 	if err := oqsrand.RandomBytesSwitchAlgorithm("OpenSSL"); err != nil {
