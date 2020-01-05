@@ -21,15 +21,15 @@ type Counter struct {
 // Add increments the counter.
 func (c *Counter) Add() {
 	c.mu.Lock()
+    defer c.mu.Unlock()
 	c.cnt++
-	c.mu.Unlock()
 }
 
 // Val retrieves the counter's value.
 func (c *Counter) Val() uint64 {
 	c.mu.Lock()
+	defer c.mu.Unlock()
 	cnt := c.cnt
-	c.mu.Unlock()
 	return cnt
 }
 
