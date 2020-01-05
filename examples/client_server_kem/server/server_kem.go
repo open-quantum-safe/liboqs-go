@@ -21,7 +21,7 @@ type Counter struct {
 // Add increments the counter.
 func (c *Counter) Add() {
 	c.mu.Lock()
-    defer c.mu.Unlock()
+	defer c.mu.Unlock()
 	c.cnt++
 }
 
