@@ -4,9 +4,10 @@ package oqstests
 import (
 	"bytes"
 	"fmt"
-	"github.com/open-quantum-safe/liboqs-go/oqs"
 	"sync"
 	"testing"
+
+	"github.com/open-quantum-safe/liboqs-go/oqs"
 )
 
 // wgKEM groups goroutines and blocks the caller until all goroutines finish.

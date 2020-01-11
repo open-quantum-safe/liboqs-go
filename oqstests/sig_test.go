@@ -2,9 +2,10 @@ package oqstests
 
 import (
 	"fmt"
-	"github.com/open-quantum-safe/liboqs-go/oqs"
 	"sync"
 	"testing"
+
+	"github.com/open-quantum-safe/liboqs-go/oqs"
 )
 
 // wgSig groups goroutines and blocks the caller until all goroutines finish.

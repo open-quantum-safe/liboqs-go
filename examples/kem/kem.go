@@ -4,8 +4,9 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"github.com/open-quantum-safe/liboqs-go/oqs"
 	"log"
+
+	"github.com/open-quantum-safe/liboqs-go/oqs"
 )
 
 func main() {

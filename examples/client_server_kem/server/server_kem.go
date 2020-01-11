@@ -4,12 +4,13 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/open-quantum-safe/liboqs-go/oqs"
 	"io"
 	"log"
 	"net"
 	"os"
 	"sync"
+
+	"github.com/open-quantum-safe/liboqs-go/oqs"
 )
 
 // Counter is a thread-safe counter.

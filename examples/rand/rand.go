@@ -3,8 +3,9 @@ package main
 
 import (
 	"fmt"
-	oqsrand "github.com/open-quantum-safe/liboqs-go/oqs/rand" // RNG support
 	"log"
+
+	oqsrand "github.com/open-quantum-safe/liboqs-go/oqs/rand" // RNG support
 )
 
 // CustomRNG provides a (trivial) custom random number generator; the memory is

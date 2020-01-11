@@ -5,11 +5,12 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/open-quantum-safe/liboqs-go/oqs"
 	"io"
 	"log"
 	"net"
 	"os"
+
+	"github.com/open-quantum-safe/liboqs-go/oqs"
 )
 
 func main() {
