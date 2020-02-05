@@ -4,6 +4,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"runtime"
 
 	oqsrand "github.com/open-quantum-safe/liboqs-go/oqs/rand" // RNG support
 )
@@ -32,10 +33,13 @@ func main() {
 	}
 	fmt.Printf("%-18s% X\n", "Custom RNG: ", oqsrand.RandomBytes(32))
 
-	if err := oqsrand.RandomBytesSwitchAlgorithm("OpenSSL"); err != nil {
-		log.Fatal(err)
+	// we do not yet support OpenSSL under Windows
+	if runtime.GOOS != "windows" {
+		if err := oqsrand.RandomBytesSwitchAlgorithm("OpenSSL"); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("%-18s% X\n", "OpenSSL: ", oqsrand.RandomBytes(32))
 	}
-	fmt.Printf("%-18s% X\n", "OpenSSL: ", oqsrand.RandomBytes(32))
 
 	if err := oqsrand.RandomBytesSwitchAlgorithm("system"); err != nil {
 		log.Fatal(err)
