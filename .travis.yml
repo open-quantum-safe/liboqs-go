@@ -1,4 +1,4 @@
-dist: xenial
+dist: bionic
 
 language: go
 go:
@@ -10,13 +10,12 @@ env:
 
 matrix:
   include:
-    # Ubuntu Linux 16.04 gcc5.4
+    # Ubuntu Linux 18.04 gcc
     - os: linux
       compiler: gcc
       env: 
         - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib 
       before_install:
-        - export CXX="g++-5" CC="gcc-5"
         - sudo apt-get install autoconf automake
         # Install liboqs
         - sh ./.travis/install_liboqs.sh &>/dev/null  
