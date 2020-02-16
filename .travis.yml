@@ -16,7 +16,7 @@ matrix:
       env: 
         - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib 
       before_install:
-        - sudo apt-get install autoconf automake
+        - sudo apt-get install cmake ninja-build
         # Install liboqs
         - sh ./.travis/install_liboqs.sh &>/dev/null  
 
@@ -27,7 +27,7 @@ matrix:
       before_install:
         - rm -rf /usr/local/include/c++
         - brew update
-        - brew install gcc6
+        - brew install gcc6 cmake ninja
         # Install liboqs
         - sh ./.travis/install_liboqs.sh &>/dev/null  
 
@@ -38,7 +38,7 @@ matrix:
       before_install:
         - rm -rf /usr/local/include/c++
         - brew update
-        - brew install gcc6
+        - brew install gcc6 cmake ninja
         - export CXX="g++-6" CC="gcc-6"
         - sudo softwareupdate -i "Command Line Tools (macOS High Sierra version 10.13) for Xcode-10.1"
         # Install liboqs
