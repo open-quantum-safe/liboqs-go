@@ -6,4 +6,4 @@ git checkout master
 mkdir build && cd build
 cmake -GNinja -DBUILD_SHARED_LIBS=ON ..
 ninja
-ninja install
+sudo ninja install
