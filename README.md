@@ -39,14 +39,14 @@ The examples in the [`examples`](https://github.com/open-quantum-safe/liboqs-go/
 
 Running/building
 ----------------
-First, you must build the master branch of liboqs according to the [liboqs building instructions](https://github.com/open-quantum-safe/liboqs#linuxmacos), followed (optionally) by a `sudo make install` to ensure that the compiled library is system-wide visible (by default it installs under `/usr/local/include` and `/usr/local/lib` on Linux/macOS).
+First, you must build the master branch of liboqs according to the [liboqs building instructions](https://github.com/open-quantum-safe/liboqs#linuxmacos) with shared library support enabled (add `-DBUILD_SHARED_LIBS=ON` to the `cmake` command), followed (optionally) by a `sudo ninja install` to ensure that the compiled library is system-wide visible (by default it installs under `/usr/local/include` and `/usr/local/lib` on Linux/macOS).
 
 If running/building on Linux, you may need to set the `LD_LIBRARY_PATH` environment variable to point to the path
 to liboqs' library directory, e.g.
 
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
             
-assuming `liboqs.so.*` were installed in `/usr/local/lib` (true if you ran `sudo make install` after building liboqs).
+assuming `liboqs.so.*` were installed in `/usr/local/lib` (true if you ran `sudo ninja install` after building liboqs).
 
 ### Using Go with modules support (requires Go 1.11 or later)
 Download/clone the `liboqs-go` wrapper repository in the directory of your choice, e.g. `$HOME`, by typing in a terminal/console

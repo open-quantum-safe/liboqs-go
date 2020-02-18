@@ -16,9 +16,9 @@ matrix:
       env: 
         - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib 
       before_install:
-        - sudo apt-get install cmake ninja-build 
+        - sudo apt-get install cmake ninja-build
         # Install liboqs
-        - sh ./.travis/install_liboqs.sh # &>/dev/null  
+        - sh ./.travis/install_liboqs.sh &>/dev/null  
 
     # Apple OSX LLVM version 10.0.0 (clang-1000.11.45.5)
     - os: osx
@@ -27,7 +27,7 @@ matrix:
       before_install:
         - rm -rf /usr/local/include/c++
         - brew update
-        - brew install gcc6 cmake ninja
+        - brew install gcc6 ninja
         # Install liboqs
         - sh ./.travis/install_liboqs.sh &>/dev/null  
 
@@ -38,7 +38,7 @@ matrix:
       before_install:
         - rm -rf /usr/local/include/c++
         - brew update
-        - brew install gcc6 cmake ninja
+        - brew install gcc6 ninja
         - export CXX="g++-6" CC="gcc-6"
         - sudo softwareupdate -i "Command Line Tools (macOS High Sierra version 10.13) for Xcode-10.1"
         # Install liboqs
@@ -55,3 +55,4 @@ script:
 
   # Run the unit tests
   - go test -v oqstests/*
+  
