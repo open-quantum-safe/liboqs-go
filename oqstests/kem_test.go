@@ -35,7 +35,12 @@ func TestKeyEncapsulation(t *testing.T) {
 	wgKEM.Add(len(oqs.EnabledKEMs()))
 	// test LEDAcryptKEM-LT52 first in the main goroutine
 	// (stack size too small otherwise)
-	testKEM("LEDAcryptKEM-LT52", t)
+	for _, kemName := range oqs.EnabledKEMs() {
+		if kemName == "LEDAcryptKEM-LT52" {
+			testKEM("LEDAcryptKEM-LT52", t)
+			break
+		}
+	}
 	// test the rest of the KEMs
 	for _, kemName := range oqs.EnabledKEMs() {
 		fmt.Println(kemName)
