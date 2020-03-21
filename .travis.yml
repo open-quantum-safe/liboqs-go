@@ -8,7 +8,7 @@ env:
     - PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$TRAVIS_BUILD_DIR/.config
     - GO111MODULE=on  
 
-matrix:
+jobs:
   include:
     # Ubuntu Linux 18.04 gcc
     - os: linux
