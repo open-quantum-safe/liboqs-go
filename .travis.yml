@@ -1,4 +1,5 @@
 dist: bionic
+os: linux
 
 language: go
 go:
