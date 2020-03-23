@@ -9,10 +9,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Supported signatures:")
-	fmt.Println(oqs.SupportedSigs())
-
-	fmt.Println("\nEnabled signatures:")
+	fmt.Println("Enabled signatures:")
 	fmt.Println(oqs.EnabledSigs())
 
 	sigName := "DEFAULT"

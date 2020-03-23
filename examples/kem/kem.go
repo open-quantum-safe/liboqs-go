@@ -10,10 +10,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Supported KEMs:")
-	fmt.Println(oqs.SupportedKEMs())
-
-	fmt.Println("\nEnabled KEMs:")
+	fmt.Println("Enabled KEMs:")
 	fmt.Println(oqs.EnabledKEMs())
 
 	kemName := "DEFAULT"

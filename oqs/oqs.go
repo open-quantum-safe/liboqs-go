@@ -72,8 +72,9 @@ func EnabledKEMs() []string {
 	return enabledKEMs
 }
 
-// Initializes the lists enabledKEMs and supportedKEMs.
+// Initializes liboqs and the lists enabledKEMs and supportedKEMs.
 func init() {
+	C.OQS_init()
 	for i := 0; i < MaxNumberKEMs(); i++ {
 		KEMName, _ := KEMName(i)
 		supportedKEMs = append(supportedKEMs, KEMName)

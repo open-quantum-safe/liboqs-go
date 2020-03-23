@@ -56,4 +56,3 @@ script:
 
   # Run the unit tests
   - go test -v oqstests/*
-  

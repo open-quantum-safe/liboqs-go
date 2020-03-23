@@ -3,19 +3,26 @@ package oqstests
 
 import (
 	"bytes"
-	"fmt"
+	"log"
+	"strings"
 	"sync"
 	"testing"
 
 	"github.com/open-quantum-safe/liboqs-go/oqs"
 )
 
+// noThreadKEMPatterns lists KEMs that have issues running in a separate thread
+var noThreadKEMPatterns = []string{"Classic-McEliece", "LEDAcryptKEM-LT52"}
+
 // wgKEM groups goroutines and blocks the caller until all goroutines finish.
 var wgKEM sync.WaitGroup
 
 // testKEM tests a specific KEM.
-func testKEM(kemName string, t *testing.T) {
-	defer wgKEM.Done()
+func testKEM(kemName string, threading bool) bool {
+	log.Println(kemName) // thread-safe
+	if threading == true {
+		defer wgKEM.Done()
+	}
 	var client, server oqs.KeyEncapsulation
 	defer client.Clean()
 	defer server.Clean()
@@ -25,28 +32,37 @@ func testKEM(kemName string, t *testing.T) {
 	clientPublicKey, _ := client.GenerateKeyPair()
 	ciphertext, sharedSecretServer, _ := server.EncapSecret(clientPublicKey)
 	sharedSecretClient, _ := client.DecapSecret(ciphertext)
-	if !bytes.Equal(sharedSecretClient, sharedSecretServer) {
-		t.Fatal(kemName + ": shared secrets do not coincide")
-	}
+	return bytes.Equal(sharedSecretClient, sharedSecretServer)
 }
 
 // TestKeyEncapsulation tests all enabled KEMs.
 func TestKeyEncapsulation(t *testing.T) {
-	wgKEM.Add(len(oqs.EnabledKEMs()))
-	// test LEDAcryptKEM-LT52 first in the main goroutine
-	// (stack size too small otherwise)
+	// first test KEMs that belong to noThreadKEMPatterns[] in the main
+	// goroutine (stack size is 8Mb on macOS), due to issues with stack size
+	// being too small in macOS (512Kb for threads)
+	cnt := 0
 	for _, kemName := range oqs.EnabledKEMs() {
-		if kemName == "LEDAcryptKEM-LT52" {
-			testKEM("LEDAcryptKEM-LT52", t)
-			break
+		for _, noThreadKem := range noThreadKEMPatterns {
+			if strings.Contains(kemName, noThreadKem) {
+				cnt++
+				testKEM(kemName, false)
+				break
+			}
 		}
 	}
-	// test the rest of the KEMs
+	// test the remaining KEMs in separate goroutines
+	wgKEM.Add(len(oqs.EnabledKEMs()) - cnt)
 	for _, kemName := range oqs.EnabledKEMs() {
-		fmt.Println(kemName)
 		// issues with stack size being too small in macOS
-		if kemName != "LEDAcryptKEM-LT52" {
-			go testKEM(kemName, t)
+		supportsThreads := true
+		for _, noThreadKem := range noThreadKEMPatterns {
+			if strings.Contains(kemName, noThreadKem) {
+				supportsThreads = false
+				break
+			}
+		}
+		if supportsThreads == true {
+			go testKEM(kemName, true)
 		}
 	}
 	wgKEM.Wait()
