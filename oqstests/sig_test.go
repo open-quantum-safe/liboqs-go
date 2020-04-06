@@ -2,21 +2,24 @@ package oqstests
 
 import (
 	"log"
-	"strings"
+	"runtime"
 	"sync"
 	"testing"
 
 	"github.com/open-quantum-safe/liboqs-go/oqs"
 )
 
+// disabledSigPatterns lists sigs for which unit testing is disabled
+var disabledSigPatterns []string
+
 // noThreadSigPatterns lists sigs that have issues running in a separate thread
-var noThreadSigPatterns = []string{"Rainbow-IIIc", "Rainbow-Vc"}
+var noThreadSigPatterns []string
 
 // wgSig groups goroutines and blocks the caller until all goroutines finish.
 var wgSig sync.WaitGroup
 
 // testSig tests a specific signature.
-func testSig(sigName string, msg []byte, threading bool) bool {
+func testSig(sigName string, msg []byte, threading bool, t *testing.T) {
 	log.Println(sigName) // thread-safe
 	if threading == true {
 		defer wgSig.Done()
@@ -30,41 +33,42 @@ func testSig(sigName string, msg []byte, threading bool) bool {
 	pubKey, _ := signer.GenerateKeyPair()
 	signature, _ := signer.Sign(msg)
 	isValid, _ := verifier.Verify(msg, signature, pubKey)
-	return isValid
+	if !isValid {
+		// t.Errorf is thread-safe
+		t.Errorf(sigName + ": signature verification failed")
+	}
 }
 
 // TestSignature tests all enabled signatures.
 func TestSignature(t *testing.T) {
+	// disable some sigs in macOS/OSX
+	if runtime.GOOS == "darwin" {
+		disabledSigPatterns = []string{"Rainbow-IIIc", "Rainbow-Vc"}
+	}
 	msg := []byte("This is our favourite message to sign")
 	// first test sigs that belong to noThreadSigPatterns[] in the main
 	// goroutine (stack size is 8Mb on macOS), due to issues with stack size
 	// being too small in macOS (512Kb for threads)
 	cnt := 0
 	for _, sigName := range oqs.EnabledSigs() {
-		for _, noThreadSig := range noThreadSigPatterns {
-			if strings.Contains(sigName, noThreadSig) {
-				cnt++
-				if testSig(sigName, msg, false) == false {
-					t.Fatal(sigName + ": signature verification failed")
-				}
-				break
-			}
+		if stringMatchSlice(sigName, disabledSigPatterns) {
+			cnt++
+			continue
+		}
+		// issues with stack size being too small in macOS
+		if stringMatchSlice(sigName, noThreadSigPatterns) {
+			cnt++
+			testSig(sigName, msg, false, t)
 		}
 	}
 	// test the remaining sigs in separate goroutines
 	wgSig.Add(len(oqs.EnabledSigs()) - cnt)
 	for _, sigName := range oqs.EnabledSigs() {
-		// issues with stack size being too small in macOS
-		supportsThreads := true
-		for _, noThreadSig := range noThreadSigPatterns {
-			if strings.Contains(sigName, noThreadSig) {
-				supportsThreads = false
-				break
-			}
+		if stringMatchSlice(sigName, disabledSigPatterns) {
+			continue
 		}
-		if supportsThreads == true {
-			log.Println(sigName)
-			go testSig(sigName, msg, true)
+		if !stringMatchSlice(sigName, noThreadSigPatterns) {
+			go testSig(sigName, msg, true, t)
 		}
 	}
 	wgSig.Wait()

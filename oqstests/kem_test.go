@@ -4,21 +4,24 @@ package oqstests
 import (
 	"bytes"
 	"log"
-	"strings"
+	"runtime"
 	"sync"
 	"testing"
 
 	"github.com/open-quantum-safe/liboqs-go/oqs"
 )
 
+// disabledKEMPatterns lists KEMs for which unit testing is disabled
+var disabledKEMPatterns []string
+
 // noThreadKEMPatterns lists KEMs that have issues running in a separate thread
-var noThreadKEMPatterns = []string{"Classic-McEliece", "LEDAcryptKEM-LT52"}
+var noThreadKEMPatterns = []string{"LEDAcryptKEM-LT52"}
 
 // wgKEM groups goroutines and blocks the caller until all goroutines finish.
 var wgKEM sync.WaitGroup
 
 // testKEM tests a specific KEM.
-func testKEM(kemName string, threading bool) bool {
+func testKEM(kemName string, threading bool, t *testing.T) {
 	log.Println(kemName) // thread-safe
 	if threading == true {
 		defer wgKEM.Done()
@@ -32,37 +35,41 @@ func testKEM(kemName string, threading bool) bool {
 	clientPublicKey, _ := client.GenerateKeyPair()
 	ciphertext, sharedSecretServer, _ := server.EncapSecret(clientPublicKey)
 	sharedSecretClient, _ := client.DecapSecret(ciphertext)
-	return bytes.Equal(sharedSecretClient, sharedSecretServer)
+	if !bytes.Equal(sharedSecretClient, sharedSecretServer) {
+		// t.Errorf is thread-safe
+		t.Errorf(kemName + ": shared secrets do not coincide")
+	}
 }
 
 // TestKeyEncapsulation tests all enabled KEMs.
 func TestKeyEncapsulation(t *testing.T) {
+	// disable some KEMs in macOS/OSX
+	if runtime.GOOS == "darwin" {
+		disabledKEMPatterns = []string{"Classic-McEliece"}
+	}
 	// first test KEMs that belong to noThreadKEMPatterns[] in the main
 	// goroutine (stack size is 8Mb on macOS), due to issues with stack size
 	// being too small in macOS (512Kb for threads)
 	cnt := 0
 	for _, kemName := range oqs.EnabledKEMs() {
-		for _, noThreadKem := range noThreadKEMPatterns {
-			if strings.Contains(kemName, noThreadKem) {
-				cnt++
-				testKEM(kemName, false)
-				break
-			}
+		if stringMatchSlice(kemName, disabledKEMPatterns) {
+			cnt++
+			continue
+		}
+		// issues with stack size being too small in macOS
+		if stringMatchSlice(kemName, noThreadKEMPatterns) {
+			cnt++
+			testKEM(kemName, false, t)
 		}
 	}
 	// test the remaining KEMs in separate goroutines
 	wgKEM.Add(len(oqs.EnabledKEMs()) - cnt)
 	for _, kemName := range oqs.EnabledKEMs() {
-		// issues with stack size being too small in macOS
-		supportsThreads := true
-		for _, noThreadKem := range noThreadKEMPatterns {
-			if strings.Contains(kemName, noThreadKem) {
-				supportsThreads = false
-				break
-			}
+		if stringMatchSlice(kemName, disabledKEMPatterns) {
+			continue
 		}
-		if supportsThreads == true {
-			go testKEM(kemName, true)
+		if !stringMatchSlice(kemName, noThreadKEMPatterns) {
+			go testKEM(kemName, true, t)
 		}
 	}
 	wgKEM.Wait()
@@ -73,6 +80,6 @@ func TestUnsupportedKeyEncapsulation(t *testing.T) {
 	client := oqs.KeyEncapsulation{}
 	defer client.Clean()
 	if err := client.Init("unsupported_kem", nil); err == nil {
-		t.Fatal("Unsupported KEM should have emitted an error")
+		t.Errorf("Unsupported KEM should have emitted an error")
 	}
 }

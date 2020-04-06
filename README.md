@@ -111,7 +111,7 @@ Finally, you must add/append the `$LIBOQSGO_INSTALL_PATH/.config` directory to t
 
     export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$LIBOQSGO_INSTALL_PATH/.config
  
-Once you have configured your system as directed above, simply `import "github.com/open-quantum-safe/liboqs-go/oqs"` in the Go application of your choice and run it with `go run <application_name.go>` or build it with `go build <applicaiton_name.go>`.
+Once you have configured your system as directed above, simply `import "github.com/open-quantum-safe/liboqs-go/oqs"` in the Go application of your choice and run it with `go run <application_name.go>` or build it with `go build <application_name.go>`.
 
 To run the examples from the terminal/console, type e.g.
 
