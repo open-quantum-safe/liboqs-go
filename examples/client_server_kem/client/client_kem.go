@@ -16,7 +16,7 @@ import (
 func main() {
 	if len(os.Args) != 3 {
 		fmt.Println("Usage: client_kem <address> <port number>")
-		os.Exit(-1)
+		os.Exit(1)
 	}
 	address := os.Args[1]
 	port := os.Args[2]

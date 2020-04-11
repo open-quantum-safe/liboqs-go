@@ -1,0 +1,39 @@
+version: 1.0.{build}
+
+image: Visual Studio 2017
+
+platform: x64
+
+environment:
+  LIBOQS_INSTALL_PATH: C:\liboqs
+  LIBOQS_BUILD_DIR: C:\liboqs\build
+  LIBOQS_INCLUDE_DIR: C:\liboqs\build\include
+  LIBOQS_LIB_DIR: C:\liboqs\build\lib
+  LIBOQS_DLL_DIR: C:\liboqs\build\bin
+
+
+install:
+  - cmd: |-
+      @echo on
+      set "PATH=%LIBOQS_DLL_DIR%;%PATH%"
+      call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+      git clone https://github.com/open-quantum-safe/liboqs %LIBOQS_INSTALL_PATH%
+      mkdir %LIBOQS_BUILD_DIR%
+      cd %LIBOQS_BUILD_DIR%
+      cmake .. -DCMAKE_BUILD_TYPE=Optimized -DBUILD_SHARED_LIBS=ON -G"Ninja"
+      ninja 1> nul
+
+build_script:
+  - cmd: |-
+      set "PATH=C:\msys64\mingw64\bin;%PATH%"
+      set "PKG_CONFIG_PATH=%APPVEYOR_BUILD_FOLDER%\.config"
+      cd %APPVEYOR_BUILD_FOLDER%
+      move /Y %PKG_CONFIG_PATH%\liboqs.pc.win64 %PKG_CONFIG_PATH%\liboqs.pc
+      go run examples/kem/kem.go
+      go run examples/rand/rand.go
+      go run examples/sig/sig.go
+
+test_script:
+  - cmd: |-
+      cd %APPVEYOR_BUILD_FOLDER%
+      go test -v .\oqstests

@@ -45,17 +45,21 @@ func TestSignature(t *testing.T) {
 	if runtime.GOOS == "darwin" {
 		disabledSigPatterns = []string{"Rainbow-IIIc", "Rainbow-Vc"}
 	}
+	// disable some sigs in Windows
+	if runtime.GOOS == "windows" {
+		disabledSigPatterns = []string{"Rainbow-IIIc", "Rainbow-Vc"}
+	}
 	msg := []byte("This is our favourite message to sign")
 	// first test sigs that belong to noThreadSigPatterns[] in the main
-	// goroutine (stack size is 8Mb on macOS), due to issues with stack size
-	// being too small in macOS (512Kb for threads)
+	// goroutine, due to issues with stack size being too small in macOS or
+	// Windows
 	cnt := 0
 	for _, sigName := range oqs.EnabledSigs() {
 		if stringMatchSlice(sigName, disabledSigPatterns) {
 			cnt++
 			continue
 		}
-		// issues with stack size being too small in macOS
+		// issues with stack size being too small
 		if stringMatchSlice(sigName, noThreadSigPatterns) {
 			cnt++
 			testSig(sigName, msg, false, t)

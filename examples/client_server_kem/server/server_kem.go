@@ -39,7 +39,8 @@ var counter Counter
 
 func main() {
 	if len(os.Args) == 1 {
-		log.Fatal("Usage: server_kem <port number> [KEM name (optional)]")
+		fmt.Println("Usage: server_kem <port number> [KEM name (optional)]")
+		os.Exit(1)
 	}
 	port := os.Args[1]
 	kemName := "DEFAULT"

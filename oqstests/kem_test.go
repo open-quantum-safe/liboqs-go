@@ -47,16 +47,20 @@ func TestKeyEncapsulation(t *testing.T) {
 	if runtime.GOOS == "darwin" {
 		disabledKEMPatterns = []string{"Classic-McEliece"}
 	}
+	// disable some KEMs in Windows
+	if runtime.GOOS == "windows" {
+		disabledKEMPatterns = []string{"Classic-McEliece"}
+	}
 	// first test KEMs that belong to noThreadKEMPatterns[] in the main
-	// goroutine (stack size is 8Mb on macOS), due to issues with stack size
-	// being too small in macOS (512Kb for threads)
+	// goroutine, due to issues with stack size being too small in macOS or
+	// Windows
 	cnt := 0
 	for _, kemName := range oqs.EnabledKEMs() {
 		if stringMatchSlice(kemName, disabledKEMPatterns) {
 			cnt++
 			continue
 		}
-		// issues with stack size being too small in macOS
+		// issues with stack size being too small
 		if stringMatchSlice(kemName, noThreadKEMPatterns) {
 			cnt++
 			testKEM(kemName, false, t)
