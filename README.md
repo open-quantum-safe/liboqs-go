@@ -101,7 +101,7 @@ in a terminal/console.
 
 To simplify the instructions to follow, export the path to the wrapper in the `LIBOQSGO_INSTALL_PATH` environment variable by typing in a terminal/console
 
-    export LIBOQSGO_INSTALL_PATH=/your/path/to/liboqs-go
+    export LIBOQSGO_INSTALL_PATH=/some/dir/liboqs-go
 
 In my case `LIBOQSGO_INSTALL_PATH` is set to `$HOME/go/src/github.com/open-quantum-safe/liboqs-go`.
 
@@ -137,8 +137,12 @@ which will build the `oqstests.test` executable in the directory from which you 
 <a name="windows"></a>Running/building under Windows
 ----
 
-For simplicity, we only provide installation instructions for Go systems that supports modules (i.e. Go version 1.11 or later, see [above](#modules)). If your Go installation does not support modules, please adapt the [corresponding instructions](#no-modules) accordingly. We  assume that `liboqs` is installed under `C:\...\liboqs` and was [successfully built](https://github.com/open-quantum-safe/liboqs#windows) in`C:\...\liboqs\build`
-, and that `liboqs-go` is installed under `C:\...\liboqs-go` (replace `...` with your corresponding paths). In case you built `liboqs` as a shared library, add the directory that contains `oqs.dll` (e.g. `C:\...\liboqs\build\bin`) to the `PATH` environment variable.
+For simplicity, we only provide installation instructions for Go systems that supports modules (i.e. Go version 1.11 or later, see [above](#modules)). If your Go installation does not support modules, please adapt the [corresponding instructions](#no-modules) accordingly. We  assume that `liboqs` is installed under `C:\some\dir\liboqs` and was [successfully built](https://github.com/open-quantum-safe/liboqs#windows) in`C:\some\dir\liboqs\build`
+, and that `liboqs-go` is installed under `C:\some\dir\liboqs-go` (replace `\some\dir` with your corresponding paths). Ensure that the liboqs shared library `oqs.dll` is visible system-wide. Use the "Edit the system environment variables" Control Panel tool or type in a Command Prompt
+	
+	set PATH="%PATH%;C:\some\dir\liboqs\build\bin"
+	
+of course replacing the paths with the ones corresponding to your system.
 
 As mentioned in the [Pre-requisites](#pre-requisites) section, we assume you have  installed the  [MSYS2](https://www.msys2.org/) C compiler (which contains also `pkg-config`). Make sure that the executable `gcc` and `pkg-config` from  MSYS2 are system-wide visible, using e.g. the "Edit the system environment variables" Control Panel tool to add their corresponding directory to the `PATH` environment variable. In our case, MSYS2's `gcc` and `pkg-config` are located under `C:\msys64\mingw64\bin`
 ,so we need to add that directory to the `PATH`. **Very important:** make sure that the `PATH` entry to the `gcc` and `pkg-config` provided by `MSYS2`comes **before** any other (if any) `gcc` and `pkg-config` executables you may have installed (e.g..such as the ones provided by [Cygwin](www.cygwin.org)). To verify, type into a Command Prompt `gcc --version`, and you should get an output like 
@@ -147,17 +151,17 @@ As mentioned in the [Pre-requisites](#pre-requisites) section, we assume you hav
 
 Next, similarly to the [POSIX instructions](#modules), modify the corresponding lines in [`liboqs-go\.config\liboqs.pc`](https://github.com/open-quantum-safe/liboqs-go/tree/master/.config/liboqs.pc) to point to the correct locations, **using forward slashes `/` and not back-slashes**, e.g.
 
-    LIBOQS_INCLUDE_DIR=C:/.../liboqs/build/include
-    LIBOQS_LIB_DIR=C:/.../liboqs/build/lib
+    LIBOQS_INCLUDE_DIR=C:/some/dir/liboqs/build/include
+    LIBOQS_LIB_DIR=C:/some/dir/liboqs/build/lib
 
 Finally, add the `liboqs-go\.config`
 directory to the `PKG_CONFIG_PATH` environment variable,  using the "Edit the system environment variables" Control Panel tool or by typing in the Command Prompt 
 
-    set PKG_CONFIG_PATH="C:\...\liboqs-go\.config"
+    set PKG_CONFIG_PATH="C:\some\dir\liboqs-go\.config"
 
 Once those steps are completed, you can now test whether everything went OK by running one of the examples and/or unit tests. First change directory to `liboqs-go` by typing in a Command Prompt
 
-    cd C:\...\liboqs-go
+    cd C:\some\dir\liboqs-go
 
 followed by e.g.
 

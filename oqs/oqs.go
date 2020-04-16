@@ -165,8 +165,9 @@ func (kem *KeyEncapsulation) GenerateKeyPair() ([]byte, error) {
 	publicKey := make([]byte, kem.algDetails.LengthPublicKey)
 	kem.secretKey = make([]byte, kem.algDetails.LengthSecretKey)
 
-	rv := C.OQS_KEM_keypair(kem.kem, (*C.uint8_t)(&publicKey[0]),
-		(*C.uint8_t)(&kem.secretKey[0]))
+	rv := C.OQS_KEM_keypair(kem.kem,
+		(*C.uint8_t)(unsafe.Pointer(&publicKey[0])),
+		(*C.uint8_t)(unsafe.Pointer(&kem.secretKey[0])))
 	if rv != C.OQS_SUCCESS {
 		return nil, errors.New("can not generate keypair")
 	}
@@ -190,8 +191,10 @@ func (kem *KeyEncapsulation) EncapSecret(publicKey []byte) (ciphertext,
 	ciphertext = make([]byte, kem.algDetails.LengthCiphertext)
 	sharedSecret = make([]byte, kem.algDetails.LengthSharedSecret)
 
-	rv := C.OQS_KEM_encaps(kem.kem, (*C.uint8_t)(&ciphertext[0]),
-		(*C.uint8_t)(&sharedSecret[0]), (*C.uint8_t)(&publicKey[0]))
+	rv := C.OQS_KEM_encaps(kem.kem,
+		(*C.uint8_t)(unsafe.Pointer(&ciphertext[0])),
+		(*C.uint8_t)(unsafe.Pointer(&sharedSecret[0])),
+		(*C.uint8_t)(unsafe.Pointer(&publicKey[0])))
 
 	if rv != C.OQS_SUCCESS {
 		return nil, nil, errors.New("can not encapsulate secret")
@@ -214,8 +217,10 @@ func (kem *KeyEncapsulation) DecapSecret(ciphertext []byte) ([]byte, error) {
 	}
 
 	sharedSecret := make([]byte, kem.algDetails.LengthSharedSecret)
-	rv := C.OQS_KEM_decaps(kem.kem, (*C.uint8_t)(&sharedSecret[0]),
-		(*C.uchar)(&ciphertext[0]), (*C.uint8_t)(&kem.secretKey[0]))
+	rv := C.OQS_KEM_decaps(kem.kem,
+		(*C.uint8_t)(unsafe.Pointer(&sharedSecret[0])),
+		(*C.uchar)(unsafe.Pointer(&ciphertext[0])),
+		(*C.uint8_t)(unsafe.Pointer(&kem.secretKey[0])))
 
 	if rv != C.OQS_SUCCESS {
 		return nil, errors.New("can not decapsulate secret")
@@ -379,8 +384,9 @@ func (sig *Signature) GenerateKeyPair() ([]byte, error) {
 	publicKey := make([]byte, sig.algDetails.LengthPublicKey)
 	sig.secretKey = make([]byte, sig.algDetails.LengthSecretKey)
 
-	rv := C.OQS_SIG_keypair(sig.sig, (*C.uint8_t)(&publicKey[0]),
-		(*C.uint8_t)(&sig.secretKey[0]))
+	rv := C.OQS_SIG_keypair(sig.sig,
+		(*C.uint8_t)(unsafe.Pointer(&publicKey[0])),
+		(*C.uint8_t)(unsafe.Pointer(&sig.secretKey[0])))
 	if rv != C.OQS_SUCCESS {
 		return nil, errors.New("can not generate keypair")
 	}
@@ -401,10 +407,11 @@ func (sig *Signature) Sign(message []byte) ([]byte, error) {
 	}
 
 	signature := make([]byte, sig.algDetails.MaxLengthSignature)
-	var lenSig int
-	rv := C.OQS_SIG_sign(sig.sig, (*C.uint8_t)(&signature[0]),
-		(*C.size_t)(unsafe.Pointer(&lenSig)), (*C.uint8_t)(&message[0]),
-		C.size_t(len(message)), (*C.uint8_t)(&sig.secretKey[0]))
+	var lenSig uint64
+	rv := C.OQS_SIG_sign(sig.sig, (*C.uint8_t)(unsafe.Pointer(&signature[0])),
+		(*C.size_t)(unsafe.Pointer(&lenSig)),
+		(*C.uint8_t)(unsafe.Pointer(&message[0])),
+		C.size_t(len(message)), (*C.uint8_t)(unsafe.Pointer(&sig.secretKey[0])))
 
 	if rv != C.OQS_SUCCESS {
 		return nil, errors.New("can not sign message")
@@ -425,9 +432,9 @@ func (sig *Signature) Verify(message []byte, signature []byte,
 		return false, errors.New("incorrect signature size")
 	}
 
-	rv := C.OQS_SIG_verify(sig.sig, (*C.uint8_t)(&message[0]),
-		C.size_t(len(message)), (*C.uint8_t)(&signature[0]),
-		C.size_t(len(signature)), (*C.uint8_t)(&publicKey[0]))
+	rv := C.OQS_SIG_verify(sig.sig, (*C.uint8_t)(unsafe.Pointer(&message[0])),
+		C.size_t(len(message)), (*C.uint8_t)(unsafe.Pointer(&signature[0])),
+		C.size_t(len(signature)), (*C.uint8_t)(unsafe.Pointer(&publicKey[0])))
 
 	if rv != C.OQS_SUCCESS {
 		return false, nil

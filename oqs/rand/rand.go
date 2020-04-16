@@ -44,7 +44,8 @@ func algorithmPtr(randomArray *C.uint8_t, bytesToRead C.size_t) {
 // selected by RandomBytesSwitchAlgorithm.
 func RandomBytes(bytesToRead int) []byte {
 	result := make([]byte, bytesToRead)
-	C.OQS_randombytes((*C.uint8_t)(&result[0]), C.size_t(bytesToRead))
+	C.OQS_randombytes((*C.uint8_t)(unsafe.Pointer(&result[0])),
+		C.size_t(bytesToRead))
 	return result
 }
 
@@ -56,7 +57,8 @@ func RandomBytesInPlace(randomArray []byte, bytesToRead int) {
 	if bytesToRead > len(randomArray) {
 		bytesToRead = len(randomArray)
 	}
-	C.OQS_randombytes((*C.uint8_t)(&randomArray[0]), C.size_t(bytesToRead))
+	C.OQS_randombytes((*C.uint8_t)(unsafe.Pointer(&randomArray[0])),
+		C.size_t(bytesToRead))
 }
 
 // RandomBytesSwitchAlgorithm switches the core OQS_randombytes to use the
@@ -81,12 +83,14 @@ func RandomBytesNistKatInit(entropyInput [48]byte,
 				"empty or at least 48 bytes long")
 		}
 
-		C.OQS_randombytes_nist_kat_init((*C.uint8_t)(&entropyInput[0]),
-			(*C.uint8_t)(&personalizationString[0]), 256)
+		C.OQS_randombytes_nist_kat_init(
+			(*C.uint8_t)(unsafe.Pointer(&entropyInput[0])),
+			(*C.uint8_t)(unsafe.Pointer(&personalizationString[0])), 256)
 		return nil
 	}
-	C.OQS_randombytes_nist_kat_init((*C.uint8_t)(&entropyInput[0]),
-		(*C.uint8_t)(nil), 256)
+	C.OQS_randombytes_nist_kat_init(
+		(*C.uint8_t)(unsafe.Pointer(&entropyInput[0])),
+		(*C.uint8_t)(unsafe.Pointer(nil)), 256)
 	return nil
 }
 
@@ -99,8 +103,8 @@ func RandomBytesCustomAlgorithm(fun func([]byte, int)) error {
 		return errors.New("the RNG algorithm callback can not be nil")
 	}
 	algorithmPtrCallback = fun
-	C.OQS_randombytes_custom_algorithm((C.algorithm_ptr)(unsafe.Pointer(C.
-		algorithmPtr_cgo)))
+	C.OQS_randombytes_custom_algorithm(
+		(C.algorithm_ptr)(unsafe.Pointer(C.algorithmPtr_cgo)))
 	return nil
 }
 
