@@ -23,7 +23,7 @@ func main() {
 		log.Fatal(err)
 	}
 	entropySeed := [48]byte{0: 100, 20: 200, 47: 150}
-	if err := oqsrand.RandomBytesNistKatInit(entropySeed, nil); err != nil {
+	if err := oqsrand.RandomBytesNistKatInit256bit(entropySeed, nil); err != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("%-18s% X\n", "NIST-KAT: ", oqsrand.RandomBytes(32))

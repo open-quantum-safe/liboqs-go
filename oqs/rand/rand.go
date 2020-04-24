@@ -71,10 +71,11 @@ func RandomBytesSwitchAlgorithm(algName string) error {
 	return nil
 }
 
-// RandomBytesNistKatInit initializes the NIST DRBG with the entropyInput seed,
-// which must be 48 exactly bytes long. The personalizationString is an optional
-// personalization string, which, if non-empty, must be at least 48 bytes long.
-func RandomBytesNistKatInit(entropyInput [48]byte,
+// RandomBytesNistKatInit256bit initializes the NIST DRBG with the entropyInput
+// seed, which must be 48 exactly bytes long. The personalizationString is an
+// optional personalization string, which, if non-empty, must be at least 48
+// bytes long. The security parameter is 256 bits.
+func RandomBytesNistKatInit256bit(entropyInput [48]byte,
 	personalizationString []byte) error {
 	lenStr := len(personalizationString)
 	if lenStr > 0 {
@@ -83,14 +84,14 @@ func RandomBytesNistKatInit(entropyInput [48]byte,
 				"empty or at least 48 bytes long")
 		}
 
-		C.OQS_randombytes_nist_kat_init(
+		C.OQS_randombytes_nist_kat_init_256bit(
 			(*C.uint8_t)(unsafe.Pointer(&entropyInput[0])),
-			(*C.uint8_t)(unsafe.Pointer(&personalizationString[0])), 256)
+			(*C.uint8_t)(unsafe.Pointer(&personalizationString[0])))
 		return nil
 	}
-	C.OQS_randombytes_nist_kat_init(
+	C.OQS_randombytes_nist_kat_init_256bit(
 		(*C.uint8_t)(unsafe.Pointer(&entropyInput[0])),
-		(*C.uint8_t)(unsafe.Pointer(nil)), 256)
+		(*C.uint8_t)(unsafe.Pointer(nil)))
 	return nil
 }
 
