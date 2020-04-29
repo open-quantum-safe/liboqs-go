@@ -134,7 +134,7 @@ and to build the unit test executable from the terminal/console, type
 
 which will build the `oqstests.test` executable in the directory from which you ran the above command.
 
-<a name="windows"></a>Running/building under Windows
+<a name="windows"></a>Running/building on Windows
 ----
 
 For simplicity, we only provide installation instructions for Go systems that supports modules (i.e. Go version 1.11 or later, see [above](#modules)). If your Go installation does not support modules, please adapt the [corresponding instructions](#no-modules) accordingly. We  assume that `liboqs` is installed under `C:\some\dir\liboqs` and was [successfully built](https://github.com/open-quantum-safe/liboqs#windows) in`C:\some\dir\liboqs\build`

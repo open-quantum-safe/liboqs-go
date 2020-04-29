@@ -1,4 +1,4 @@
-// various RNGs Go examples
+// various RNGs Go example
 package main
 
 import (
