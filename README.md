@@ -14,7 +14,7 @@ The wrapper is written in Go, hence in the following it is assumed that you have
 
 ## <a name="pre-requisites"></a>Pre-requisites
 
-liboqs-go depends on the [liboqs](https://github.com/open-quantum-safe/liboqs) C library; liboqs master branch must first be compiled as a UNIX/Linux/macOS/Windows library, see the building instructions [below](https://github.com/open-quantum-safe/liboqs-go#runningbuilding).
+liboqs-go depends on the [liboqs](https://github.com/open-quantum-safe/liboqs) C library; liboqs master branch must first be compiled as a Linux/macOS/Windows library (i.e. using `ninja install` with `-DBUILD_SHARED_LIBS=ON` during configuration), see the specific platform building instructions below.
 
 In addition, we assume you have access to:
 
@@ -39,7 +39,7 @@ liboqs-go is a Go package. The project contains the following files and director
 
 The examples in the [`examples`](https://github.com/open-quantum-safe/liboqs-go/tree/master/examples) directory are self-explanatory and provide more details about the wrapper's API.
 
-<a name="posix"></a>Running/building on POSIX  (Linux/UNIX-like) platforms
+<a name="posix"></a>Running/building on POSIX (Linux/UNIX-like) platforms
 ----
 
 First, you must build the master branch of liboqs according to the [liboqs building instructions](https://github.com/open-quantum-safe/liboqs#linuxmacos) with shared library support enabled (add `-DBUILD_SHARED_LIBS=ON` to the `cmake` command), followed (optionally) by a `sudo ninja install` to ensure that the shared library is visible system-wide (by default it installs under `/usr/local/include` and `/usr/local/lib` on Linux/macOS). 
