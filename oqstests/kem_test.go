@@ -3,6 +3,7 @@ package oqstests
 
 import (
 	"bytes"
+	"github.com/open-quantum-safe/liboqs-go/oqs/rand"
 	"log"
 	"runtime"
 	"sync"
@@ -17,14 +18,17 @@ var disabledKEMPatterns []string
 // noThreadKEMPatterns lists KEMs that have issues running in a separate thread
 var noThreadKEMPatterns = []string{"LEDAcryptKEM-LT52"}
 
-// wgKEM groups goroutines and blocks the caller until all goroutines finish.
-var wgKEM sync.WaitGroup
+// wgKEMCorrectness groups goroutines and blocks the caller until all goroutines finish.
+var wgKEMCorrectness sync.WaitGroup
 
-// testKEM tests a specific KEM.
-func testKEM(kemName string, threading bool, t *testing.T) {
-	log.Println(kemName) // thread-safe
+// wgKEMWrongCiphertext groups goroutines and blocks the caller until all goroutines finish.
+var wgKEMWrongCiphertext sync.WaitGroup
+
+// testKEMCorrectness tests the correctness of a specific KEM.
+func testKEMCorrectness(kemName string, threading bool, t *testing.T) {
+	log.Println("Correctness - ", kemName) // thread-safe
 	if threading == true {
-		defer wgKEM.Done()
+		defer wgKEMCorrectness.Done()
 	}
 	var client, server oqs.KeyEncapsulation
 	defer client.Clean()
@@ -41,8 +45,30 @@ func testKEM(kemName string, threading bool, t *testing.T) {
 	}
 }
 
-// TestKeyEncapsulation tests all enabled KEMs.
-func TestKeyEncapsulation(t *testing.T) {
+// testKEMWrongCiphertext tests the wrong ciphertext regime of a specific KEM.
+func testKEMWrongCiphertext(kemName string, threading bool, t *testing.T) {
+	log.Println("Wrong ciphertext - ", kemName) // thread-safe
+	if threading == true {
+		defer wgKEMWrongCiphertext.Done()
+	}
+	var client, server oqs.KeyEncapsulation
+	defer client.Clean()
+	defer server.Clean()
+	// ignore potential errors everywhere
+	_ = client.Init(kemName, nil)
+	_ = server.Init(kemName, nil)
+	clientPublicKey, _ := client.GenerateKeyPair()
+	ciphertext, sharedSecretServer, _ := server.EncapSecret(clientPublicKey)
+	wrongCiphertext := rand.RandomBytes(len(ciphertext))
+	sharedSecretClient, _ := client.DecapSecret(wrongCiphertext)
+	if bytes.Equal(sharedSecretClient, sharedSecretServer) {
+		// t.Errorf is thread-safe
+		t.Errorf(kemName + ": shared secrets should not coincide")
+	}
+}
+
+// TestKeyEncapsulationCorrectness tests the correctness of all enabled KEMs.
+func TestKeyEncapsulationCorrectness(t *testing.T) {
 	// disable some KEMs in macOS/OSX
 	if runtime.GOOS == "darwin" {
 		disabledKEMPatterns = []string{"Classic-McEliece"}
@@ -63,20 +89,58 @@ func TestKeyEncapsulation(t *testing.T) {
 		// issues with stack size being too small
 		if stringMatchSlice(kemName, noThreadKEMPatterns) {
 			cnt++
-			testKEM(kemName, false, t)
+			testKEMCorrectness(kemName, false, t)
 		}
 	}
 	// test the remaining KEMs in separate goroutines
-	wgKEM.Add(len(oqs.EnabledKEMs()) - cnt)
+	wgKEMCorrectness.Add(len(oqs.EnabledKEMs()) - cnt)
 	for _, kemName := range oqs.EnabledKEMs() {
 		if stringMatchSlice(kemName, disabledKEMPatterns) {
 			continue
 		}
 		if !stringMatchSlice(kemName, noThreadKEMPatterns) {
-			go testKEM(kemName, true, t)
+			go testKEMCorrectness(kemName, true, t)
 		}
 	}
-	wgKEM.Wait()
+	wgKEMCorrectness.Wait()
+}
+
+// TestKeyEncapsulationWrongCiphertext tests the wrong ciphertext regime of all enabled KEMs.
+func TestKeyEncapsulationWrongCiphertext(t *testing.T) {
+	// disable some KEMs in macOS/OSX
+	if runtime.GOOS == "darwin" {
+		disabledKEMPatterns = []string{"Classic-McEliece"}
+	}
+	// disable some KEMs in Windows
+	if runtime.GOOS == "windows" {
+		disabledKEMPatterns = []string{"Classic-McEliece"}
+	}
+	// first test KEMs that belong to noThreadKEMPatterns[] in the main
+	// goroutine, due to issues with stack size being too small in macOS or
+	// Windows
+	cnt := 0
+	for _, kemName := range oqs.EnabledKEMs() {
+		if stringMatchSlice(kemName, disabledKEMPatterns) {
+			cnt++
+			continue
+		}
+		// issues with stack size being too small
+		if stringMatchSlice(kemName, noThreadKEMPatterns) {
+			cnt++
+			testKEMWrongCiphertext(kemName, false, t)
+		}
+	}
+	// test the remaining KEMs in separate goroutines
+	wgKEMWrongCiphertext.Add(len(oqs.EnabledKEMs()) - cnt)
+	for _, kemName := range oqs.EnabledKEMs() {
+		if stringMatchSlice(kemName, disabledKEMPatterns) {
+			continue
+		}
+		if !stringMatchSlice(kemName, noThreadKEMPatterns) {
+			go testKEMWrongCiphertext(kemName, true, t)
+		}
+	}
+	wgKEMWrongCiphertext.Wait()
 }
 
 // TestUnsupportedKeyEncapsulation tests that an unsupported KEM emits an error.

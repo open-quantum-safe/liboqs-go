@@ -145,7 +145,7 @@ For simplicity, we only provide installation instructions for Go systems that su
 of course replacing the paths with the ones corresponding to your system.
 
 As mentioned in the [Pre-requisites](#pre-requisites) section, we assume you have  installed the  [MSYS2](https://www.msys2.org/) C compiler (which contains also `pkg-config`). Make sure that the executable `gcc` and `pkg-config` from  MSYS2 are system-wide visible, using e.g. the "Edit the system environment variables" Control Panel tool to add their corresponding directory to the `PATH` environment variable. In our case, MSYS2's `gcc` and `pkg-config` are located under `C:\msys64\mingw64\bin`
-,so we need to add that directory to the `PATH`. **Very important:** make sure that the `PATH` entry to the `gcc` and `pkg-config` provided by `MSYS2`comes **before** any other (if any) `gcc` and `pkg-config` executables you may have installed (e.g..such as the ones provided by [Cygwin](www.cygwin.org)). To verify, type into a Command Prompt `gcc --version`, and you should get an output like 
+,so we need to add that directory to the `PATH`. **Very important:** make sure that the `PATH` entry to the `gcc` and `pkg-config` provided by `MSYS2`comes **before** any other (if any) `gcc` and `pkg-config` executables you may have installed (e.g. such as the ones provided by [Cygwin](https://www.cygwin.com)). To verify, type into a Command Prompt `gcc --version`, and you should get an output like 
 
 > gcc (Rev3, Built by MSYS2 project) 9.1.0
 
