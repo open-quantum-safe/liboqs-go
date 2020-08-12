@@ -16,7 +16,7 @@ import (
 var disabledKEMPatterns []string
 
 // noThreadKEMPatterns lists KEMs that have issues running in a separate thread
-var noThreadKEMPatterns = []string{"LEDAcryptKEM-LT52"}
+var noThreadKEMPatterns = []string{"LEDAcryptKEM-LT52", "HQC-256"}
 
 // wgKEMCorrectness groups goroutines and blocks the caller until all goroutines finish.
 var wgKEMCorrectness sync.WaitGroup
@@ -71,11 +71,11 @@ func testKEMWrongCiphertext(kemName string, threading bool, t *testing.T) {
 func TestKeyEncapsulationCorrectness(t *testing.T) {
 	// disable some KEMs in macOS/OSX
 	if runtime.GOOS == "darwin" {
-		disabledKEMPatterns = []string{"Classic-McEliece", "HQC-256"}
+		disabledKEMPatterns = []string{"Classic-McEliece"}
 	}
 	// disable some KEMs in Windows
 	if runtime.GOOS == "windows" {
-		disabledKEMPatterns = []string{"Classic-McEliece", "HQC-256"}
+		disabledKEMPatterns = []string{"Classic-McEliece"}
 	}
 	// first test KEMs that belong to noThreadKEMPatterns[] in the main
 	// goroutine, due to issues with stack size being too small in macOS or
@@ -109,11 +109,11 @@ func TestKeyEncapsulationCorrectness(t *testing.T) {
 func TestKeyEncapsulationWrongCiphertext(t *testing.T) {
 	// disable some KEMs in macOS/OSX
 	if runtime.GOOS == "darwin" {
-		disabledKEMPatterns = []string{"Classic-McEliece", "HQC-256"}
+		disabledKEMPatterns = []string{"Classic-McEliece"}
 	}
 	// disable some KEMs in Windows
 	if runtime.GOOS == "windows" {
-		disabledKEMPatterns = []string{"Classic-McEliece", "HQC-256"}
+		disabledKEMPatterns = []string{"Classic-McEliece"}
 	}
 	// first test KEMs that belong to noThreadKEMPatterns[] in the main
 	// goroutine, due to issues with stack size being too small in macOS or
