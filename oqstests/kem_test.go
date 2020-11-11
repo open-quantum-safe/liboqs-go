@@ -109,7 +109,7 @@ func TestKeyEncapsulationCorrectness(t *testing.T) {
 func TestKeyEncapsulationWrongCiphertext(t *testing.T) {
 	// disable some KEMs in macOS/OSX
 	if runtime.GOOS == "darwin" {
-		disabledKEMPatterns = []string{"Classic-McEliece"}
+		disabledKEMPatterns = []string{"Classic-McEliece", "HQC-256"}
 	}
 	// disable some KEMs in Windows
 	if runtime.GOOS == "windows" {
