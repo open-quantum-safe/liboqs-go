@@ -17,10 +17,10 @@ install:
       @echo on
       set "PATH=%LIBOQS_DLL_DIR%;%PATH%"
       call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
-      git clone https://github.com/open-quantum-safe/liboqs %LIBOQS_INSTALL_PATH%
+      git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs %LIBOQS_INSTALL_PATH%
       mkdir %LIBOQS_BUILD_DIR%
       cd %LIBOQS_BUILD_DIR%
-      cmake .. -DCMAKE_BUILD_TYPE=Optimized -DBUILD_SHARED_LIBS=ON -G"Ninja"
+      cmake .. -DCMAKE_BUILD_TYPE=Optimized -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIBS=ON -G"Ninja"
       ninja 1> nul
 
 build_script:
