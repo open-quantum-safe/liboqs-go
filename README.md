@@ -1,7 +1,7 @@
 liboqs-go: Go bindings for liboqs
 =================================
 
-[![Build status - Linux/macOS](https://api.travis-ci.com/open-quantum-safe/liboqs-go.svg?branch=master)](https://travis-ci.com/open-quantum-safe/liboqs-go)
+[![Build status - Linux/macOS](https://api.travis-ci.com/open-quantum-safe/liboqs-go.svg?branch=main)](https://travis-ci.com/open-quantum-safe/liboqs-go)
 [![Build status](https://ci.appveyor.com/api/projects/status/x4d2quphnr1c2emf?svg=true)](https://ci.appveyor.com/project/vsoftco/liboqs-go)
 [![Go Report Card](https://goreportcard.com/badge/github.com/open-quantum-safe/liboqs-go)](https://goreportcard.com/report/github.com/open-quantum-safe/liboqs-go)
 [![Documentation](https://godoc.org/github.com/open-quantum-safe/liboqs-go/oqs?status.svg)](https://pkg.go.dev/github.com/open-quantum-safe/liboqs-go/oqs)
@@ -37,7 +37,7 @@ liboqs-go is a Go package. The project contains the following files and director
 <a name="usage"></a>Usage
 ----
 
-The examples in the [`examples`](https://github.com/open-quantum-safe/liboqs-go/tree/master/examples) directory are self-explanatory and provide more details about the wrapper's API.
+The examples in the [`examples`](https://github.com/open-quantum-safe/liboqs-go/tree/main/examples) directory are self-explanatory and provide more details about the wrapper's API.
 
 <a name="posix"></a>Running/building on POSIX (Linux/UNIX-like) platforms
 ----
@@ -55,7 +55,7 @@ Download/clone the `liboqs-go` wrapper repository in the directory of your choic
 
     cd $HOME && git clone https://github.com/open-quantum-safe/liboqs-go
 
-Next, you must modify the following lines in [`$HOME/liboqs-go/.config/liboqs.pc`](https://github.com/open-quantum-safe/liboqs-go/tree/master/.config/liboqs.pc)
+Next, you must modify the following lines in [`$HOME/liboqs-go/.config/liboqs.pc`](https://github.com/open-quantum-safe/liboqs-go/tree/main/.config/liboqs.pc)
 
     LIBOQS_INCLUDE_DIR=/usr/local/include
     LIBOQS_LIB_DIR=/usr/local/lib
@@ -105,7 +105,7 @@ To simplify the instructions to follow, export the path to the wrapper in the `L
 
 In my case `LIBOQSGO_INSTALL_PATH` is set to `$HOME/go/src/github.com/open-quantum-safe/liboqs-go`.
 
-Next, you must modify the following lines in [`$LIBOQSGO_INSTALL_PATH/.config/liboqs.pc`](https://github.com/open-quantum-safe/liboqs-go/tree/master/.config/liboqs.pc)
+Next, you must modify the following lines in [`$LIBOQSGO_INSTALL_PATH/.config/liboqs.pc`](https://github.com/open-quantum-safe/liboqs-go/tree/main/.config/liboqs.pc)
 
     LIBOQS_INCLUDE_DIR=/usr/local/include
     LIBOQS_LIB_DIR=/usr/local/lib
@@ -149,7 +149,7 @@ As mentioned in the [Pre-requisites](#pre-requisites) section, we assume you hav
 
 > gcc (Rev3, Built by MSYS2 project) 9.1.0
 
-Next, similarly to the [POSIX instructions](#modules), modify the corresponding lines in [`liboqs-go\.config\liboqs.pc`](https://github.com/open-quantum-safe/liboqs-go/tree/master/.config/liboqs.pc) to point to the correct locations, **using forward slashes `/` and not back-slashes**, e.g.
+Next, similarly to the [POSIX instructions](#modules), modify the corresponding lines in [`liboqs-go\.config\liboqs.pc`](https://github.com/open-quantum-safe/liboqs-go/tree/main/.config/liboqs.pc) to point to the correct locations, **using forward slashes `/` and not back-slashes**, e.g.
 
     LIBOQS_INCLUDE_DIR=C:/some/dir/liboqs/build/include
     LIBOQS_LIB_DIR=C:/some/dir/liboqs/build/lib
@@ -171,7 +171,7 @@ and/or
 
     go test -v .\oqstests
 
-If you do not get any errors and the example (unit tests) is (are) successfully run, then your installation was successful. For more details about command-line configuration under Windows see the AppVeyor CI configuration file [`appveyor.yml`](https://github.com/open-quantum-safe/liboqs-go/tree/master/appveyor.yml).
+If you do not get any errors and the example (unit tests) is (are) successfully run, then your installation was successful. For more details about command-line configuration under Windows see the AppVeyor CI configuration file [`appveyor.yml`](https://github.com/open-quantum-safe/liboqs-go/tree/main/appveyor.yml).
 
 <a name="documentation"></a>Documentation
 ----
@@ -196,9 +196,9 @@ if using Go modules, or
 
 if not using Go modules.    
 
-For [GoDoc](https://godoc.org) automatically-generated documentation in HTML format, click [here](https://godoc.org/github.com/open-quantum-safe/liboqs-go/oqs).
+For automatically-generated documentation in HTML format, click [here](https://pkg.go.dev/github.com/open-quantum-safe/liboqs-go/oqs).
 
-For the RNG-related documentation, click [here](https://godoc.org/github.com/open-quantum-safe/liboqs-go/oqs/rand).
+For the RNG-related documentation, click [here](https://pkg.go.dev/github.com/open-quantum-safe/liboqs-go/oqs/rand).
 
 <a name="limitations"></a>Limitations and security
 ----
@@ -209,12 +209,12 @@ We believe that the NIST Post-Quantum Cryptography standardization project is cu
 
 We acknowledge that some parties may want to begin deploying post-quantum cryptography prior to the conclusion of the NIST standardization project. We strongly recommend that any attempts to do make use of so-called **hybrid cryptography**, in which post-quantum public-key algorithms are used alongside traditional public key algorithms (like RSA or elliptic curves) so that the solution is at least no less secure than existing traditional cryptography.
 
-Just like liboqs, liboqs-go is provided "as is", without warranty of any kind. See [LICENSE](https://github.com/open-quantum-safe/liboqs-go/blob/master/LICENSE) for the full disclaimer.
+Just like liboqs, liboqs-go is provided "as is", without warranty of any kind. See [LICENSE](https://github.com/open-quantum-safe/liboqs-go/blob/main/LICENSE) for the full disclaimer.
 
 License
 -------
 
-liboqs-go is licensed under the MIT License; see [LICENSE](https://github.com/open-quantum-safe/liboqs-go/blob/master/LICENSE) for details.
+liboqs-go is licensed under the MIT License; see [LICENSE](https://github.com/open-quantum-safe/liboqs-go/blob/main/LICENSE) for details.
 
 Team
 ----

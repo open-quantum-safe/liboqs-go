@@ -1,3 +1,7 @@
+Version 0.4.0 - November 28, 2020
+    - Bugfixes
+    - Renamed 'master' branch to 'main'
+
 Version 0.3.0 - June 10, 2020
     - Full Windows support and AppVeyor continuous integration
     - Disabled unit testing for McEliece and Rainbow-IIIc/Vc under Windows
