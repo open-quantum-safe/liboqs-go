@@ -1,5 +1,5 @@
-LIBOQS_INCLUDE_DIR=/usr/local/include
-LIBOQS_LIB_DIR=/usr/local/lib
+LIBOQS_INCLUDE_DIR=C:/Users/vsoft/GitHub/liboqs/build/include
+LIBOQS_LIB_DIR=C:/Users/vsoft/GitHub/liboqs/build/lib/Debug
 
 Name: liboqs
 Description: C library for quantum resistant cryptography

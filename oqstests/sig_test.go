@@ -94,11 +94,11 @@ func testSigWrongPublicKey(sigName string, msg []byte, threading bool, t *testin
 func TestSignatureCorrectness(t *testing.T) {
 	// disable some sigs in macOS/OSX
 	if runtime.GOOS == "darwin" {
-		disabledSigPatterns = []string{"Rainbow-IIIc", "Rainbow-Vc"}
+		disabledSigPatterns = []string{"Rainbow-III", "Rainbow-V"}
 	}
 	// disable some sigs in Windows
 	if runtime.GOOS == "windows" {
-		disabledSigPatterns = []string{"Rainbow-IIIc", "Rainbow-Vc"}
+		disabledSigPatterns = []string{"Rainbow-V"}
 	}
 	msg := []byte("This is our favourite message to sign")
 	// first test sigs that belong to noThreadSigPatterns[] in the main
@@ -134,11 +134,11 @@ func TestSignatureCorrectness(t *testing.T) {
 func TestSignatureWrongSignature(t *testing.T) {
 	// disable some sigs in macOS/OSX
 	if runtime.GOOS == "darwin" {
-		disabledSigPatterns = []string{"Rainbow-IIIc", "Rainbow-Vc"}
+		disabledSigPatterns = []string{"Rainbow-III", "Rainbow-V"}
 	}
 	// disable some sigs in Windows
 	if runtime.GOOS == "windows" {
-		disabledSigPatterns = []string{"Rainbow-IIIc", "Rainbow-Vc"}
+		disabledSigPatterns = []string{"Rainbow-V"}
 	}
 	msg := []byte("This is our favourite message to sign")
 	// first test sigs that belong to noThreadSigPatterns[] in the main
@@ -174,11 +174,11 @@ func TestSignatureWrongSignature(t *testing.T) {
 func TestSignatureWrongPublicKey(t *testing.T) {
 	// disable some sigs in macOS/OSX
 	if runtime.GOOS == "darwin" {
-		disabledSigPatterns = []string{"Rainbow-IIIc", "Rainbow-Vc"}
+		disabledSigPatterns = []string{"Rainbow-III", "Rainbow-V"}
 	}
 	// disable some sigs in Windows
 	if runtime.GOOS == "windows" {
-		disabledSigPatterns = []string{"Rainbow-IIIc", "Rainbow-Vc"}
+		disabledSigPatterns = []string{"Rainbow-V"}
 	}
 	msg := []byte("This is our favourite message to sign")
 	// first test sigs that belong to noThreadSigPatterns[] in the main

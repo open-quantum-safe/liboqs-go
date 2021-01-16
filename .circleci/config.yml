@@ -12,7 +12,7 @@ localCheckout: &localCheckout
 
 jobs:
   ubuntu_x64_liboqsgo:
-    description: A template for building and testing liboqs-go
+    description: A template for building and testing liboqs-go on Ubuntu Linux
     docker:
       - image: openquantumsafe/ci-ubuntu-bionic-x86_64:latest
         auth:
@@ -22,50 +22,69 @@ jobs:
       - checkout # change this from "checkout" to "*localCheckout" when running CircleCI locally
       - run:
           name: Authenticate to Docker
-          command: echo $DOCKER_PASSWORD | docker login --username $DOCKER_LOGIN --password-stdin
-      - run:
-          name: build and install liboqs
           command: |
-            git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs &&
-            cd liboqs && mkdir build && cd build && cmake -GNinja -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON .. &&
+            echo $DOCKER_PASSWORD | docker login --username $DOCKER_LOGIN --password-stdin
+      - run:
+          name: Build and install liboqs
+          command: |
+            git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs
+            cd liboqs && mkdir build && cd build
+            cmake .. -GNinja -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON
             ninja install
       - run:
-          name: Run examples and unit tests
+          name: Run examples
           command: |
-            export PKG_CONFIG_PATH=`pwd`/.config && export LD_LIBRARY_PATH=/usr/local/lib &&
-            go run examples/kem/kem.go && go run examples/rand/rand.go &&
-            go run examples/sig/sig.go && go test -v oqstests/*
+            export LD_LIBRARY_PATH=/usr/local/lib
+            export PKG_CONFIG_PATH=`pwd`/.config
+            go run examples/kem/kem.go
+            go run examples/sig/sig.go
+            go run examples/rand/rand.go
+      - run:
+          name: Run unit tests
+          command: |
+            export LD_LIBRARY_PATH=/usr/local/lib
+            export PKG_CONFIG_PATH=`pwd`/.config
+            go test -v oqstests/*
 
   macOS:
-    description: A template for running liboqs-go tests on macOS
+    description: A template for building and testing liboqs-go on macOS
     macos:
       xcode: "11.3.0"
     steps:
       - checkout # change this from "checkout" to "*localCheckout" when running CircleCI locally
       - run:
           name: Install dependencies
-          command: brew update && brew install gcc6 ninja && export CXX="g++-6" CC="gcc-6" &&
-            sudo softwareupdate -i "Command Line Tools (macOS High Sierra version 10.13) for Xcode-10.1" 
+          command: |
+            brew update && brew install ninja cmake go pkg-config
+            sudo softwareupdate -i "Command Line Tools (macOS High Sierra version 10.13) for Xcode-10.1"
       - run:
           name: Build and install liboqs
           command: |
-            git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs &&
-            cd liboqs && mkdir build && cd build && cmake -GNinja -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON .. &&
+            git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs
+            cd liboqs && mkdir build && cd build
+            cmake .. -GNinja -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON
             ninja install
       - run:
-          name: Run examples and unit tests
+          name: Run examples
           command: |
-            export PKG_CONFIG_PATH=`pwd`/.config && export LD_LIBRARY_PATH=/usr/local/lib &&
-            go run examples/kem/kem.go && go run examples/rand/rand.go &&
-            go run examples/sig/sig.go && go test -v oqstests/*
+            export LD_LIBRARY_PATH=/usr/local/lib
+            export PKG_CONFIG_PATH=`pwd`/.config
+            go run examples/kem/kem.go
+            go run examples/sig/sig.go
+            go run examples/rand/rand.go
+      - run:
+          name: Run unit tests
+          command: |
+            export LD_LIBRARY_PATH=/usr/local/lib
+            export PKG_CONFIG_PATH=`pwd`/.config
+            go test -v oqstests/*
 
 workflows:
-  version: 2.1
   build:
     jobs:
       - ubuntu_x64_liboqsgo:
           name: ubuntu-bionic
           context: openquantumsafe
-#      - macOS:
-#          name: macOS-base
-
+      - macOS:
+          name: macOS-base
+          context: openquantumsafe
