@@ -257,6 +257,43 @@ configuration under Windows see the AppVeyor CI configuration
 file [`appveyor.yml`](https://github.com/open-quantum-safe/liboqs-go/tree/main/appveyor.yml)
 .
 
+
+<a name="Disposable docker containers"></a>Quick and dirty execution of examples with disposable Docker containers
+----
+
+With relevant docker named volumes run a container to clone liboqs
+
+	docker run -it --rm -v liboqs:/oqs -w /oqs openquantumsafe/ci-ubuntu-focal-x86_64  git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs
+
+Build containers
+
+	docker run -it --rm -v liboqs:/oqs -v liboqs-build:/oqs/liboqs/build -w /oqs/liboqs/build openquantumsafe/ci-ubuntu-focal-x86_64 cmake .. -GNinja -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON
+
+	docker run -it --rm -v liboqs:/oqs -v liboqs-build:/oqs/liboqs/build -v liboqs-install:/usr/local/include -v liboqs-lib:/usr/local/lib/ -w /oqs/liboqs/build openquantumsafe/ci-ubuntu-focal-x86_64 ninja install
+
+Get the liboqs-go source 
+
+	docker run -it --rm -v liboqs-go:/usr/local/go/src/liboqs-go -w /usr/local/go/src/liboqs-go openquantumsafe/ci-ubuntu-focal-x86_64  git clone --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs-go . 
+	
+Setup a few environment variables and run desired example 	
+
+	docker run -it --rm  \
+     -v liboqs:/oqs -v liboqs-build:/oqs/liboqs/build -v liboqs-install:/usr/local/include -v liboqs-lib:/usr/local/lib/ -v liboqs-go:/usr/local/go/src/liboqs-go \
+     -w /usr/local/go/src/liboqs-go \
+     -e LD_LIBRARY_PATH=/usr/local/lib:/usr/local/include \
+     -e PKG_CONFIG_PATH=/usr/local/go/src/liboqs-go/.config  \
+     -e LIBOQSGO_INSTALL_PATH=/usr/local/go/src/liboqs-go \
+     -e GOROOT=/usr/local/go  \
+     -e PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/include/oqs \
+      openquantumsafe/ci-ubuntu-focal-x86_64 go run examples/kem/kem.go 
+
+---
+**NOTE**
+
+One must remove docker volumes -  ``docker volume rm liboqs liboqs-build liboqs-go liboqs-install liboqs-lib ``
+
+---
+
 <a name="documentation"></a>Documentation
 ----
 
