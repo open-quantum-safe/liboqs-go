@@ -13,7 +13,7 @@ func main() {
 	fmt.Println("Enabled KEMs:")
 	fmt.Println(oqs.EnabledKEMs())
 
-	kemName := "DEFAULT"
+	kemName := "Kyber512"
 	client := oqs.KeyEncapsulation{}
 	defer client.Clean() // clean up even in case of panic
 
