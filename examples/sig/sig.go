@@ -12,7 +12,7 @@ func main() {
 	fmt.Println("Enabled signatures:")
 	fmt.Println(oqs.EnabledSigs())
 
-	sigName := "DEFAULT"
+	sigName := "Dilithium2"
 	signer := oqs.Signature{}
 	defer signer.Clean() // clean up even in case of panic
 
