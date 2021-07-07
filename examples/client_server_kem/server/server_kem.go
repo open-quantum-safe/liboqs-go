@@ -43,7 +43,7 @@ func main() {
 		os.Exit(1)
 	}
 	port := os.Args[1]
-	kemName := "DEFAULT"
+	kemName := "Kyber512"
 	if len(os.Args) > 2 {
 		kemName = os.Args[2]
 	}
