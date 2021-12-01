@@ -55,7 +55,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            brew update && brew install ninja cmake go pkg-config
+            env HOMEBREW_NO_AUTO_UPDATE=1 brew install ninja cmake go pkg-config
             sudo softwareupdate -i "Command Line Tools (macOS High Sierra version 10.13) for Xcode-10.1"
       - run:
           name: Build and install liboqs
