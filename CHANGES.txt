@@ -1,6 +1,7 @@
-Pre-release
-    - Switched continuous integration from Travis CI to CircleCI, we now support
-      macOS & Linux (CircleCI) and Windows (AppVeyor)
+Version 0.7.1 - January 5, 2022
+    - Release numbering updated to match liboqs
+    - Switched continuous integration from Travis CI to CircleCI, we now
+      support macOS & Linux (CircleCI) and Windows (AppVeyor)
 
 Version 0.4.0 - November 28, 2020
     - Bugfixes
