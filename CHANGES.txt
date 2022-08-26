@@ -1,3 +1,7 @@
+Version 0.7.2 - August 26, 2022
+    - Added liboqs library version retrieval function
+          LiboqsVersion() string
+
 Version 0.7.1 - January 5, 2022
     - Release numbering updated to match liboqs
     - Switched continuous integration from Travis CI to CircleCI, we now

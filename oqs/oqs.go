@@ -15,6 +15,11 @@ import (
 
 /**************** Misc functions ****************/
 
+// LiboqsVersion retrieves the underlying liboqs version string.
+func LiboqsVersion() string {
+	return C.GoString(C.OQS_version())
+}
+
 // MemCleanse sets to zero the content of a byte slice by invoking the liboqs
 // OQS_MEM_cleanse() function. Use it to clean "hot" memory areas, such as
 // secret keys etc.

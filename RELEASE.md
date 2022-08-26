@@ -1,4 +1,4 @@
-liboqs-go version 0.7.1
+liboqs-go version 0.7.2
 =======================
 
 About
@@ -13,15 +13,14 @@ The **Open Quantum Safe (OQS) project** has the goal of developing and prototypi
 Release notes
 =============
 
-This release of liboqs-go was released on January 5, 2022. Its release page on GitHub is https://github.com/open-quantum-safe/liboqs-go/releases/tag/0.7.1.
+This release of liboqs-go was released on August 26, 2022. Its release page on 
+GitHub is https://github.com/open-quantum-safe/liboqs-go/releases/tag/0.7.2.
 
 What's New
 ----------
 
-This is the ninth release of liboqs-go. 
+This is the 10th release of liboqs-go. 
 
 This is an incremental minor change release.
 
-For a list of changes
-see [CHANGES.txt](https://github.com/open-quantum-safe/liboqs-go/blob/main/CHANGES.txt)
-.
+For a list of changes see [CHANGES.txt](https://github.com/open-quantum-safe/liboqs-go/blob/main/CHANGES.txt).

@@ -367,7 +367,7 @@ and [Michele Mosca](http://faculty.iqc.uwaterloo.ca/mmosca/) at the University
 of Waterloo.
 
 liboqs-go was developed by [Vlad Gheorghiu](http://vsoftco.github.io) at
-evolutionQ and University of Waterloo.
+softwareQ Inc. and University of Waterloo.
 
 ### Support
 
@@ -376,7 +376,7 @@ Amazon Web Services and the Canadian Centre for Cyber Security.
 
 We'd like to make a special acknowledgement to the companies who have dedicated
 programmer time to contribute source code to OQS, including Amazon Web Services,
-evolutionQ, and Microsoft Research.
+evolutionQ, softwareQ, and Microsoft Research.
 
 Research projects which developed specific components of OQS have been supported
 by various research grants, including funding from the Natural Sciences and

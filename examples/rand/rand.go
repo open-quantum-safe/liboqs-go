@@ -3,6 +3,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/open-quantum-safe/liboqs-go/oqs"
 	"log"
 	"runtime"
 
@@ -26,6 +27,7 @@ func main() {
 	if err := oqsrand.RandomBytesNistKatInit256bit(entropySeed, nil); err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("liboqs version: " + oqs.LiboqsVersion())
 	fmt.Printf("%-18s% X\n", "NIST-KAT: ", oqsrand.RandomBytes(32))
 
 	if err := oqsrand.RandomBytesCustomAlgorithm(CustomRNG); err != nil {

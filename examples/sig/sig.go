@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+	fmt.Println("liboqs version: " + oqs.LiboqsVersion())
 	fmt.Println("Enabled signatures:")
 	fmt.Println(oqs.EnabledSigs())
 
