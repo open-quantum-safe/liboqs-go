@@ -43,6 +43,13 @@ In addition, we assume you have access to:
   , then add the corresponding installation location (in our
   case, `C:\msys64\mingw64\bin`) to your `PATH` environment variable.
 
+### Functional restrictions
+
+Please note that on some platforms not all algorithms are supported:
+
+- Darwin: The Rainbow and Classic-McEliece algorithm families as well as HQC-256 do not work.
+- Windows: The Rainbow and Classic-McEliece algorithm families do not work.
+
 <a name="contents"></a>Contents
 ----
 
