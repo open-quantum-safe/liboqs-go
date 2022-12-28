@@ -41,5 +41,5 @@ RUN git clone https://github.com/open-quantum-safe/liboqs-go
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/home/liboqs-go/.config
 WORKDIR /home/liboqs-go
-RUN go build /home/liboqs-go/examples/kem/kem.go
-CMD ["./kem"]
+RUN go test -c ./oqstests
+CMD ["./oqstests.test"]
