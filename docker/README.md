@@ -7,7 +7,7 @@ You can build the container with:
 docker build -t liboqs-go .
 
 ```
-You can start the container and run the kem example with:
+You can start the container and run the tests with:
 ```cmd
 docker run liboqs-go
 
@@ -23,4 +23,3 @@ After intalling hadolint, you can check it with:
 ```
 docker run --rm -i hadolint/hadolint < Dockerfile
 ```
-
