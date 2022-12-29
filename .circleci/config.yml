@@ -78,9 +78,47 @@ jobs:
             export PKG_CONFIG_PATH=`pwd`/.config
             go test -v oqstests/*
 
+  dockerbuild:
+    description: Building and pushing oqs-go enabled image
+    docker:
+      - image: openquantumsafe/ci-ubuntu-bionic-x86_64:latest
+        auth:
+          username: $DOCKER_LOGIN
+          password: $DOCKER_PASSWORD
+    steps:
+      - checkout # change this from "checkout" to "*localCheckout" when running CircleCI locally
+      - setup_remote_docker
+      - run:
+          name: Authenticate to Docker
+          command: |
+            echo $DOCKER_PASSWORD | docker login --username $DOCKER_LOGIN --password-stdin
+      - run:
+          name: Build docker image
+          command: |
+            docker build --build-arg MAKE_DEFINES="-j 18" -t oqs-go .
+          working_directory: docker
+      - run:
+          name: Test docker image
+          command: |
+            docker run oqs-go
+      - when:
+          condition:
+            equal: [ main, << pipeline.git.branch >> ]
+          steps:
+            - run:
+                name: Push docker image
+                command: |
+                   export SHORT_GITID=`git rev-parse --short HEAD`
+                   docker tag oqs-go $TARGETNAME/go:latest && \
+                   docker push $TARGETNAME/go:latest && \
+                   docker tag oqs-go $TARGETNAME/go:$SHORT_GITID && \
+                   docker push $TARGETNAME/go:$SHORT_GITID
+
 workflows:
   build:
     jobs:
+      - dockerbuild:
+          context: openquantumsafe
       - ubuntu_x64_liboqsgo:
           name: ubuntu-bionic
           context: openquantumsafe
