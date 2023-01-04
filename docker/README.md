@@ -8,11 +8,11 @@ docker pull openquantumsafe/go
 ```
 You can build the container with:
 ```bash
-docker build -t  openquantumsafe/go .
+docker build -t openquantumsafe/go .
 ```
 You can start the container and run the tests with:
 ```bash
-docker run  openquantumsafe/go
+docker run openquantumsafe/go
 ```
 If you want to mount your current directory into the container and use it as an development environment:
 ```bash
