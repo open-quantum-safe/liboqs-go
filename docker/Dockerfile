@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   xsltproc=1.1.34-4ubuntu0.22.04.1 -V \
 && git clone -b main https://github.com/open-quantum-safe/liboqs.git
 WORKDIR /app/liboqs/build
-RUN cmake -GNinja .. -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON \
+RUN cmake -GNinja .. -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON -DOQS_DIST_BUILD=ON \
 && ninja
 
 FROM ubuntu:22.04
