@@ -1,11 +1,12 @@
 package oqstests
 
 import (
-	"github.com/open-quantum-safe/liboqs-go/oqs/rand"
 	"log"
 	"runtime"
 	"sync"
 	"testing"
+
+	"github.com/open-quantum-safe/liboqs-go/oqs/rand"
 
 	"github.com/open-quantum-safe/liboqs-go/oqs"
 )
@@ -160,6 +161,7 @@ func TestSignatureWrongSignature(t *testing.T) {
 	wgSigWrongSignature.Add(len(oqs.EnabledSigs()) - cnt)
 	for _, sigName := range oqs.EnabledSigs() {
 		if stringMatchSlice(sigName, disabledSigPatterns) {
+			wgSigWrongSignature.Done()
 			continue
 		}
 		if !stringMatchSlice(sigName, noThreadSigPatterns) {
