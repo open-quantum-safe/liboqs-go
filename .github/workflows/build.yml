@@ -33,7 +33,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@master
         with:
-          images: samyuan1990/liboqs-go
+          images: ghcr.io/samyuan1990/liboqs-go
           tags: |
               type=ref,event=tag
 
@@ -43,5 +43,5 @@ jobs:
           context: ./docker
           platforms: linux/amd64,linux/arm64,linux/s390x
           push: true
-          tags: samyuan1990/liboqs-go
+          tags: ghcr.io/samyuan1990/liboqs-go
           labels: ${{ steps.meta.outputs.labels }}
