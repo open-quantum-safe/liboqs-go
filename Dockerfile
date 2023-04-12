@@ -19,6 +19,5 @@ ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/home/liboqs-go/.config
 WORKDIR /home/liboqs-go
 COPY . .
-RUN ls -al
-#RUN go test -v ./oqstests
+RUN ls -la
 CMD ["go", "test", "-v", "./oqstests"]
