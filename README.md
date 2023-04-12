@@ -26,8 +26,8 @@ the specific platform building instructions below.
 
 In addition, we assume you have access to:
 
-- a POSIX compliant system (UNIX/Linux/macOS) or Windows
-- Go version 1.7 or later (version 1.11 or later for Go modules support)
+- POSIX compliant system (UNIX/Linux/macOS) or Windows
+- Go version 1.18 or later
 - a standard C compliant compiler (`gcc`/`clang` etc.)
 - `pkg-config` (use `sudo apt-get install pkg-config` to install on
   Ubuntu/Debian-based Linux platforms or install it via a third-party compiler
@@ -71,6 +71,7 @@ directory are self-explanatory and provide more details about the wrapper's API.
 <a name="posix"></a>Running/building on POSIX (Linux/UNIX-like) platforms
 ----
 
+### <a name="install-oqs"></a>Installing liboqs
 First, you must build liboqs according to
 the [liboqs building instructions](https://github.com/open-quantum-safe/liboqs#linuxmacos)
 with shared library support enabled (add `-DBUILD_SHARED_LIBS=ON` to the `cmake`
@@ -86,7 +87,7 @@ environment variable to point to the path to liboqs' library directory, e.g.
 assuming `liboqs.so.*` were installed in `/usr/local/lib` (true if you
 ran `sudo ninja install` after building liboqs).
 
-### <a name="modules"></a>Using Go with modules support (requires Go 1.11 or later)
+### <a name="install-wrapper"></a>Installing the wrapper
 
 Download/clone the `liboqs-go` wrapper repository in the directory of your
 choice, e.g. `$HOME`, by typing in a terminal/console
@@ -132,75 +133,10 @@ executable from the terminal/console, type
 
 which will build the `$HOME/liboqs-go/oqstests.test` executable.
 
-### <a name="no-modules"></a>Using Go without modules support
-
-Install the latest version of the `liboqs-go` wrapper by typing
-
-    go get github.com/open-quantum-safe/liboqs-go/oqs
-
-in a terminal/console. This will install the wrapper in the first directory set
-by your `$GOPATH` environment variable. In my case `$GOPATH` is set
-to `$HOME/go`, and the Go package manager installs the wrapper
-in `$HOME/go/src/github.com/open-quantum-safe/liboqs-go`. To update a previously
-installed Go wrapper, type
-
-    go get -u github.com/open-quantum-safe/liboqs-go/oqs
-
-in a terminal/console.
-
-To simplify the instructions to follow, export the path to the wrapper in
-the `LIBOQSGO_INSTALL_PATH` environment variable by typing in a terminal/console
-
-    export LIBOQSGO_INSTALL_PATH=/some/dir/liboqs-go
-
-In my case `LIBOQSGO_INSTALL_PATH` is set
-to `$HOME/go/src/github.com/open-quantum-safe/liboqs-go`.
-
-Next, you must modify the following lines
-in [`$LIBOQSGO_INSTALL_PATH/.config/liboqs.pc`](https://github.com/open-quantum-safe/liboqs-go/tree/main/.config/liboqs.pc)
-
-    LIBOQS_INCLUDE_DIR=/usr/local/include
-    LIBOQS_LIB_DIR=/usr/local/lib
-
-so they correspond to your C liboqs include/lib installation directories.
-
-Finally, you must add/append the `$LIBOQSGO_INSTALL_PATH/.config` directory to
-the `PKG_CONFIG_PATH` environment variable, by typing in a terminal/console
-
-    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$LIBOQSGO_INSTALL_PATH/.config
-
-Once you have configured your system as directed above,
-simply `import "github.com/open-quantum-safe/liboqs-go/oqs"` in the Go
-application of your choice and run it with `go run <application_name.go>` or
-build it with `go build <application_name.go>`.
-
-To run the examples from the terminal/console, type e.g.
-
-    go run $LIBOQSGO_INSTALL_PATH/examples/kem/kem.go 
-
-Replace `go run` with `go build` if you intend to build the corresponding
-executable; in this case it will be built in the directory from which you ran
-the `go build` command.
-
-To run the unit tests from the terminal/console, type
-
-    go test -v $LIBOQSGO_INSTALL_PATH/oqstests
-
-and to build the unit test executable from the terminal/console, type
-
-    go test -c $LIBOQSGO_INSTALL_PATH/oqstests
-
-which will build the `oqstests.test` executable in the directory from which you
-ran the above command.
-
 <a name="windows"></a>Running/building on Windows
 ----
 
-For simplicity, we only provide installation instructions for Go systems that
-supports modules (i.e. Go version 1.11 or later, see [above](#modules)). If your
-Go installation does not support modules, please adapt
-the [corresponding instructions](#no-modules) accordingly. We assume
-that `liboqs` is installed under `C:\some\dir\liboqs` and
+We assume that `liboqs` is installed under `C:\some\dir\liboqs` and
 was [successfully built](https://github.com/open-quantum-safe/liboqs#windows)
 in`C:\some\dir\liboqs\build`
 , and that `liboqs-go` is installed under `C:\some\dir\liboqs-go` (
@@ -228,7 +164,7 @@ output like
 
 > gcc (Rev3, Built by MSYS2 project) 9.1.0
 
-Next, similarly to the [POSIX instructions](#modules), modify the corresponding
+Next, similarly to the [POSIX instructions](#install), modify the corresponding
 lines
 in [`liboqs-go\.config\liboqs.pc`](https://github.com/open-quantum-safe/liboqs-go/tree/main/.config/liboqs.pc)
 to point to the correct locations, **using forward slashes `/` and not
@@ -297,21 +233,10 @@ the `oqs.Signature.Verify` method, type in a terminal/console
 
 	go doc $HOME/liboqs-go/oqs.Signature.Verify
 
-if using Go modules, or
-
-    go doc github.com/open-quantum-safe/liboqs-go/oqs.Signature.Verify
-
-if not using Go modules.
-
 For the RNG-related function, type e.g.
 
     go doc $HOME/liboqs-go/oqs/rand.RandomBytes
 
-if using Go modules, or
-
-    go doc github.com/open-quantum-safe/liboqs-go/oqs/rand.RandomBytes 
-
-if not using Go modules.
 
 For automatically-generated documentation in HTML format,
 click [here](https://pkg.go.dev/github.com/open-quantum-safe/liboqs-go/oqs).
