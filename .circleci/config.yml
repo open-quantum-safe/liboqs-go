@@ -117,8 +117,9 @@ jobs:
 workflows:
   build:
     jobs:
-      - dockerbuild:
-          context: openquantumsafe
+# max be removed completely if github-based docker buildx works OK:
+#      - dockerbuild:
+#          context: openquantumsafe
       - ubuntu_x64_liboqsgo:
           name: ubuntu-bionic
           context: openquantumsafe
