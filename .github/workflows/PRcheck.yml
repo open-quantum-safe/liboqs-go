@@ -7,7 +7,7 @@ on:
     types: [completed]
     
 jobs:
-  build-image:
+  build-image-pr:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,7 +18,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@master
         with:
-          images: ${{ vars.DOCKERIMAGE }}
+          images: ghcr.io/open-quantum-safe/liboqs-go
           tags: |
               type=ref,event=tag
 
@@ -26,5 +26,5 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          tags: ${{ vars.DOCKERIMAGE }}
+          tags: ghcr.io/open-quantum-safe/liboqs-go
           labels: ${{ steps.meta.outputs.labels }}
