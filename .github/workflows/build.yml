@@ -28,14 +28,14 @@ jobs:
         if: github.ref == 'refs/heads/main'
         with:
           registry: ghcr.io
-          username: ${{ vars.USERNAME }}
+          username: SamYuan1990
           password: ${{ secrets.TESTDOCKERLOGIN }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@master
         with:
-          images: ghcr.io/open-quantum-safe/liboqs-go
+          images: ghcr.io/samyuan1990/liboqs-go
           tags: |
               type=ref,event=tag
 
@@ -46,5 +46,5 @@ jobs:
           context: .
           platforms: linux/amd64,linux/s390x,linux/arm64
           push: true
-          tags: ghcr.io/open-quantum-safe/liboqs-go
+          tags: ghcr.io/samyuan1990/liboqs-go
           labels: ${{ steps.meta.outputs.labels }}
