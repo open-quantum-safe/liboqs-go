@@ -126,7 +126,7 @@ Replace `go run` with `go build` if you intend to build the corresponding
 executable `$HOME/liboqs-go/kem`.
 
 To run the unit tests from the terminal/console, type (still from
-inside `$HOME/liboqs-go`) go test -v ./oqstests and to build the unit test
+inside `$HOME/liboqs-go`) `go test -v ./oqstests` and to build the unit test
 executable from the terminal/console, type
 
     go test -c ./oqstests
