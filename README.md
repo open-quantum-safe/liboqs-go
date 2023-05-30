@@ -178,46 +178,62 @@ directory to the `PKG_CONFIG_PATH` environment variable, using the "Edit the
 system environment variables" Control Panel tool or by typing in the Command
 Prompt
 
-    set PKG_CONFIG_PATH="C:\some\dir\liboqs-go\.config"
+```bash
+set PKG_CONFIG_PATH="C:\some\dir\liboqs-go\.config"
+```
 
 Once those steps are completed, you can now test whether everything went OK by
 running one of the examples and/or unit tests. First change directory
 to `liboqs-go` by typing in a Command Prompt
 
-    cd C:\some\dir\liboqs-go
+```bash
+cd C:\some\dir\liboqs-go
+```
 
 followed by e.g.
 
-    go run examples\kem\kem.go
+```bash
+go run examples\kem\kem.go
+```
 
 and/or
 
-    go test -v .\oqstests
+```bash
+go test -v .\oqstests
+```
 
 If you do not get any errors and the example (unit tests) is (are) successfully
 run, then your installation was successful. For more details about command-line
 configuration under Windows see the AppVeyor CI configuration
-file [`appveyor.yml`](https://github.com/open-quantum-safe/liboqs-go/tree/main/appveyor.yml)
-.
+file [`appveyor.yml`](https://github.com/open-quantum-safe/liboqs-go/tree/main/appveyor.yml).
 
 
 <a name="Docker containers"></a>Docker container 
 ----
 
-There are two ways to run liboqs-go in a Docker container. You can pull the official liboqs-go Docker conatiner from Dockerhub:
+There are two ways to run liboqs-go in a Docker container. You can pull the 
+official liboqs-go Docker container from Dockerhub:
+
 ```bash
 docker pull openquantumsafe/go
 ```
+
 Or you can build the container yourself: 
+
 ``` bash
 cd docker
 docker build -t openquantumsafe/go .
 ```
+
 Run the tests with:
+
 ```bash
 docker run openquantumsafe/go
 ```
-Maybe you want to use the Docker container as develompment environment. Mount your current project in the Docker container with:
+
+Maybe you want to use the Docker container as development environment. 
+Mount your current project in the Docker container with:
+
 ```bash
  docker run --rm -it --workdir=/app -v ${PWD}:/app openquantumsafe/go /bin/bash 
 ```
