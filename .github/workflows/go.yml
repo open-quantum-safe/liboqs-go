@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ "**" ]
 
+env:
+  LD_LIBRARY_PATH: /usr/local/lib
+
 jobs:
   build:
     strategy:
@@ -30,6 +33,7 @@ jobs:
 
       - name: Run examples
         run: |
+          export PKG_CONFIG_PATH=`pwd`/.config
           go run ./examples/kem/kem.go
           go run ./examples/sig/sig.go
           go run ./examples/rand/rand.go
