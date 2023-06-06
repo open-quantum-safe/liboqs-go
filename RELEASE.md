@@ -53,7 +53,7 @@ You can start the container and run the tests with:
 docker run openquantumsafe/go
 ```
 
-If you want to mount your current directory into the container and use it as an development environment:
+If you want to mount your current directory into the container and use it as a development environment:
 
 ```bash
  docker run --rm -it --workdir=/app -v ${PWD}:/app openquantumsafe/go /bin/bash 
@@ -61,8 +61,8 @@ If you want to mount your current directory into the container and use it as an 
 
 # `Contribution`
 
-If you want to contribute, please make sure that the dockerfile passes all hadolint tests.
-After intalling hadolint, you can check it with:
+If you want to contribute, please make sure that the dockerfile passes all hadolint tests. After installing hadolint,
+you can check it with:
 
 ```
 docker run --rm -i hadolint/hadolint < Dockerfile
