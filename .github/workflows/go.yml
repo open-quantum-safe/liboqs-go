@@ -38,7 +38,7 @@ jobs:
           go-version: 1.19
 
       - name: Configure pkgconfig on Windows
-        if: matrix.os == 'windows'
+        if: matrix.os == 'Windows'
         run: move /Y ./.config/liboqs.pc.win64 ./.config/liboqs.pc
 
       - name: Run examples
