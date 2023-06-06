@@ -121,7 +121,7 @@ which will build the `$HOME/liboqs-go/oqstests.test` executable.
 ----
 
 We assume that `liboqs` is installed under `C:\some\dir\liboqs` and
-was [successfully built](https://github.com/open-quantum-safe/liboqs#windows) in`C:\some\dir\liboqs\build`, and
+was [successfully built](https://github.com/open-quantum-safe/liboqs#windows) in `C:\some\dir\liboqs\build`, and
 that `liboqs-go` is installed under `C:\some\dir\liboqs-go` (replace `\some\dir` with your corresponding paths). Ensure
 that the liboqs shared library `oqs.dll` is visible system-wide. Use the "Edit the system environment variables" Control
 Panel tool or type in a Command Prompt
