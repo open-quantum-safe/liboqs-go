@@ -52,5 +52,5 @@ jobs:
           go run ./examples/sig/sig.go
           go run ./examples/rand/rand.go
 
-      - name: Test
+      - name: Run unit tests
         run: go test -v ./oqstests
