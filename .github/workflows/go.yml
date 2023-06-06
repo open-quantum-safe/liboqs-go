@@ -39,7 +39,7 @@ jobs:
 
       - name: Configure pkgconfig on Windows
         if: matrix.os == 'Windows'
-        run: move /Y ./.config/liboqs.pc.win64 ./.config/liboqs.pc
+        run: copy ./.config/liboqs.pc.win64 C:/Strawberry/c/lib/pkgconfig
 
       - name: Run examples
         run: |
