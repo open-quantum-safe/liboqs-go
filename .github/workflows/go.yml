@@ -9,6 +9,7 @@ on:
 env:
   LD_LIBRARY_PATH: /usr/local/lib
   WIN_LIBOQS_INSTALL_PATH: C:/liboqs
+  WIN_LIBOQS_DLL_DIR: C:/liboqs/bin
   WIN_PKG_CONFIG_PATH: C:/Strawberry/c/lib/pkgconfig
 
 
@@ -39,10 +40,11 @@ jobs:
         with:
           go-version: 1.19
 
-      - name: Configure pkgconfig (Windows only)
+      - name: Configure pkgconfig and copy oqs.dll to liboqs-go root directory (Windows only)
         if: matrix.os == 'windows-latest'
         run: |
-          copy ./.config/liboqs.pc.win64 ${{env.WIN_PKG_CONFIG_PATH}}/liboqs.pc 
+          copy ./.config/liboqs.pc.win64 ${{env.WIN_PKG_CONFIG_PATH}}/liboqs.pc
+          copy ${{env.WIN_LIBOQS_DLL_DIR}}/oqs.dll .
 
       - name: Install openssl on macOS
         if: matrix.os == 'macos-latest'
