@@ -58,12 +58,12 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           copy ./.config/liboqs.pc.win64 ${{env.WIN_PKG_CONFIG_PATH}}/liboqs.pc
-#          copy ${{env.WIN_LIBOQS_DLL_DIR}}/oqs.dll .
+          copy ${{env.WIN_LIBOQS_DLL_DIR}}/oqs.dll .
+          copy ${{env.WIN_LIBOQS_DLL_DIR}}/oqs.dll ./oqstests
 
       - name: Run examples Windows
         if: matrix.os == 'windows-latest'
         run: |
-          gcc --version
           $env:PATH += 'C:/liboqs/bin'
           go run ./examples/kem/kem.go
           go run ./examples/sig/sig.go
@@ -72,5 +72,5 @@ jobs:
       - name: Run unit tests Windows
         if: matrix.os == 'windows-latest'
         run: |
-          $env:PATH += '${{env.WIN_LIBOQS_DLL_DIR}}'
+          $env:PATH += 'C:/liboqs/bin'
           go test -v ./oqstests
