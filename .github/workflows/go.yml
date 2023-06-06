@@ -38,7 +38,7 @@ jobs:
           go-version: 1.19
 
       - name: Configure pkgconfig on Windows
-        if: matrix.os == 'Windows'
+        if: matrix.os == 'windows-latest'
         run: copy ./.config/liboqs.pc.win64 C:/Strawberry/c/lib/pkgconfig
 
       - name: Run examples
