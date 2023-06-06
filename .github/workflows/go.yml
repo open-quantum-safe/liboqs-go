@@ -8,7 +8,6 @@ on:
 
 env:
   LD_LIBRARY_PATH: /usr/local/lib
-  WIN_OQS_INSTALL_DIR: C:/liboqs
   WIN_PKG_CONFIG_PATH: C:/Strawberry/c/lib/pkgconfig
 
 
@@ -25,16 +24,12 @@ jobs:
       - name: Install liboqs
         shell: bash
         run: |
+          git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs
+          cmake -S liboqs -B liboqs/build -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON
           if [ "$RUNNER_OS" == "Windows" ]; then
-            git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs "${{env.WIN_OQS_INSTALL_DIR}}"
-            cd "${{env.WIN_OQS_INSTALL_DIR}}"
-            cmake -B build -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON
-            cmake --build build --parallel 4 --target INSTALL
+            cmake --build liboqs/build --parallel 4 --target INSTALL
           else
-            git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs
-            cd liboqs
-            cmake -B build -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON
-            sudo cmake --build build --parallel 4 --target install
+            sudo cmake --build liboqs/build --parallel 4 --target install
           fi
 
       - name: Set up Go
@@ -44,7 +39,8 @@ jobs:
 
       - name: Configure pkgconfig (Windows only)
         if: matrix.os == 'windows-latest'
-        run: copy ./.config/liboqs.pc.win64 ${{env.WIN_PKG_CONFIG_PATH}}/liboqs.pc
+        run: |
+          copy ./.config/liboqs.pc.win64 ${{env.WIN_PKG_CONFIG_PATH}}/liboqs.pc 
 
       - name: Install openssl on macOS
         if: matrix.os == 'macos-latest'
