@@ -16,7 +16,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ windows-latest ]
+        os: [ ubuntu-latest, windows-latest ]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -53,7 +53,7 @@ jobs:
           cmake -S liboqs -B liboqs/build -DCMAKE_INSTALL_PREFIX=${{env.WIN_LIBOQS_INSTALL_PATH}} -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON
           cmake --build liboqs/build --parallel 4 --target INSTALL
 
-      - name: Configure pkgconfig and copy oqs.dll to liboqs-go root directory (Windows only)
+      - name: Configure pkgconfig Windows
         if: matrix.os == 'windows-latest'
         run: |
           copy ./.config/liboqs.pc.win64 ${{env.WIN_PKG_CONFIG_PATH}}/liboqs.pc
