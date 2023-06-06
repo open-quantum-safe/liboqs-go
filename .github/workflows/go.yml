@@ -23,7 +23,7 @@ jobs:
       - name: Install liboqs
         shell: bash
         run: |
-          if [ "$RUNNER_OS" == "Windows"]; then
+          if [ "$RUNNER_OS" == "Windows" ]; then
             git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs "${{env.WIN_OQS_INSTALL_DIR}}"
           else
             git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs
