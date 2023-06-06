@@ -19,6 +19,7 @@ jobs:
       - name: Install liboqs
         run: |
           git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs
+          cd liboqs
           cmake -B build -GNinja -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON
           sudo cmake --build build --target install
 
