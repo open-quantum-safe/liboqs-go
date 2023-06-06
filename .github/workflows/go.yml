@@ -8,7 +8,7 @@ on:
 
 env:
   LD_LIBRARY_PATH: /usr/local/lib
-  WIN_OQS_INSTALL_DIR: C:/liboqs
+  WIN_PKG_CONFIG_PATH: C:/Strawberry/c/lib/pkgconfig
 
 jobs:
   build:
@@ -39,7 +39,7 @@ jobs:
 
       - name: Configure pkgconfig on Windows
         if: matrix.os == 'windows-latest'
-        run: copy ./.config/liboqs.pc.win64 C:/Strawberry/c/lib/pkgconfig
+        run: copy ./.config/liboqs.pc.win64 ${{env.WIN_PKG_CONFIG_PATH}}/liboqs.pc
 
       - name: Run examples
         run: |
