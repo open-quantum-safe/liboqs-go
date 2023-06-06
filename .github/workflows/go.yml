@@ -62,7 +62,7 @@ jobs:
       - name: Run examples Windows
         if: matrix.os == 'windows-latest'
         run: |
-          $env:Path += ${{env.WIN_LIBOQS_DLL_DIR}}
+          $env:Path += '${{env.WIN_LIBOQS_DLL_DIR}}'
           go run ./examples/kem/kem.go
           go run ./examples/sig/sig.go
           go run ./examples/rand/rand.go
@@ -70,5 +70,5 @@ jobs:
       - name: Run unit tests Windows
         if: matrix.os == 'windows-latest'
         run: |
-          $env:Path += ${{env.WIN_LIBOQS_DLL_DIR}}
+          $env:Path += '${{env.WIN_LIBOQS_DLL_DIR}}'
           go test -v ./oqstests
