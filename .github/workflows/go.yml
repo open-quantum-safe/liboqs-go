@@ -30,7 +30,7 @@ jobs:
           fi
           cd liboqs
           cmake -B build -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON
-          if [ "$RUNNER_OS" == "Windows"]; then
+          if [ "$RUNNER_OS" == "Windows" ]; then
             cmake --build build --parallel 4 --target INSTALL
           else
             sudo cmake --build build --parallel 4 --target install
