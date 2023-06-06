@@ -8,23 +8,33 @@ on:
 
 env:
   LD_LIBRARY_PATH: /usr/local/lib
+  WIN_OQS_INSTALL_DIR: C:/liboqs
 
 jobs:
   build:
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest ]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
     runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Install liboqs
+        shell: bash
         run: |
-          git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs
+          if [ "$RUNNER_OS" == "Windows"]; then
+            git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs "${{env.WIN_OQS_INSTALL_DIR}}"
+          else
+            git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs
+          fi
           cd liboqs
           cmake -B build -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON
-          sudo cmake --build build --parallel 4 --target install
+          if [ "$RUNNER_OS" == "Windows"]; then
+            cmake --build build --parallel 4 --target INSTALL
+          else
+            sudo cmake --build build --parallel 4 --target install
+          fi
 
       - name: Set up Go
         uses: actions/setup-go@v3
@@ -33,7 +43,7 @@ jobs:
 
       - name: Run examples
         run: |
-          export PKG_CONFIG_PATH=`pwd`/.config
+#          export PKG_CONFIG_PATH=`pwd`/.config
           go run ./examples/kem/kem.go
           go run ./examples/sig/sig.go
           go run ./examples/rand/rand.go
