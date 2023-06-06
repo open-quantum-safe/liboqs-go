@@ -27,7 +27,7 @@ jobs:
         run: |
           git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs
           if [ "$RUNNER_OS" == "Windows" ]; then
-            cmake -S liboqs -B liboqs/build -CMAKE_INSTALL_PREFIX=${{env.WIN_LIBOQS_INSTALL_PATH}} -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON
+            cmake -S liboqs -B liboqs/build -DCMAKE_INSTALL_PREFIX=${{env.WIN_LIBOQS_INSTALL_PATH}} -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON
             cmake --build liboqs/build --parallel 4 --target INSTALL
           else
             cmake -S liboqs -B liboqs/build -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON
