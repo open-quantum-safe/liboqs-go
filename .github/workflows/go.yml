@@ -7,6 +7,7 @@ on:
     branches: [ "**" ]
 
 env:
+  LD_LIBRARY_PATH: /usr/local/lib
   WIN_LIBOQS_INSTALL_PATH: C:/liboqs
   WIN_LIBOQS_DLL_DIR: C:/liboqs/bin
   WIN_PKG_CONFIG_PATH: C:/Strawberry/c/lib/pkgconfig
