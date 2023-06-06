@@ -1,8 +1,7 @@
 liboqs-go: Go bindings for liboqs
 =================================
 
-[![Build status - CircleCI Linux/macOS](https://circleci.com/gh/open-quantum-safe/liboqs-go.svg?style=svg)](https://circleci.com/gh/open-quantum-safe/liboqs-go)
-[![Build status](https://ci.appveyor.com/api/projects/status/x4d2quphnr1c2emf?svg=true)](https://ci.appveyor.com/project/vsoftco/liboqs-go)
+[![GitHub actions](https://github.com/open-quantum-safe/liboqs-go/actions/workflows/go.yml/badge.svg)](https://github.com/open-quantum-safe/liboqs-go/actions)
 [![Go Report Card](https://goreportcard.com/badge/github.com/open-quantum-safe/liboqs-go)](https://goreportcard.com/report/github.com/open-quantum-safe/liboqs-go)
 [![Documentation](https://godoc.org/github.com/open-quantum-safe/liboqs-go/oqs?status.svg)](https://pkg.go.dev/github.com/open-quantum-safe/liboqs-go/oqs)
 
@@ -72,6 +71,7 @@ directory are self-explanatory and provide more details about the wrapper's API.
 ----
 
 ### <a name="install-oqs"></a>Installing liboqs
+
 First, you must build liboqs according to
 the [liboqs building instructions](https://github.com/open-quantum-safe/liboqs#linuxmacos)
 with shared library support enabled (add `-DBUILD_SHARED_LIBS=ON` to the `cmake`
@@ -80,7 +80,7 @@ shared library is visible system-wide (by default it installs
 under `/usr/local/include` and `/usr/local/lib` on Linux/macOS).
 
 You may need to set the `LD_LIBRARY_PATH` (`DYLD_LIBRARY_PATH` on macOS)
-environment variable to point to the path to liboqs' library directory, e.g.
+environment variable to point to the path to liboqs library directory, e.g.
 
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
@@ -148,7 +148,7 @@ environment variables" Control Panel tool or type in a Command Prompt
 
 of course replacing the paths with the ones corresponding to your system.
 
-As mentioned in the [Pre-requisites](#pre-requisites) section, we assume you
+As mentioned in the [Pre-requisites](#a-namepre-requisitesapre-requisites) section, we assume you
 have installed the  [MSYS2](https://www.msys2.org/) C compiler (which contains
 also `pkg-config`). Make sure that the executable `gcc` and `pkg-config` from
 MSYS2 are system-wide visible, using e.g. the "Edit the system environment
@@ -164,7 +164,8 @@ output like
 
 > gcc (Rev3, Built by MSYS2 project) 9.1.0
 
-Next, similarly to the [POSIX instructions](#install), modify the corresponding
+Next, similarly to the [POSIX instructions](#a-nameposixarunningbuilding-on-posix-linuxunix-like-platforms), modify the
+corresponding
 lines
 in [`liboqs-go\.config\liboqs.pc`](https://github.com/open-quantum-safe/liboqs-go/tree/main/.config/liboqs.pc)
 to point to the correct locations, **using forward slashes `/` and not
@@ -208,17 +209,17 @@ configuration under Windows see the AppVeyor CI configuration
 file [`appveyor.yml`](https://github.com/open-quantum-safe/liboqs-go/tree/main/appveyor.yml).
 
 
-<a name="Docker containers"></a>Docker container 
+<a name="Docker containers"></a>Docker container
 ----
 
-There are two ways to run liboqs-go in a Docker container. You can pull the 
+There are two ways to run liboqs-go in a Docker container. You can pull the
 official liboqs-go Docker container from Dockerhub:
 
 ```bash
 docker pull openquantumsafe/go
 ```
 
-Or you can build the container yourself: 
+Or you can build the container yourself:
 
 ``` bash
 cd docker
@@ -231,7 +232,7 @@ Run the tests with:
 docker run openquantumsafe/go
 ```
 
-Maybe you want to use the Docker container as development environment. 
+Maybe you want to use the Docker container as development environment.
 Mount your current project in the Docker container with:
 
 ```bash
@@ -252,7 +253,6 @@ the `oqs.Signature.Verify` method, type in a terminal/console
 For the RNG-related function, type e.g.
 
     go doc $HOME/liboqs-go/oqs/rand.RandomBytes
-
 
 For automatically-generated documentation in HTML format,
 click [here](https://pkg.go.dev/github.com/open-quantum-safe/liboqs-go/oqs).
