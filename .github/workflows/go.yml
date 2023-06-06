@@ -65,7 +65,8 @@ jobs:
         if: matrix.os == 'windows-latest'
         shell: cmd
         run: |
-          set "PATH=%LIBOQS_DLL_DIR%;%PATH%"
+          set "PATH=${{env.WIN_LIBOQS_DLL_DIR}};%PATH%"
+          echo %PATH%
           go run .\examples\kem\kem.go
           go run .\examples\sig\sig.go
           go run .\examples\rand\rand.go
@@ -74,5 +75,5 @@ jobs:
         shell: cmd
         if: matrix.os == 'windows-latest'
         run: |
-          set "PATH=%LIBOQS_DLL_DIR%;%PATH%"
+          set "PATH=${{env.WIN_LIBOQS_DLL_DIR}};%PATH%"
           go test -v .\oqstests
