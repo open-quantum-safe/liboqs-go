@@ -56,6 +56,7 @@ jobs:
 
       - name: Configure pkgconfig Windows
         if: matrix.os == 'windows-latest'
+        shell: cmd
         run: |
           copy ./.config/liboqs.pc.win64 ${{env.WIN_PKG_CONFIG_PATH}}/liboqs.pc
           copy ${{env.WIN_LIBOQS_DLL_DIR}}/oqs.dll .
@@ -63,14 +64,16 @@ jobs:
 
       - name: Run examples Windows
         if: matrix.os == 'windows-latest'
+        shell: cmd
         run: |
-          $env:PATH += 'C:/liboqs/bin'
+          set "PATH=%LIBOQS_DLL_DIR%;%PATH%"
           go run ./examples/kem/kem.go
           go run ./examples/sig/sig.go
           go run ./examples/rand/rand.go
 
       - name: Run unit tests Windows
+        shell: cmd
         if: matrix.os == 'windows-latest'
         run: |
-          $env:PATH += 'C:/liboqs/bin'
+          set "PATH=%LIBOQS_DLL_DIR%;%PATH%"
           go test -v ./oqstests
