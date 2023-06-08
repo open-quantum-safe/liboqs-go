@@ -8,15 +8,15 @@ on:
 
 env:
   LD_LIBRARY_PATH: /usr/local/lib
+  POSIX_PKG_CONFIG_PATH: ${{github.workspace}}/.config
   WIN_LIBOQS_INSTALL_PATH: C:\liboqs
   WIN_PKG_CONFIG_PATH: C:\Strawberry\c\lib\pkgconfig
-
 
 jobs:
   build:
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest ]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -37,13 +37,17 @@ jobs:
       - name: Run examples POSIX
         if: matrix.os != 'windows-latest'
         run: |
+          export PKG_CONFIG_PATH=${{env.POSIX_PKG_CONFIG_PATH}}
           go run ./examples/kem/kem.go
+          echo
           go run ./examples/sig/sig.go
+          echo
           go run ./examples/rand/rand.go
 
       - name: Run unit tests POSIX
         if: matrix.os != 'windows-latest'
         run: |
+          export PKG_CONFIG_PATH=${{env.POSIX_PKG_CONFIG_PATH}}
           go test -v ./oqstests
 
       - name: Install liboqs Windows
