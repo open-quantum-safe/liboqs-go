@@ -110,10 +110,17 @@ then run the example(s) by typing e.g.
 
 Replace `go run` with `go build` if you intend to build the corresponding executable `$HOME/liboqs-go/kem`.
 
-To run the unit tests from the terminal/console, type (still from inside `$HOME/liboqs-go`) `go test -v ./oqstests` and
-to build the unit test executable from the terminal/console, type
+To run the unit tests from the terminal/console, type (still from inside `$HOME/liboqs-go`)
 
-    go test -c ./oqstests
+```bash
+go test -v ./oqstests
+``` 
+
+and to build the unit test executable from the terminal/console, type
+
+```bash
+go test -c ./oqstests
+```
 
 which will build the `$HOME/liboqs-go/oqstests.test` executable.
 
@@ -126,7 +133,9 @@ that `liboqs-go` is installed under `C:\some\dir\liboqs-go` (replace `\some\dir`
 that the liboqs shared library `oqs.dll` is visible system-wide. Use the "Edit the system environment variables" Control
 Panel tool or type in a Command Prompt
 
-	set PATH="%PATH%;C:\some\dir\liboqs\build\bin"
+```shell
+set PATH="%PATH%;C:\some\dir\liboqs\build\bin"
+```
 
 of course replacing the paths with the ones corresponding to your system.
 
