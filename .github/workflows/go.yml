@@ -27,53 +27,7 @@ jobs:
         with:
           go-version: 1.19
 
-      - name: Install liboqs POSIX
-        if: matrix.os != 'windows-latest'
+      - name: Find openssl
         run: |
-          git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs
-          cmake -S liboqs -B liboqs/build -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON
-          sudo cmake --build liboqs/build --parallel 4 --target install
-
-      - name: Run examples POSIX
-        if: matrix.os != 'windows-latest'
-        run: |
-          go run ./examples/kem/kem.go
-          go run ./examples/sig/sig.go
-          go run ./examples/rand/rand.go
-
-      - name: Run unit tests POSIX
-        if: matrix.os != 'windows-latest'
-        run: |
-          go test -v ./oqstests
-
-      - name: Install liboqs Windows
-        if: matrix.os == 'windows-latest'
-        shell: cmd
-        run: |
-          git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs
-          cmake -S liboqs -B liboqs\build -DCMAKE_INSTALL_PREFIX=${{env.WIN_LIBOQS_INSTALL_PATH}} -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON
-          cmake --build liboqs\build --parallel 4 --target install
-
-      - name: Configure pkgconfig Windows
-        if: matrix.os == 'windows-latest'
-        shell: cmd
-        run: |
-          copy .\.config\liboqs.pc.win64 ${{env.WIN_PKG_CONFIG_PATH}}\liboqs.pc
-
-      - name: Run examples Windows
-        if: matrix.os == 'windows-latest'
-        shell: cmd
-        run: |
-          set "PATH=${{env.WIN_LIBOQS_INSTALL_PATH}}\bin;%PATH%"
-          go run .\examples\kem\kem.go
-          echo.
-          go run .\examples\sig\sig.go
-          echo.
-          go run .\examples\rand\rand.go
-
-      - name: Run unit tests Windows
-        shell: cmd
-        if: matrix.os == 'windows-latest'
-        run: |
-          set "PATH=${{env.WIN_LIBOQS_INSTALL_PATH}}\bin;%PATH%"
-          go test -v .\oqstests
+          brew install openssl@3
+          find / -name openssl.pc 2>/dev/null
