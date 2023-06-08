@@ -112,13 +112,13 @@ Replace `go run` with `go build` if you intend to build the corresponding execut
 
 To run the unit tests from the terminal/console, type (still from inside `$HOME/liboqs-go`)
 
-```bash
+```shell
 go test -v ./oqstests
 ``` 
 
 and to build the unit test executable from the terminal/console, type
 
-```bash
+```shell
 go test -c ./oqstests
 ```
 
@@ -133,7 +133,7 @@ that `liboqs-go` is installed under `C:\some\dir\liboqs-go` (replace `\some\dir`
 that the liboqs shared library `oqs.dll` is visible system-wide. Use the "Edit the system environment variables" Control
 Panel tool or type in a Command Prompt
 
-```shell
+```cmd
 set PATH="%PATH%;C:\some\dir\liboqs\build\bin"
 ```
 
@@ -187,8 +187,7 @@ go test -v .\oqstests
 ```
 
 If you do not get any errors and the example (unit tests) is (are) successfully run, then your installation was
-successful. For more details about command-line configuration under Windows see the AppVeyor CI configuration
-file [`appveyor.yml`](https://github.com/open-quantum-safe/liboqs-go/tree/main/appveyor.yml).
+successful.
 
 <a name="Docker containers"></a>Docker container
 ----
@@ -196,28 +195,28 @@ file [`appveyor.yml`](https://github.com/open-quantum-safe/liboqs-go/tree/main/a
 There are two ways to run liboqs-go in a Docker container. You can pull the official liboqs-go Docker container from
 Dockerhub:
 
-```bash
+```shell
 docker pull openquantumsafe/go
 ```
 
 Or you can build the container yourself:
 
-``` bash
+``` shell
 cd docker
 docker build -t openquantumsafe/go .
 ```
 
 Run the tests with:
 
-```bash
+```shell
 docker run openquantumsafe/go
 ```
 
 Maybe you want to use the Docker container as development environment. Mount your current project in the Docker
 container with:
 
-```bash
- docker run --rm -it --workdir=/app -v ${PWD}:/app openquantumsafe/go /bin/bash 
+```shell
+docker run --rm -it --workdir=/app -v ${PWD}:/app openquantumsafe/go /bin/bash 
 ```
 
 ---
@@ -228,11 +227,15 @@ container with:
 The `liboqs-go` wrapper is fully documented using the Go standard documentation conventions. For example, to read the
 full documentation about the `oqs.Signature.Verify` method, type in a terminal/console
 
-	go doc $HOME/liboqs-go/oqs.Signature.Verify
+```shell
+go doc $HOME/liboqs-go/oqs.Signature.Verify
+```
 
 For the RNG-related function, type e.g.
 
-    go doc $HOME/liboqs-go/oqs/rand.RandomBytes
+```shell
+go doc $HOME/liboqs-go/oqs/rand.RandomBytes
+```
 
 For automatically-generated documentation in HTML format,
 click [here](https://pkg.go.dev/github.com/open-quantum-safe/liboqs-go/oqs).
