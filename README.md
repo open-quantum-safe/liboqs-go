@@ -13,7 +13,7 @@ which is a C library for quantum-resistant cryptographic algorithms.
 
 The wrapper is written in Go, hence in the following it is assumed that you have access to a Go compliant environment.
 liboqs-go has been extensively tested on Linux, macOS and Windows platforms. Continuous integration is provided via
-CircleCI and AppVeyor.
+GitHub actions.
 
 ## <a name="pre-requisites"></a>Pre-requisites
 
