@@ -73,7 +73,9 @@ on Linux/macOS).
 You may need to set the `LD_LIBRARY_PATH` (`DYLD_LIBRARY_PATH` on macOS) environment variable to point to the path to
 liboqs library directory, e.g.
 
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+```shell
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+```
 
 assuming `liboqs.so.*` were installed in `/usr/local/lib` (true if you ran `sudo ninja install` after building liboqs).
 
@@ -82,7 +84,9 @@ assuming `liboqs.so.*` were installed in `/usr/local/lib` (true if you ran `sudo
 Download/clone the `liboqs-go` wrapper repository in the directory of your choice, e.g. `$HOME`, by typing in a
 terminal/console
 
-    cd $HOME && git clone https://github.com/open-quantum-safe/liboqs-go
+```shell
+cd $HOME && git clone https://github.com/open-quantum-safe/liboqs-go
+```
 
 Next, you must modify the following lines
 in [`$HOME/liboqs-go/.config/liboqs.pc`](https://github.com/open-quantum-safe/liboqs-go/tree/main/.config/liboqs.pc)
@@ -94,7 +98,9 @@ so they correspond to your C liboqs include/lib installation directories.
 
 Finally, you must add/append the `$HOME/liboqs-go/.config` directory to the `PKG_CONFIG_PATH` environment variable, i.e.
 
-    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$HOME/liboqs-go/.config
+```shell
+export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$HOME/liboqs-go/.config
+```
 
 Once you have configured your system as directed above, simply `import "github.com/open-quantum-safe/liboqs-go/oqs"` in
 the Go application of your choice, initialize the application module with `go mod init <module_name>`, and finally run
@@ -102,11 +108,15 @@ it with `go run <module_name>` or build it with `go build <module_name>`.
 
 To run the examples from the terminal/console, first change directory to `liboqs-go` by typing in a terminal/console
 
-    cd $HOME/liboqs-go
+```shell
+cd $HOME/liboqs-go
+```
 
 then run the example(s) by typing e.g.
 
-    go run examples/kem/kem.go 
+```shell
+go run examples/kem/kem.go 
+```
 
 Replace `go run` with `go build` if you intend to build the corresponding executable `$HOME/liboqs-go/kem`.
 
