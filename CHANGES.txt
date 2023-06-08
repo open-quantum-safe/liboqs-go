@@ -1,4 +1,4 @@
-Version 0.8.0 - June xx, 2023
+Version 0.8.0 - June 9, 2023
     - This is a maintenance release, minor fixes
     - Removed AppVeyor and CircleCI, all continuous integration is now done
       via GitHub actions
