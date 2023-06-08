@@ -8,7 +8,7 @@ on:
 
 env:
   LD_LIBRARY_PATH: /usr/local/lib
-  PKG_CONFIG_PATH: ${GITHUB_WORKSPACE}/.config
+  PKG_CONFIG_PATH: ${{github.workspace}}/.config
   WIN_LIBOQS_INSTALL_PATH: C:\liboqs
   WIN_PKG_CONFIG_PATH: C:\Strawberry\c\lib\pkgconfig
 
