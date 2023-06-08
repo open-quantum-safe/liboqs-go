@@ -8,9 +8,9 @@ on:
 
 env:
   LD_LIBRARY_PATH: /usr/local/lib
+  PKG_CONFIG_PATH: ${GITHUB_WORKSPACE}/.config
   WIN_LIBOQS_INSTALL_PATH: C:\liboqs
   WIN_PKG_CONFIG_PATH: C:\Strawberry\c\lib\pkgconfig
-
 
 jobs:
   build:
@@ -33,11 +33,6 @@ jobs:
           git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs
           cmake -S liboqs -B liboqs/build -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON
           sudo cmake --build liboqs/build --parallel 4 --target install
-
-      - name: Configure pkgconfig macOS
-        if: matrix.os == 'macos-latest'
-        run: |
-          cp /usr/local/Cellar/openssl@3/3.1.0/lib/pkgconfig/openssl.pc .config
 
       - name: Run examples POSIX
         if: matrix.os != 'windows-latest'
