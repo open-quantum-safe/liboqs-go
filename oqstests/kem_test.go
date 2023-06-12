@@ -73,8 +73,8 @@ func TestKeyEncapsulationCorrectness(t *testing.T) {
 	if runtime.GOOS == "darwin" {
 		disabledKEMPatterns = []string{"Classic-McEliece", "HQC-256"}
 	}
-	// disable some KEMs in Solaris
-	if runtime.GOOS == "solaris" {
+	// disable some KEMs in OpenIndiana
+	if runtime.GOOS == "illumos" {
 		disabledKEMPatterns = []string{"Classic-McEliece", "HQC-256"}
 	}
 	// disable some KEMs in Windows
@@ -115,8 +115,8 @@ func TestKeyEncapsulationWrongCiphertext(t *testing.T) {
 	if runtime.GOOS == "darwin" {
 		disabledKEMPatterns = []string{"Classic-McEliece", "HQC-256"}
 	}
-	// disable some KEMs in Solaris
-	if runtime.GOOS == "solaris" {
+	// disable some KEMs in OpenIndiana
+	if runtime.GOOS == "illumos" {
 		disabledKEMPatterns = []string{"Classic-McEliece", "HQC-256"}
 	}
 	// disable some KEMs in Windows
