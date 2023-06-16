@@ -1,23 +1,26 @@
-FROM ubuntu:22.04 AS build
+FROM ubuntu:latest
 
-WORKDIR /app
-RUN apt-get update && apt-get install -y astyle cmake gcc ninja-build libssl-dev python3-pytest python3-pytest-xdist unzip xsltproc doxygen graphviz python3-yaml valgrind git \
-&& git clone -b main https://github.com/open-quantum-safe/liboqs.git
-RUN mkdir -p /app/liboqs/build
-WORKDIR /app/liboqs/build
-RUN cmake -GNinja .. -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON -DOQS_DIST_BUILD=ON \
-&& ninja install
+# Install dependencies
+RUN apt-get -y update && \
+    apt-get install -y build-essential git cmake libssl-dev golang
 
-FROM ubuntu:22.04
-RUN apt-get update && apt-get install -y golang \
-&& apt-get clean \
-&& rm -rf /var/lib/apt/lists/*
-COPY --from=build /usr/local/lib/liboqs* /usr/local/lib
-COPY --from=build /usr/local/include/oqs /usr/local/include/oqs
-WORKDIR /home
+# Get liboqs
+RUN git clone --depth 1 --branch main https://github.com/open-quantum-safe/liboqs
+
+# Install liboqs
+RUN cmake -S liboqs -B liboqs/build -DBUILD_SHARED_LIBS=ON && \
+    cmake --build liboqs/build --parallel 4 && \
+    cmake --build liboqs/build --target install
+
+# Enable a normal user
+RUN useradd -m -c "Open Quantum Safe" oqs
+USER oqs
+WORKDIR /home/oqs
+
+# Get liboqs-go
+RUN git clone --depth 1 --branch main https://github.com/open-quantum-safe/liboqs-go.git
+WORKDIR /home/oqs/liboqs-go
+
+# Configure liboqs-go
+ENV PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/home/oqs/liboqs-go/.config
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/home/liboqs-go/.config
-WORKDIR /home/liboqs-go
-COPY . .
-RUN ls -la
-CMD ["go", "test", "-v", "./oqstests"]
