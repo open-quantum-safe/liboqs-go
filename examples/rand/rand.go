@@ -20,14 +20,19 @@ func CustomRNG(randomArray []byte, bytesToRead int) {
 }
 
 func main() {
+	fmt.Println("liboqs version: " + oqs.LiboqsVersion())
+	
 	if err := oqsrand.RandomBytesSwitchAlgorithm("NIST-KAT"); err != nil {
 		log.Fatal(err)
 	}
-	entropySeed := [48]byte{0: 100, 20: 200, 47: 150}
+	// set the entropy seed to some values
+	var entropySeed [48]byte
+	for i := 0; i < 48; i++ {
+		entropySeed[i] = byte(i)
+	}
 	if err := oqsrand.RandomBytesNistKatInit256bit(entropySeed, nil); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("liboqs version: " + oqs.LiboqsVersion())
 	fmt.Printf("%-18s% X\n", "NIST-KAT: ", oqsrand.RandomBytes(32))
 
 	if err := oqsrand.RandomBytesCustomAlgorithm(CustomRNG); err != nil {
