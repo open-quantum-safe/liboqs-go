@@ -167,7 +167,7 @@ On Windows, you may need to replace forward-slashes `/` by back-slashes `\'.
 
 ## Usage in standalone applications
 
-liboqs-go can be imported into Python programs with
+liboqs-go can be imported into Go programs with
 
 ```go
 import (
