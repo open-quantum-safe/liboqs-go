@@ -1,3 +1,3 @@
 module github.com/open-quantum-safe/liboqs-go
 
-go 1.18
+go 1.15

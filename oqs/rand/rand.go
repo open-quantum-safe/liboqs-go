@@ -23,6 +23,7 @@ var algorithmPtrCallback func([]byte, int)
 // algorithmPtr is automatically invoked by RandomBytesCustomAlgorithm. When
 // invoked, the memory is provided by the caller, i.e. RandomBytes or
 // RandomBytesInPlace.
+//
 //export algorithmPtr
 func algorithmPtr(randomArray *C.uint8_t, bytesToRead C.size_t) {
 	// TODO optimize the copying if possible!
