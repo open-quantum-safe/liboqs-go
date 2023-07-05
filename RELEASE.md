@@ -20,7 +20,7 @@ See in particular limitations on intended use.
 
 ## Release notes
 
-This release of liboqs-go was released on June x, 2023. Its release page on
+This release of liboqs-go was released on July 5, 2023. Its release page on
 GitHub is https://github.com/open-quantum-safe/liboqs-go/releases/tag/0.8.0.
 
 ---

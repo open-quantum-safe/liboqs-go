@@ -19,7 +19,6 @@ WORKDIR /home/oqs
 
 # Get liboqs-go
 RUN git clone --depth 1 --branch main https://github.com/open-quantum-safe/liboqs-go.git
-WORKDIR /home/oqs/liboqs-go
 
 # Configure liboqs-go
 ENV PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/home/oqs/liboqs-go/.config

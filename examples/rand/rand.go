@@ -21,7 +21,7 @@ func CustomRNG(randomArray []byte, bytesToRead int) {
 
 func main() {
 	fmt.Println("liboqs version: " + oqs.LiboqsVersion())
-	
+
 	if err := oqsrand.RandomBytesSwitchAlgorithm("NIST-KAT"); err != nil {
 		log.Fatal(err)
 	}
