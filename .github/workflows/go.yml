@@ -5,6 +5,8 @@ on:
     branches: [ "**" ]
   pull_request:
     branches: [ "**" ]
+  repository_dispatch:
+    types: [ "**" ]
 
 env:
   BUILD_TYPE: Debug
