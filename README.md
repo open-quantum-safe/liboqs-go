@@ -226,7 +226,7 @@ Or, run the unit tests with
 docker run -it oqs-go sh -c "cd liboqs-go && go test -v ./oqstests"
 ```
 
-In case you want to use the Docker container as development environment, mount your current project in the Docker
+In case you want to use the Docker container as a development environment, mount your current project in the Docker
 container with
 
 ```shell
