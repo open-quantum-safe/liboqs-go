@@ -43,7 +43,7 @@ The project contains the following files and directories:
   and [`tdm-gcc`](https://jmeubank.github.io/tdm-gcc/); [Cygwin](https://www.cygwin.com/) is **not yet supported**
   by `cgo`; we recommend using MSYS2 since it also contains `pkg-config` as a package; to install `gcc` and `pkg-config`
   under MSYS2, please execute in a MSYS2 terminal
-  window `pacman -Ss mingw64/mingw-w64-x86_64-gcc mingw64/mingw-w64-x86_64-pkg-config`, then add the corresponding
+  window `pacman -S mingw64/mingw-w64-x86_64-gcc mingw64/mingw-w64-x86_64-pkg-config`, then add the corresponding
   installation location (e.g, `C:\msys64\mingw64\bin`) to your `PATH` environment variable by
   executing `set PATH=%PATH%;C:\msys64\mingw64\bin`. **Very important:** make sure that the `PATH` entry to the `gcc`
   and `pkg-config` provided by `MSYS2`comes ** before**
