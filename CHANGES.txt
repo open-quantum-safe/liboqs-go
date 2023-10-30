@@ -1,5 +1,9 @@
+Version 0.9.0 - October 30, 2023
+    - No modifications, release bumped to match the latest release of liboqs
+
 Version 0.8.0 - July 5, 2023
     - This is a maintenance release, minor fixes
+    - Go minimum required version bumped to 1.15
     - Removed AppVeyor and CircleCI, all continuous integration is now done
       via GitHub actions
 
