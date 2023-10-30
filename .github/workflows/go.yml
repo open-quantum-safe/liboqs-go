@@ -47,6 +47,9 @@ jobs:
           go run ./examples/sig/sig.go
           echo
           go run ./examples/rand/rand.go
+          echo 
+          go build ./examples/kem/kem.go
+          ./kem
 
       - name: Run unit tests POSIX
         if: matrix.os != 'windows-latest'
