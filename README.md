@@ -53,6 +53,8 @@ The project contains the following files and directories:
 
 > gcc (Rev3, Built by MSYS2 project) 9.1.0
 
+- If using Windows, you *may* need Go 1.21, as some earlier versions of Go produce some linker errors when
+  running `cgo`.
 
 ---
 
