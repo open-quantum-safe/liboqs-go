@@ -164,7 +164,7 @@ Replace `go run` by `go build`, e.g., `go build examples/kem/kem.go`.
 To fix, run
 
 ```shell
-codesign -f -s - path_to_exacutable
+codesign -f -s - path/to/executable
 ```
 
 ### Run the unit tests
