@@ -154,6 +154,19 @@ go run examples/sig/sig.go
 go run examples/rand/rand.go
 ```
 
+### Build executables
+
+Replace `go run` by `go build`, e.g., `go build examples/kem/kem.go`.
+
+**Note** go binaries produced on macOS arm64 are not code-signed properly. See
+[https://github.com/golang/go/issues/63997](https://github.com/golang/go/issues/63997).
+
+To fix, run
+
+```shell
+codesign -f -s - path_to_exacutable
+```
+
 ### Run the unit tests
 
 From inside the `liboqs-go` directory, execute
