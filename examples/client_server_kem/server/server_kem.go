@@ -97,8 +97,8 @@ func handleConnection(conn net.Conn, kemName string) {
 		log.Fatal(err)
 	} else if n != server.Details().LengthPublicKey {
 		log.Fatal(errors.New("server expected to read " +
-			string(server.Details().LengthPublicKey) + " bytes, but instead " +
-			"read " + string(n)))
+			fmt.Sprintf("%v", server.Details().LengthPublicKey) + " bytes, but instead " +
+			"read " + fmt.Sprintf("%v", n)))
 	}
 
 	// encapsulate the secret
@@ -112,8 +112,8 @@ func handleConnection(conn net.Conn, kemName string) {
 	if err != nil {
 		log.Fatal(err)
 	} else if n != server.Details().LengthCiphertext {
-		log.Fatal(errors.New("server expected to write " + string(server.
-			Details().LengthCiphertext) + " bytes, but instead wrote " + string(n)))
+		log.Fatal(errors.New("server expected to write " + fmt.Sprintf("%v", server.
+			Details().LengthCiphertext) + " bytes, but instead wrote " + fmt.Sprintf("%v", n)))
 	}
 
 	log.Printf("\nConnection #%d - server shared secret:\n% X ... % X\n\n",
