@@ -64,8 +64,8 @@ func main() {
 		log.Fatal(err)
 	} else if n != client.Details().LengthCiphertext {
 		log.Fatal(errors.New("client expected to read " +
-			string(client.Details().LengthCiphertext) + " bytes, but instead " +
-			"read " + string(n)))
+			fmt.Sprintf("%v", client.Details().LengthCiphertext) + " bytes, but instead " +
+			"read " + fmt.Sprintf("%v", n)))
 	}
 
 	// decapsulate the secret and extract the shared secret
