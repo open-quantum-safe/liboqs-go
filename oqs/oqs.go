@@ -188,7 +188,8 @@ func (kem *KeyEncapsulation) ExportSecretKey() []byte {
 // EncapSecret encapsulates a secret using a public key and returns the
 // corresponding ciphertext and shared secret.
 func (kem *KeyEncapsulation) EncapSecret(publicKey []byte) (ciphertext,
-	sharedSecret []byte, err error) {
+	sharedSecret []byte, err error,
+) {
 	if len(publicKey) != kem.algDetails.LengthPublicKey {
 		return nil, nil, errors.New("incorrect public key length")
 	}
@@ -218,7 +219,6 @@ func (kem *KeyEncapsulation) DecapSecret(ciphertext []byte) ([]byte, error) {
 	if len(kem.secretKey) != kem.algDetails.LengthSecretKey {
 		return nil, errors.New("incorrect secret key length, make sure you " +
 			"specify one in Init() or run GenerateKeyPair()")
-
 	}
 
 	sharedSecret := make([]byte, kem.algDetails.LengthSharedSecret)
@@ -428,7 +428,8 @@ func (sig *Signature) Sign(message []byte) ([]byte, error) {
 // Verify verifies the validity of a signed message, returning true if the
 // signature is valid, and false otherwise.
 func (sig *Signature) Verify(message []byte, signature []byte,
-	publicKey []byte) (bool, error) {
+	publicKey []byte,
+) (bool, error) {
 	if len(publicKey) != sig.algDetails.LengthPublicKey {
 		return false, errors.New("incorrect public key length")
 	}

@@ -1,4 +1,4 @@
-// key encapsulation Go example
+// Key encapsulation Go example
 package main
 
 import (

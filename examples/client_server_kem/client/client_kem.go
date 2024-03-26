@@ -1,4 +1,4 @@
-// key encapsulation TCP client Go example
+// Key encapsulation TCP client Go example
 package main
 
 import (
@@ -29,11 +29,11 @@ func main() {
 	}
 	defer conn.Close() // clean up even in case of panic
 
-	// construct the KEM client
+	// Construct the KEM client
 	client := oqs.KeyEncapsulation{}
 	defer client.Clean() // clean up even in case of panic
 
-	// receive the KEM name from the server
+	// Receive the KEM name from the server
 	kemName, err := bufio.NewReader(conn).ReadString('\n')
 	if err != nil {
 		log.Fatal(errors.New("client cannot receive the " +
@@ -41,7 +41,7 @@ func main() {
 	}
 	kemName = kemName[:len(kemName)-1] // remove the '\n'
 
-	// initialize the KEM client and generate the key pairs
+	// Initialize the KEM client and generate the key pairs
 	if err := client.Init(kemName, nil); err != nil {
 		log.Fatal(err)
 	}
@@ -50,14 +50,14 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// send the client public key to the server
+	// Send the client public key to the server
 	_, err = conn.Write(clientPublicKey)
 	if err != nil {
 		log.Fatal(errors.New("client cannot send the public key to the " +
 			"server"))
 	}
 
-	// listen for reply from the server, e.g. for the encapsulated secret
+	// Listen for reply from the server, e.g. for the encapsulated secret
 	ciphertext := make([]byte, client.Details().LengthCiphertext)
 	n, err := io.ReadFull(conn, ciphertext)
 	if err != nil {
@@ -68,7 +68,7 @@ func main() {
 			"read " + fmt.Sprintf("%v", n)))
 	}
 
-	// decapsulate the secret and extract the shared secret
+	// Decapsulate the secret and extract the shared secret
 	sharedSecretClient, err := client.DecapSecret(ciphertext)
 	if err != nil {
 		log.Fatal(err)

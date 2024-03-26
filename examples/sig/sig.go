@@ -1,4 +1,4 @@
-// signature Go example
+// Signature Go example
 package main
 
 import (

@@ -3,13 +3,13 @@ package oqstests
 
 import (
 	"bytes"
-	"github.com/open-quantum-safe/liboqs-go/oqs/rand"
 	"log"
 	"runtime"
 	"sync"
 	"testing"
 
 	"github.com/open-quantum-safe/liboqs-go/oqs"
+	"github.com/open-quantum-safe/liboqs-go/oqs/rand"
 )
 
 // disabledKEMPatterns lists KEMs for which unit testing is disabled
@@ -33,7 +33,7 @@ func testKEMCorrectness(kemName string, threading bool, t *testing.T) {
 	var client, server oqs.KeyEncapsulation
 	defer client.Clean()
 	defer server.Clean()
-	// ignore potential errors everywhere
+	// Ignore potential errors everywhere
 	_ = client.Init(kemName, nil)
 	_ = server.Init(kemName, nil)
 	clientPublicKey, _ := client.GenerateKeyPair()
@@ -54,7 +54,7 @@ func testKEMWrongCiphertext(kemName string, threading bool, t *testing.T) {
 	var client, server oqs.KeyEncapsulation
 	defer client.Clean()
 	defer server.Clean()
-	// ignore potential errors everywhere
+	// Ignore potential errors everywhere
 	_ = client.Init(kemName, nil)
 	_ = server.Init(kemName, nil)
 	clientPublicKey, _ := client.GenerateKeyPair()
@@ -69,19 +69,19 @@ func testKEMWrongCiphertext(kemName string, threading bool, t *testing.T) {
 
 // TestKeyEncapsulationCorrectness tests the correctness of all enabled KEMs.
 func TestKeyEncapsulationCorrectness(t *testing.T) {
-	// disable some KEMs in macOS/OSX
+	// Disable some KEMs in macOS/OSX
 	if runtime.GOOS == "darwin" {
 		disabledKEMPatterns = []string{"Classic-McEliece", "HQC-256"}
 	}
-	// disable some KEMs in OpenIndiana
+	// Disable some KEMs in OpenIndiana
 	if runtime.GOOS == "illumos" {
 		disabledKEMPatterns = []string{"Classic-McEliece"}
 	}
-	// disable some KEMs in Windows
+	// Disable some KEMs in Windows
 	if runtime.GOOS == "windows" {
 		disabledKEMPatterns = []string{"Classic-McEliece"}
 	}
-	// first test KEMs that belong to noThreadKEMPatterns[] in the main
+	// First test KEMs that belong to noThreadKEMPatterns[] in the main
 	// goroutine, due to issues with stack size being too small in macOS or
 	// Windows
 	cnt := 0
@@ -96,7 +96,7 @@ func TestKeyEncapsulationCorrectness(t *testing.T) {
 			testKEMCorrectness(kemName, false, t)
 		}
 	}
-	// test the remaining KEMs in separate goroutines
+	// Test the remaining KEMs in separate goroutines
 	wgKEMCorrectness.Add(len(oqs.EnabledKEMs()) - cnt)
 	for _, kemName := range oqs.EnabledKEMs() {
 		if stringMatchSlice(kemName, disabledKEMPatterns) {
@@ -115,15 +115,15 @@ func TestKeyEncapsulationWrongCiphertext(t *testing.T) {
 	if runtime.GOOS == "darwin" {
 		disabledKEMPatterns = []string{"Classic-McEliece", "HQC-256"}
 	}
-	// disable some KEMs in OpenIndiana
+	// Disable some KEMs in OpenIndiana
 	if runtime.GOOS == "illumos" {
 		disabledKEMPatterns = []string{"Classic-McEliece"}
 	}
-	// disable some KEMs in Windows
+	// Disable some KEMs in Windows
 	if runtime.GOOS == "windows" {
 		disabledKEMPatterns = []string{"Classic-McEliece"}
 	}
-	// first test KEMs that belong to noThreadKEMPatterns[] in the main
+	// First test KEMs that belong to noThreadKEMPatterns[] in the main
 	// goroutine, due to issues with stack size being too small in macOS or
 	// Windows
 	cnt := 0
@@ -132,13 +132,13 @@ func TestKeyEncapsulationWrongCiphertext(t *testing.T) {
 			cnt++
 			continue
 		}
-		// issues with stack size being too small
+		// Issues with stack size being too small
 		if stringMatchSlice(kemName, noThreadKEMPatterns) {
 			cnt++
 			testKEMWrongCiphertext(kemName, false, t)
 		}
 	}
-	// test the remaining KEMs in separate goroutines
+	// Test the remaining KEMs in separate goroutines
 	wgKEMWrongCiphertext.Add(len(oqs.EnabledKEMs()) - cnt)
 	for _, kemName := range oqs.EnabledKEMs() {
 		if stringMatchSlice(kemName, disabledKEMPatterns) {

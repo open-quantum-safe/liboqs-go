@@ -1,4 +1,4 @@
-// various RNGs Go example
+// Various RNGs Go example
 package main
 
 import (
@@ -7,7 +7,6 @@ import (
 	"runtime"
 
 	"github.com/open-quantum-safe/liboqs-go/oqs"
-
 	oqsrand "github.com/open-quantum-safe/liboqs-go/oqs/rand" // RNG support
 )
 
@@ -23,21 +22,20 @@ func CustomRNG(randomArray []byte, bytesToRead int) {
 func main() {
 	fmt.Println("liboqs version: " + oqs.LiboqsVersion())
 
+	if err := oqsrand.RandomBytesSwitchAlgorithm("system"); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("%18s% X\n", "System (default): ", oqsrand.RandomBytes(32))
 	if err := oqsrand.RandomBytesCustomAlgorithm(CustomRNG); err != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("%-18s% X\n", "Custom RNG: ", oqsrand.RandomBytes(32))
 
-	// we do not yet support OpenSSL under Windows
+	// We do not yet support OpenSSL under Windows
 	if runtime.GOOS != "windows" {
 		if err := oqsrand.RandomBytesSwitchAlgorithm("OpenSSL"); err != nil {
 			log.Fatal(err)
 		}
 		fmt.Printf("%-18s% X\n", "OpenSSL: ", oqsrand.RandomBytes(32))
 	}
-
-	if err := oqsrand.RandomBytesSwitchAlgorithm("system"); err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("%18s% X\n", "System (default): ", oqsrand.RandomBytes(32))
 }
