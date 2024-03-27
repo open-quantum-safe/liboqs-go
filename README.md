@@ -25,6 +25,8 @@ The project contains the following files and directories:
 
 - **`oqs/oqs.go`: main package file for the wrapper**
 - `.config/liboqs-go.pc`: `pkg-config` configuration file needed by `cgo`
+- `.config-static/liboqs-go.pc`: `pkg-config` configuration file needed by
+  `cgo` when linking statically against liboqs
 - `examples`: usage examples, including a client/server KEM over TCP/IP
 - `oqstests`: unit tests
 
@@ -62,9 +64,6 @@ The project contains the following files and directories:
   `gcc --version`, and you should get an output like
 
 > gcc (Rev3, Built by MSYS2 project) 9.1.0
-
-- If using Windows, you _may_ need Go 1.21, as some earlier versions of Go
-  produce some linker errors when running `cgo`
 
 ---
 
@@ -159,12 +158,23 @@ Control Panel tool or execute in a Command Prompt
 set PKG_CONFIG_PATH=%PKG_CONFIG_PATH%;$HOME/liboqs-go/.config
 ```
 
-### Linking statically against liboqs
+### Linking statically against liboqs (excluding macOS/OS X platforms)
 
-Replace `.config` with `.config-static` when defining the `PKG_CONFIG_PATH`
+Replace `.config` with `.config-static` when setting the `PKG_CONFIG_PATH`
 environment variable above. This assumes that you previously compiled and
 installed the static version of liboqs, i.e., you did not pass
-`-DBUILD_SHARED_LIBS=ON` to CMake when configuring liboqs above.
+`-DBUILD_SHARED_LIBS=ON` to CMake when configuring liboqs above. Ensure that
+you run `go clean -cache` before building or running.
+
+### Linking statically against liboqs (macOS/OS X platforms)
+
+The macOS/OS X linker does not allow choosing static vs dynamic linking when
+both static and dynamic versions of a library are installed. In this case, the
+dynamic version will always be chosen by the linker. Hence, to link statically
+agains liboqs on macOS/OS X, make sure you have not installed the dynamic
+version of liboqs anywhere on your system, and use the `.config` (not
+`.config-static`) when setting the `PKG_CONFIG_PATH` environment variable.
+Ensure that you run `go clean -cache` before building or running.
 
 ### Run the examples
 

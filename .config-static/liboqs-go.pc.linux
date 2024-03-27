@@ -6,4 +6,4 @@ Description: Go bindings for liboqs, a C library for quantum resistant cryptogra
 Version: 0.10.0
 Cflags: -I${LIBOQS_INCLUDE_DIR}
 Ldflags: '-extldflags "-Wl,-stack_size -Wl,0x1000000"'
-Libs: -L${LIBOQS_LIB_DIR} -Wl,-Bstatic -loqs -lcrypto -Wl, -Bdynamic
+Libs: -L${LIBOQS_LIB_DIR} -Wl,-Bstatic -loqs -lcrypto -Wl,-Bdynamic
