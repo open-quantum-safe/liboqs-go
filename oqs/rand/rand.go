@@ -63,7 +63,7 @@ func RandomBytesInPlace(randomArray []byte, bytesToRead int) {
 }
 
 // RandomBytesSwitchAlgorithm switches the core OQS_randombytes to use the
-// specified algorithm. Possible values are "system", "NIST-KAT", "OpenSSL".
+// specified algorithm. Possible values are "system", "OpenSSL".
 // See <oqs/rand.h> liboqs header for more details.
 func RandomBytesSwitchAlgorithm(algName string) error {
 	if C.OQS_randombytes_switch_algorithm(C.CString(algName)) != C.OQS_SUCCESS {
