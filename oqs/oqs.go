@@ -2,7 +2,7 @@
 package oqs // import "github.com/open-quantum-safe/liboqs-go/oqs"
 
 /*
-#cgo pkg-config: liboqs
+#cgo pkg-config: liboqs-go
 #include <oqs/oqs.h>
 */
 import "C"

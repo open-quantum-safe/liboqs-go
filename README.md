@@ -24,7 +24,7 @@ GitHub actions.
 The project contains the following files and directories:
 
 - **`oqs/oqs.go`: main package file for the wrapper**
-- `.config/liboqs.pc`: `pkg-config` configuration file needed by `cgo`
+- `.config/liboqs-go.pc`: `pkg-config` configuration file needed by `cgo`
 - `examples`: usage examples, including a client/server KEM over TCP/IP
 - `oqstests`: unit tests
 
@@ -44,6 +44,7 @@ The project contains the following files and directories:
   Windows)
 - If using Windows, you need a C compiler supported by `cgo` added to your
   `PATH` environment variable; currently, the
+
   best supported ones are provided by [MSYS2](https://www.msys2.org/)
   and [`tdm-gcc`](https://jmeubank.github.io/tdm-gcc/);
   [Cygwin](https://www.cygwin.com/) is **not yet supported**
@@ -131,7 +132,7 @@ git clone --depth=1 https://github.com/open-quantum-safe/liboqs-go
 ```
 
 Next, you must modify the following lines in
-[`$HOME/liboqs-go/.config/liboqs.pc`](https://github.com/open-quantum-safe/liboqs-go/tree/main/.config/liboqs.pc)
+[`$HOME/liboqs-go/.config/liboqs-go.pc`](https://github.com/open-quantum-safe/liboqs-go/tree/main/.config/liboqs-go.pc)
 
     LIBOQS_INCLUDE_DIR=/usr/local/include
     LIBOQS_LIB_DIR=/usr/local/lib
@@ -157,6 +158,13 @@ Control Panel tool or execute in a Command Prompt
 ```shell
 set PKG_CONFIG_PATH=%PKG_CONFIG_PATH%;$HOME/liboqs-go/.config
 ```
+
+### Linking statically against liboqs
+
+Replace `.config` with `.config-static` when defining the `PKG_CONFIG_PATH`
+environment variable above. This assumes that you previously compiled and
+installed the static version of liboqs, i.e., you did not pass
+`-DBUILD_SHARED_LIBS=ON` to CMake when configuring liboqs above.
 
 ### Run the examples
 

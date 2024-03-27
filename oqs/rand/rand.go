@@ -4,7 +4,7 @@ package rand // import "github.com/open-quantum-safe/liboqs-go/oqs/rand"
 /**************** Callbacks ****************/
 
 /*
-#cgo pkg-config: liboqs
+#cgo pkg-config: liboqs-go
 #include <oqs/oqs.h>
 typedef void (*algorithm_ptr)(uint8_t*, size_t);
 void algorithmPtr_cgo(uint8_t*, size_t);
