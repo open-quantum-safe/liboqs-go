@@ -2,11 +2,11 @@ name: GitHub actions
 
 on:
   push:
-    branches: [ "**" ]
+    branches: ["**"]
   pull_request:
-    branches: [ "**" ]
+    branches: ["**"]
   repository_dispatch:
-    types: [ "**" ]
+    types: ["**"]
 
 env:
   BUILD_TYPE: Debug
@@ -19,7 +19,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -67,7 +67,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         shell: cmd
         run: |
-          copy .\.config\liboqs.pc.win64 ${{env.WIN_PKG_CONFIG_PATH}}\liboqs.pc
+          copy .\.config\liboqs-go.pc.win64 ${{env.WIN_PKG_CONFIG_PATH}}\liboqs-go.pc
 
       - name: Run examples Windows
         if: matrix.os == 'windows-latest'

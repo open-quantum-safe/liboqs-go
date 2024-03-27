@@ -1,0 +1,9 @@
+LIBOQS_INCLUDE_DIR=/usr/local/include
+LIBOQS_LIB_DIR=/usr/local/lib
+
+Name: liboqs-go
+Description: Go bindings for liboqs, a C library for quantum resistant cryptography
+Version: 0.10.0
+Cflags: -I${LIBOQS_INCLUDE_DIR}
+Ldflags: '-extldflags "-Wl,-stack_size -Wl,0x1000000"'
+Libs: -L${LIBOQS_LIB_DIR} -Wl,-Bstatic -loqs -lcrypto -Wl,-Bdynamic

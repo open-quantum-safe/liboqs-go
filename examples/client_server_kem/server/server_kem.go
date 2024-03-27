@@ -1,4 +1,4 @@
-// key encapsulation TCP server Go example
+// Key encapsulation TCP server Go example
 package main
 
 import (
@@ -63,13 +63,13 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// listen indefinitely (until explicitly stopped, e.g. with CTRL+C in UNIX)
+	// Listen indefinitely (until explicitly stopped, e.g. with CTRL+C in UNIX)
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
 			log.Fatal(err)
 		}
-		// handle connections concurrently
+		// Handle connections concurrently
 		go handleConnection(conn, kemName)
 	}
 }
@@ -77,20 +77,20 @@ func main() {
 func handleConnection(conn net.Conn, kemName string) {
 	defer conn.Close() // clean up even in case of panic
 
-	// send KEM name to client first
+	// Send KEM name to client first
 	_, err := fmt.Fprintln(conn, kemName)
 	if err != nil {
 		log.Fatal(errors.New("server cannot send the KEM name to the client"))
 	}
 
-	// construct and initialize the KEM server
+	// Construct and initialize the KEM server
 	server := oqs.KeyEncapsulation{}
 	defer server.Clean() // clean up even in case of panic
 	if err := server.Init(kemName, nil); err != nil {
 		log.Fatal(err)
 	}
 
-	// read the public key sent by the client
+	// Read the public key sent by the client
 	clientPublicKey := make([]byte, server.Details().LengthPublicKey)
 	n, err := io.ReadFull(conn, clientPublicKey)
 	if err != nil {
@@ -101,13 +101,13 @@ func handleConnection(conn net.Conn, kemName string) {
 			"read " + fmt.Sprintf("%v", n)))
 	}
 
-	// encapsulate the secret
+	// Encapsulate the secret
 	ciphertext, sharedSecretServer, err := server.EncapSecret(clientPublicKey)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// then send ciphertext to client and close the connection
+	// Then send ciphertext to client and close the connection
 	n, err = conn.Write(ciphertext)
 	if err != nil {
 		log.Fatal(err)
@@ -120,6 +120,6 @@ func handleConnection(conn net.Conn, kemName string) {
 		counter.Val(), sharedSecretServer[0:8],
 		sharedSecretServer[len(sharedSecretServer)-8:])
 
-	// increment the connection number
+	// Increment the connection number
 	counter.Add()
 }

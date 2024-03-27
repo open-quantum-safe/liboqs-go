@@ -4,7 +4,7 @@ package rand // import "github.com/open-quantum-safe/liboqs-go/oqs/rand"
 /**************** Callbacks ****************/
 
 /*
-#cgo pkg-config: liboqs
+#cgo pkg-config: liboqs-go
 #include <oqs/oqs.h>
 typedef void (*algorithm_ptr)(uint8_t*, size_t);
 void algorithmPtr_cgo(uint8_t*, size_t);
@@ -63,7 +63,7 @@ func RandomBytesInPlace(randomArray []byte, bytesToRead int) {
 }
 
 // RandomBytesSwitchAlgorithm switches the core OQS_randombytes to use the
-// specified algorithm. Possible values are "system", "NIST-KAT", "OpenSSL".
+// specified algorithm. Possible values are "system" and "OpenSSL".
 // See <oqs/rand.h> liboqs header for more details.
 func RandomBytesSwitchAlgorithm(algName string) error {
 	if C.OQS_randombytes_switch_algorithm(C.CString(algName)) != C.OQS_SUCCESS {
