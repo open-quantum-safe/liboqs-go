@@ -158,15 +158,17 @@ Control Panel tool or execute in a Command Prompt
 set PKG_CONFIG_PATH=%PKG_CONFIG_PATH%;$HOME/liboqs-go/.config
 ```
 
-### Linking statically against liboqs (excluding macOS/OS X platforms)
+### Linking statically against liboqs - excluding macOS/OS X platforms
 
 Replace `.config` with `.config-static` when setting the `PKG_CONFIG_PATH`
 environment variable above. This assumes that you previously compiled and
 installed the static version of liboqs, i.e., you did not pass
-`-DBUILD_SHARED_LIBS=ON` to CMake when configuring liboqs above. Ensure that
-you run `go clean -cache` before building or running.
+`-DBUILD_SHARED_LIBS=ON` to CMake when configuring liboqs above.
 
-### Linking statically against liboqs (macOS/OS X platforms)
+**Important:** Ensure that you run `go clean -cache` before building or
+running.
+
+### Linking statically against liboqs - macOS/OS X platforms
 
 The macOS/OS X linker does not allow choosing static vs dynamic linking when
 both static and dynamic versions of a library are installed. In this case, the
@@ -174,7 +176,9 @@ dynamic version will always be chosen by the linker. Hence, to link statically
 agains liboqs on macOS/OS X, make sure you have not installed the dynamic
 version of liboqs anywhere on your system, and use the `.config` (not
 `.config-static`) when setting the `PKG_CONFIG_PATH` environment variable.
-Ensure that you run `go clean -cache` before building or running.
+
+**Important:** Ensure that you run `go clean -cache` before building or
+running.
 
 ### Run the examples
 
