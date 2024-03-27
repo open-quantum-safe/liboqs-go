@@ -5,6 +5,11 @@
   keep track of changes in new releases
 - Removed the NIST PRNG as the latter is no longer exposed by liboqs' public
   API
+- Added the
+  [".config-static"](https://github.com/open-quantum-safe/liboqs-go/tree/main/.config-static)
+  pkg-config configuration directory for linking statically against liboqs, see
+  ["README.md"](https://github.com/open-quantum-safe/liboqs-go/blob/main/README.md)
+  for more details.
 
 # Version 0.9.0 - October 30, 2023
 

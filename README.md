@@ -61,7 +61,7 @@ The project contains the following files and directories:
   **before** any other (if any) `gcc` and `pkg-config` executables you may have
   installed (e.g. such as the ones provided
   by [Cygwin](https://www.cygwin.com)). To verify, type into a Command Prompt
-  `gcc --version`, and you should get an output like
+  `gcc --version`, and you should get an output such as
 
 > gcc (Rev3, Built by MSYS2 project) 9.1.0
 
@@ -165,8 +165,14 @@ environment variable above. This assumes that you previously compiled and
 installed the static version of liboqs, i.e., you did not pass
 `-DBUILD_SHARED_LIBS=ON` to CMake when configuring liboqs above.
 
+Note that `.config-static/liboqs-go.pc` links statically against OpenSSL as
+well. In case you don't have OpenSSL installed, remove the `-lcrypto` from the
+last line of `.config-static/liboqs-go.pc`, and make sure you compiled liboqs
+without OpenSSL, i.e., pass the `-DOQS_USE_OPENSSL=OFF` CMake flag when
+configuring liboqs, otherwise you will get linker errors.
+
 **Important:** Ensure that you run `go clean -cache` before building or
-running.
+running, so `pkg-config` refreshes its cache.
 
 ### Linking statically against liboqs - macOS/OS X platforms
 
