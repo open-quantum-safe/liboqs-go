@@ -36,7 +36,7 @@ The project contains the following files and directories:
 
 - [liboqs](https://github.com/open-quantum-safe/liboqs)
 - [CMake](https://cmake.org/)
-- C++11 compliant compiler, e.g., [gcc](https://gcc.gnu.org/)
+- C compiler, e.g., [gcc](https://gcc.gnu.org/)
   , [clang](https://clang.llvm.org)
   , [MSYS2](https://www.msys2.org/) etc.
 - [Go 1.21 or later](https://go.dev/)
