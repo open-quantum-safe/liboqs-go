@@ -46,9 +46,8 @@ The project contains the following files and directories:
   via a third-party compiler such as [MSYS2](https://www.msys2.org/) on
   Windows)
 - If using Windows, you need a C compiler supported by `cgo` added to your
-  `PATH` environment variable; currently, the
-
-  best supported ones are provided by [MSYS2](https://www.msys2.org/)
+  `PATH` environment variable; currently, the best supported ones are provided
+  by [MSYS2](https://www.msys2.org/)
   and [`tdm-gcc`](https://jmeubank.github.io/tdm-gcc/);
   [Cygwin](https://www.cygwin.com/) is **not yet supported**
   by `cgo`; we recommend using MSYS2 since it also contains `pkg-config` as a
