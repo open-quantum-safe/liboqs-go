@@ -56,7 +56,8 @@ The project contains the following files and directories:
   `pacman -S mingw64/mingw-w64-x86_64-gcc mingw64/mingw-w64-x86_64-pkg-config`,
   then add the corresponding installation location (e.g,
   `C:\msys64\mingw64\bin`) to your `PATH` environment variable by executing
-  `set PATH=%PATH%;C:\msys64\mingw64\bin`. **Very important:** make sure that
+  `set PATH=%PATH%;C:\msys64\mingw64\bin`.
+  **Very important:** make sure that
   the `PATH` entry to the `gcc` and `pkg-config` provided by `MSYS2`comes
   **before** any other (if any) `gcc` and `pkg-config` executables you may have
   installed (e.g. such as the ones provided
