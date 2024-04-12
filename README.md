@@ -57,6 +57,7 @@ The project contains the following files and directories:
   then add the corresponding installation location (e.g,
   `C:\msys64\mingw64\bin`) to your `PATH` environment variable by executing
   `set PATH=%PATH%;C:\msys64\mingw64\bin`.
+
   **Very important:** make sure that
   the `PATH` entry to the `gcc` and `pkg-config` provided by `MSYS2`comes
   **before** any other (if any) `gcc` and `pkg-config` executables you may have
@@ -64,7 +65,7 @@ The project contains the following files and directories:
   by [Cygwin](https://www.cygwin.com)). To verify, type into a Command Prompt
   `gcc --version`, and you should get an output such as
 
-> gcc (Rev3, Built by MSYS2 project) 9.1.0
+  > gcc (Rev3, Built by MSYS2 project) 9.1.0
 
 ---
 
