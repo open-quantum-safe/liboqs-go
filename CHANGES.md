@@ -1,5 +1,16 @@
 # Version 0.12.0 - January 15, 2025
 
+- Fixes https://github.com/open-quantum-safe/liboqs-go/issues/44. The API that
+  NIST has introduced in [FIPS 204](https://csrc.nist.gov/pubs/fips/204/final)
+  for ML-DSA includes a context string of length >= 0. Added new API for
+  signing with a context string
+  - `func (sig *Signature)
+SignWithCtxStr(message []byte, context []byte) ([]byte, error)`
+  - `func (sig *Signature)
+VerifyWithCtxStr(message []byte, signature []byte, context []byte,
+publicKey []byte) (bool, error)`
+- Updated examples to use `ML-KEM` and `ML-DSA` as the defaults
+
 # Version 0.10.0 - March 27, 2024
 
 - Bumped Go version to 1.21

@@ -95,27 +95,36 @@ func init() {
 
 // KeyEncapsulationDetails defines the KEM algorithm details.
 type KeyEncapsulationDetails struct {
-	ClaimedNISTLevel   int
-	IsINDCCA           bool
-	LengthCiphertext   int
-	LengthPublicKey    int
-	LengthSecretKey    int
-	LengthSharedSecret int
 	Name               string
 	Version            string
+	ClaimedNISTLevel   int
+	IsINDCCA           bool
+	LengthPublicKey    int
+	LengthSecretKey    int
+	LengthCiphertext   int
+	LengthSharedSecret int
 }
 
 // String converts the KEM algorithm details to a string representation. Use
 // this method to pretty-print the KEM algorithm details, e.g.
 // fmt.Println(client.Details()).
 func (kemDetails KeyEncapsulationDetails) String() string {
-	return fmt.Sprintf("Name: %s\nVersion: %s\nClaimed NIST level: %d\n"+
-		"Is IND_CCA: %v\nLength public key (bytes): %d\nLength secret key ("+
-		"bytes): %d\nLength ciphertext (bytes): %d\nLength shared secret ("+
-		"bytes): %d", kemDetails.Name,
-		kemDetails.Version, kemDetails.ClaimedNISTLevel, kemDetails.IsINDCCA,
-		kemDetails.LengthPublicKey, kemDetails.LengthSecretKey,
-		kemDetails.LengthCiphertext, kemDetails.LengthSharedSecret)
+	return fmt.Sprintf("Name: %s\n"+
+		"Version: %s\n"+
+		"Claimed NIST level: %d\n"+
+		"Is IND_CCA: %v\n"+
+		"Length public key (bytes): %d\n"+
+		"Length secret key (bytes): %d\n"+
+		"Length ciphertext (bytes): %d\n"+
+		"Length shared secret (bytes): %d",
+		kemDetails.Name,
+		kemDetails.Version,
+		kemDetails.ClaimedNISTLevel,
+		kemDetails.IsINDCCA,
+		kemDetails.LengthPublicKey,
+		kemDetails.LengthSecretKey,
+		kemDetails.LengthCiphertext,
+		kemDetails.LengthSharedSecret)
 }
 
 // KeyEncapsulation defines the KEM main data structure.
@@ -170,9 +179,12 @@ func (kem *KeyEncapsulation) GenerateKeyPair() ([]byte, error) {
 	publicKey := make([]byte, kem.algDetails.LengthPublicKey)
 	kem.secretKey = make([]byte, kem.algDetails.LengthSecretKey)
 
-	rv := C.OQS_KEM_keypair(kem.kem,
+	rv := C.OQS_KEM_keypair(
+		kem.kem,
 		(*C.uint8_t)(unsafe.Pointer(&publicKey[0])),
-		(*C.uint8_t)(unsafe.Pointer(&kem.secretKey[0])))
+		(*C.uint8_t)(unsafe.Pointer(&kem.secretKey[0])),
+	)
+
 	if rv != C.OQS_SUCCESS {
 		return nil, errors.New("can not generate keypair")
 	}
@@ -197,10 +209,12 @@ func (kem *KeyEncapsulation) EncapSecret(publicKey []byte) (ciphertext,
 	ciphertext = make([]byte, kem.algDetails.LengthCiphertext)
 	sharedSecret = make([]byte, kem.algDetails.LengthSharedSecret)
 
-	rv := C.OQS_KEM_encaps(kem.kem,
+	rv := C.OQS_KEM_encaps(
+		kem.kem,
 		(*C.uint8_t)(unsafe.Pointer(&ciphertext[0])),
 		(*C.uint8_t)(unsafe.Pointer(&sharedSecret[0])),
-		(*C.uint8_t)(unsafe.Pointer(&publicKey[0])))
+		(*C.uint8_t)(unsafe.Pointer(&publicKey[0])),
+	)
 
 	if rv != C.OQS_SUCCESS {
 		return nil, nil, errors.New("can not encapsulate secret")
@@ -222,10 +236,12 @@ func (kem *KeyEncapsulation) DecapSecret(ciphertext []byte) ([]byte, error) {
 	}
 
 	sharedSecret := make([]byte, kem.algDetails.LengthSharedSecret)
-	rv := C.OQS_KEM_decaps(kem.kem,
+	rv := C.OQS_KEM_decaps(
+		kem.kem,
 		(*C.uint8_t)(unsafe.Pointer(&sharedSecret[0])),
 		(*C.uchar)(unsafe.Pointer(&ciphertext[0])),
-		(*C.uint8_t)(unsafe.Pointer(&kem.secretKey[0])))
+		(*C.uint8_t)(unsafe.Pointer(&kem.secretKey[0])),
+	)
 
 	if rv != C.OQS_SUCCESS {
 		return nil, errors.New("can not decapsulate secret")
@@ -313,24 +329,35 @@ func init() {
 
 // SignatureDetails defines the signature algorithm details.
 type SignatureDetails struct {
+	Name               string
+	Version            string
 	ClaimedNISTLevel   int
 	IsEUFCMA           bool
+	SigWithCtxSupport  bool
 	LengthPublicKey    int
 	LengthSecretKey    int
 	MaxLengthSignature int
-	Name               string
-	Version            string
 }
 
 // String converts the signature algorithm details to a string representation.
 // Use this method to pretty-print the signature algorithm details, e.g.
 // fmt.Println(signer.Details()).
 func (sigDetails SignatureDetails) String() string {
-	return fmt.Sprintf("Name: %s\nVersion: %s\nClaimed NIST level: %d\n"+
-		"Is EUF_CMA: %v\nLength public key (bytes): %d\nLength secret key ("+
-		"bytes): %d\nMaximum length signature (bytes): %d", sigDetails.Name,
-		sigDetails.Version, sigDetails.ClaimedNISTLevel, sigDetails.IsEUFCMA,
-		sigDetails.LengthPublicKey, sigDetails.LengthSecretKey,
+	return fmt.Sprintf("Name: %s\n"+
+		"Version: %s\n"+
+		"Claimed NIST level: %d\n"+
+		"Is EUF_CMA: %v\n"+
+		"Supports context string: %v\n"+
+		"Length public key (bytes): %d\n"+
+		"Length secret key (bytes): %d\n"+
+		"Maximum length signature (bytes): %d",
+		sigDetails.Name,
+		sigDetails.Version,
+		sigDetails.ClaimedNISTLevel,
+		sigDetails.IsEUFCMA,
+		sigDetails.SigWithCtxSupport,
+		sigDetails.LengthPublicKey,
+		sigDetails.LengthSecretKey,
 		sigDetails.MaxLengthSignature)
 }
 
@@ -370,9 +397,11 @@ func (sig *Signature) Init(algName string, secretKey []byte) error {
 	sig.algDetails.Version = C.GoString(sig.sig.alg_version)
 	sig.algDetails.ClaimedNISTLevel = int(sig.sig.claimed_nist_level)
 	sig.algDetails.IsEUFCMA = bool(sig.sig.euf_cma)
+	sig.algDetails.SigWithCtxSupport = bool(sig.sig.sig_with_ctx_support)
 	sig.algDetails.LengthPublicKey = int(sig.sig.length_public_key)
 	sig.algDetails.LengthSecretKey = int(sig.sig.length_secret_key)
 	sig.algDetails.MaxLengthSignature = int(sig.sig.length_signature)
+
 	return nil
 }
 
@@ -389,9 +418,12 @@ func (sig *Signature) GenerateKeyPair() ([]byte, error) {
 	publicKey := make([]byte, sig.algDetails.LengthPublicKey)
 	sig.secretKey = make([]byte, sig.algDetails.LengthSecretKey)
 
-	rv := C.OQS_SIG_keypair(sig.sig,
+	rv := C.OQS_SIG_keypair(
+		sig.sig,
 		(*C.uint8_t)(unsafe.Pointer(&publicKey[0])),
-		(*C.uint8_t)(unsafe.Pointer(&sig.secretKey[0])))
+		(*C.uint8_t)(unsafe.Pointer(&sig.secretKey[0])),
+	)
+
 	if rv != C.OQS_SUCCESS {
 		return nil, errors.New("can not generate keypair")
 	}
@@ -413,10 +445,46 @@ func (sig *Signature) Sign(message []byte) ([]byte, error) {
 
 	signature := make([]byte, sig.algDetails.MaxLengthSignature)
 	var lenSig uint64
-	rv := C.OQS_SIG_sign(sig.sig, (*C.uint8_t)(unsafe.Pointer(&signature[0])),
+	rv := C.OQS_SIG_sign(
+		sig.sig,
+		(*C.uint8_t)(unsafe.Pointer(&signature[0])),
 		(*C.size_t)(unsafe.Pointer(&lenSig)),
 		(*C.uint8_t)(unsafe.Pointer(&message[0])),
-		C.size_t(len(message)), (*C.uint8_t)(unsafe.Pointer(&sig.secretKey[0])))
+		C.size_t(len(message)),
+		(*C.uint8_t)(unsafe.Pointer(&sig.secretKey[0])),
+	)
+
+	if rv != C.OQS_SUCCESS {
+		return nil, errors.New("can not sign message")
+	}
+
+	return signature[:lenSig], nil
+}
+
+// Sign signs a message with context string and returns the corresponding
+// signature.
+func (sig *Signature) SignWithCtxStr(message []byte, context []byte) ([]byte, error) {
+	if len(context) > 0 && !sig.algDetails.SigWithCtxSupport {
+		return nil, errors.New("can not sign message with context string")
+	}
+
+	if len(sig.secretKey) != sig.algDetails.LengthSecretKey {
+		return nil, errors.New("incorrect secret key length, make sure you " +
+			"specify one in Init() or run GenerateKeyPair()")
+	}
+
+	signature := make([]byte, sig.algDetails.MaxLengthSignature)
+	var lenSig uint64
+	rv := C.OQS_SIG_sign_with_ctx_str(
+		sig.sig,
+		(*C.uint8_t)(unsafe.Pointer(&signature[0])),
+		(*C.size_t)(unsafe.Pointer(&lenSig)),
+		(*C.uint8_t)(unsafe.Pointer(&message[0])),
+		C.size_t(len(message)),
+		(*C.uint8_t)(unsafe.Pointer(&context[0])),
+		C.size_t(len(context)),
+		(*C.uint8_t)(unsafe.Pointer(&sig.secretKey[0])),
+	)
 
 	if rv != C.OQS_SUCCESS {
 		return nil, errors.New("can not sign message")
@@ -438,9 +506,54 @@ func (sig *Signature) Verify(message []byte, signature []byte,
 		return false, errors.New("incorrect signature size")
 	}
 
-	rv := C.OQS_SIG_verify(sig.sig, (*C.uint8_t)(unsafe.Pointer(&message[0])),
-		C.size_t(len(message)), (*C.uint8_t)(unsafe.Pointer(&signature[0])),
-		C.size_t(len(signature)), (*C.uint8_t)(unsafe.Pointer(&publicKey[0])))
+	rv := C.OQS_SIG_verify(
+		sig.sig,
+		(*C.uint8_t)(unsafe.Pointer(&message[0])),
+		C.size_t(len(message)),
+		(*C.uint8_t)(unsafe.Pointer(&signature[0])),
+		C.size_t(len(signature)),
+		(*C.uint8_t)(unsafe.Pointer(&publicKey[0])),
+	)
+
+	if rv != C.OQS_SUCCESS {
+		return false, nil
+	}
+
+	return true, nil
+}
+
+// Verify verifies the validity of a signed message with context string,
+// returning true if the signature is valid, and false otherwise.
+func (sig *Signature) VerifyWithCtxStr(
+	message []byte,
+	signature []byte,
+	context []byte,
+	publicKey []byte,
+) (bool, error) {
+	if len(context) > 0 && !sig.algDetails.SigWithCtxSupport {
+		return false, errors.New("can not sign message with context string")
+	}
+
+	if len(publicKey) != sig.algDetails.LengthPublicKey {
+		return false, errors.New("incorrect public key length")
+	}
+
+	if len(signature) > sig.algDetails.MaxLengthSignature {
+		return false, errors.New("incorrect signature size")
+	}
+
+	rv := C.OQS_SIG_verify_with_ctx_str(
+		sig.sig,
+		(*C.uint8_t)(
+			unsafe.Pointer(&message[0]),
+		),
+		C.size_t(len(message)),
+		(*C.uint8_t)(unsafe.Pointer(&signature[0])),
+		C.size_t(len(signature)),
+		(*C.uint8_t)(unsafe.Pointer(&context[0])),
+		C.size_t(len(context)),
+		(*C.uint8_t)(unsafe.Pointer(&publicKey[0])),
+	)
 
 	if rv != C.OQS_SUCCESS {
 		return false, nil

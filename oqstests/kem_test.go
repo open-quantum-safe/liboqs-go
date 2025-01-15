@@ -41,7 +41,7 @@ func testKEMCorrectness(kemName string, threading bool, t *testing.T) {
 	sharedSecretClient, _ := client.DecapSecret(ciphertext)
 	if !bytes.Equal(sharedSecretClient, sharedSecretServer) {
 		// t.Errorf is thread-safe
-		t.Errorf(kemName + ": shared secrets do not coincide")
+		t.Errorf("%s: shared secrets do not coincide", kemName)
 	}
 }
 
@@ -63,7 +63,7 @@ func testKEMWrongCiphertext(kemName string, threading bool, t *testing.T) {
 	sharedSecretClient, _ := client.DecapSecret(wrongCiphertext)
 	if bytes.Equal(sharedSecretClient, sharedSecretServer) {
 		// t.Errorf is thread-safe
-		t.Errorf(kemName + ": shared secrets should not coincide")
+		t.Errorf("%s: shared secrets should not coincide", kemName)
 	}
 }
 
