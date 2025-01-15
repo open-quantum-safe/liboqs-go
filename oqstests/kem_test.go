@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/open-quantum-safe/liboqs-go/oqs"
-	"github.com/open-quantum-safe/liboqs-go/oqs/rand"
 )
 
 // disabledKEMPatterns lists KEMs for which unit testing is disabled
@@ -59,7 +58,7 @@ func testKEMWrongCiphertext(kemName string, threading bool, t *testing.T) {
 	_ = server.Init(kemName, nil)
 	clientPublicKey, _ := client.GenerateKeyPair()
 	ciphertext, sharedSecretServer, _ := server.EncapSecret(clientPublicKey)
-	wrongCiphertext := rand.RandomBytes(len(ciphertext))
+	wrongCiphertext := oqs.RandomBytes(len(ciphertext))
 	sharedSecretClient, _ := client.DecapSecret(wrongCiphertext)
 	if bytes.Equal(sharedSecretClient, sharedSecretServer) {
 		// t.Errorf is thread-safe

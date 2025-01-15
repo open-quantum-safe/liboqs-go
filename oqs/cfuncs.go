@@ -1,4 +1,4 @@
-package rand
+package oqs
 
 // C callbacks, DO NOT CHANGE
 

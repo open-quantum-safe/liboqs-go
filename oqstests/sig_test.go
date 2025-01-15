@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/open-quantum-safe/liboqs-go/oqs"
-	"github.com/open-quantum-safe/liboqs-go/oqs/rand"
 )
 
 // disabledSigPatterns lists sigs for which unit testing is disabled
@@ -87,7 +86,7 @@ func testSigWrongSignature(sigName string, msg []byte, threading bool, t *testin
 	_ = verifier.Init(sigName, nil)
 	pubKey, _ := signer.GenerateKeyPair()
 	signature, _ := signer.Sign(msg)
-	wrongSignature := rand.RandomBytes(len(signature))
+	wrongSignature := oqs.RandomBytes(len(signature))
 	isValid, _ := verifier.Verify(msg, wrongSignature, pubKey)
 	if isValid {
 		// t.Errorf is thread-safe
@@ -108,7 +107,7 @@ func testSigWrongPublicKey(sigName string, msg []byte, threading bool, t *testin
 	_ = signer.Init(sigName, nil)
 	_ = verifier.Init(sigName, nil)
 	pubKey, _ := signer.GenerateKeyPair()
-	wrongPubKey := rand.RandomBytes(len(pubKey))
+	wrongPubKey := oqs.RandomBytes(len(pubKey))
 	signature, _ := signer.Sign(msg)
 	isValid, _ := verifier.Verify(msg, signature, wrongPubKey)
 	if isValid {
