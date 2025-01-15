@@ -1,3 +1,5 @@
+# Version 0.12.0 - January 15, 2025
+
 # Version 0.10.0 - March 27, 2024
 
 - Bumped Go version to 1.21
