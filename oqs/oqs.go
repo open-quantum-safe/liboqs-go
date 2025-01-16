@@ -4,8 +4,8 @@ package oqs // import "github.com/open-quantum-safe/liboqs-go/oqs"
 /*
 #cgo pkg-config: liboqs-go
 #include <oqs/oqs.h>
-typedef void (*algorithm_ptr)(uint8_t*, size_t);
-void algorithmPtr_cgo(uint8_t*, size_t);
+typedef void (*rand_algorithm_ptr)(uint8_t*, size_t);
+void randAlgorithmPtr_cgo(uint8_t*, size_t);
 */
 import "C"
 
@@ -580,19 +580,19 @@ func (sig *Signature) Clean() {
 
 /**************** Callbacks ****************/
 
-// algorithmPtrCallback is a global RNG algorithm callback set by
+// randAlgorithmPtrCallback is a global RNG algorithm callback set by
 // RandomBytesCustomAlgorithm.
-var algorithmPtrCallback func([]byte, int)
+var randAlgorithmPtrCallback func([]byte, int)
 
-// algorithmPtr is automatically invoked by RandomBytesCustomAlgorithm. When
+// randAlgorithmPtr is automatically invoked by RandomBytesCustomAlgorithm. When
 // invoked, the memory is provided by the caller, i.e. RandomBytes or
 // RandomBytesInPlace.
 //
-//export algorithmPtr
-func algorithmPtr(randomArray *C.uint8_t, bytesToRead C.size_t) {
+//export randAlgorithmPtr
+func randAlgorithmPtr(randomArray *C.uint8_t, bytesToRead C.size_t) {
 	// TODO optimize the copying if possible!
 	result := make([]byte, int(bytesToRead))
-	algorithmPtrCallback(result, int(bytesToRead))
+	randAlgorithmPtrCallback(result, int(bytesToRead))
 	p := unsafe.Pointer(randomArray)
 	for _, v := range result {
 		*(*C.uint8_t)(p) = C.uint8_t(v)
@@ -642,9 +642,9 @@ func RandomBytesCustomAlgorithm(fun func([]byte, int)) error {
 	if fun == nil {
 		return errors.New("the RNG algorithm callback can not be nil")
 	}
-	algorithmPtrCallback = fun
+	randAlgorithmPtrCallback = fun
 	C.OQS_randombytes_custom_algorithm(
-		(C.algorithm_ptr)(unsafe.Pointer(C.algorithmPtr_cgo)))
+		(C.rand_algorithm_ptr)(unsafe.Pointer(C.randAlgorithmPtr_cgo)))
 	return nil
 }
 

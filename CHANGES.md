@@ -10,6 +10,9 @@ SignWithCtxStr(message []byte, context []byte) ([]byte, error)`
 VerifyWithCtxStr(message []byte, signature []byte, context []byte,
 publicKey []byte) (bool, error)`
 - Updated examples to use `ML-KEM` and `ML-DSA` as the defaults
+- Removed the `oqs.rand` package and moved the `RandomBytes` functions from
+`oqs.rand` to the main `oqs` package to avoid warnings about linking liboqs
+twice
 
 # Version 0.10.0 - March 27, 2024
 
