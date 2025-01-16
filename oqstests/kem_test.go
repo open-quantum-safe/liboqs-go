@@ -72,10 +72,6 @@ func TestKeyEncapsulationCorrectness(t *testing.T) {
 	if runtime.GOOS == "darwin" {
 		disabledKEMPatterns = []string{}
 	}
-	// Disable some KEMs in OpenIndiana
-	if runtime.GOOS == "illumos" {
-		disabledKEMPatterns = []string{"Classic-McEliece"}
-	}
 	// Disable some KEMs in Windows
 	if runtime.GOOS == "windows" {
 		disabledKEMPatterns = []string{}
@@ -113,10 +109,6 @@ func TestKeyEncapsulationWrongCiphertext(t *testing.T) {
 	// disable some KEMs in macOS/OSX
 	if runtime.GOOS == "darwin" {
 		disabledKEMPatterns = []string{}
-	}
-	// Disable some KEMs in OpenIndiana
-	if runtime.GOOS == "illumos" {
-		disabledKEMPatterns = []string{"Classic-McEliece"}
 	}
 	// Disable some KEMs in Windows
 	if runtime.GOOS == "windows" {
