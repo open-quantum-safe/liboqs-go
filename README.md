@@ -71,10 +71,7 @@ The project contains the following files and directories:
 
 ## Functional restrictions
 
-Please note that on some platforms not all algorithms are supported:
-
-- macOS/Darwin: No known issues as of liboqs-0.12.0
-- Windows: No known issues as of liboqs-0.12.0
+No known issues as of liboqs-0.12.0
 
 ---
 
