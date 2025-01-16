@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/open-quantum-safe/liboqs-go/oqs"
-	"github.com/open-quantum-safe/liboqs-go/oqs/rand"
 )
 
 // disabledSigPatterns lists sigs for which unit testing is disabled
@@ -42,7 +41,34 @@ func testSigCorrectness(sigName string, msg []byte, threading bool, t *testing.T
 	isValid, _ := verifier.Verify(msg, signature, pubKey)
 	if !isValid {
 		// t.Errorf is thread-safe
-		t.Errorf(sigName + ": signature verification failed")
+		t.Errorf("%s: signature verification failed", sigName)
+	}
+}
+
+// testSigCorrectnessWithCtxStr tests a specific signature with context string.
+func testSigCorrectnessWithCtxStr(sigName string, msg []byte, threading bool, t *testing.T) {
+	if threading == true {
+		defer wgSigCorrectness.Done()
+	}
+	var signer, verifier oqs.Signature
+	defer signer.Clean()
+	defer verifier.Clean()
+
+	// Ignore potential errors everywhere
+	_ = signer.Init(sigName, nil)
+	if !signer.Details().SigWithCtxSupport {
+		return
+	}
+
+	log.Println("Correctness with context string - ", sigName) // thread-safe
+	// Ignore potential errors everywhere
+	_ = verifier.Init(sigName, nil)
+	pubKey, _ := signer.GenerateKeyPair()
+	signature, _ := signer.Sign(msg)
+	isValid, _ := verifier.Verify(msg, signature, pubKey)
+	if !isValid {
+		// t.Errorf is thread-safe
+		t.Errorf("%s: signature verification failed", sigName)
 	}
 }
 
@@ -60,11 +86,11 @@ func testSigWrongSignature(sigName string, msg []byte, threading bool, t *testin
 	_ = verifier.Init(sigName, nil)
 	pubKey, _ := signer.GenerateKeyPair()
 	signature, _ := signer.Sign(msg)
-	wrongSignature := rand.RandomBytes(len(signature))
+	wrongSignature := oqs.RandomBytes(len(signature))
 	isValid, _ := verifier.Verify(msg, wrongSignature, pubKey)
 	if isValid {
 		// t.Errorf is thread-safe
-		t.Errorf(sigName + ": signature verification should have failed")
+		t.Errorf("%s: signature verification should have failed", sigName)
 	}
 }
 
@@ -81,12 +107,12 @@ func testSigWrongPublicKey(sigName string, msg []byte, threading bool, t *testin
 	_ = signer.Init(sigName, nil)
 	_ = verifier.Init(sigName, nil)
 	pubKey, _ := signer.GenerateKeyPair()
-	wrongPubKey := rand.RandomBytes(len(pubKey))
+	wrongPubKey := oqs.RandomBytes(len(pubKey))
 	signature, _ := signer.Sign(msg)
 	isValid, _ := verifier.Verify(msg, signature, wrongPubKey)
 	if isValid {
 		// t.Errorf is thread-safe
-		t.Errorf(sigName + ": signature verification should have failed")
+		t.Errorf("%s: signature verification should have failed", sigName)
 	}
 }
 
@@ -94,11 +120,11 @@ func testSigWrongPublicKey(sigName string, msg []byte, threading bool, t *testin
 func TestSignatureCorrectness(t *testing.T) {
 	// Disable some sigs in macOS/OSX
 	if runtime.GOOS == "darwin" {
-		disabledSigPatterns = []string{"Rainbow-III", "Rainbow-V"}
+		disabledSigPatterns = []string{}
 	}
 	// Disable some sigs in Windows
 	if runtime.GOOS == "windows" {
-		disabledSigPatterns = []string{"Rainbow-V"}
+		disabledSigPatterns = []string{}
 	}
 	msg := []byte("This is our favourite message to sign")
 	// First test sigs that belong to noThreadSigPatterns[] in the main
@@ -129,16 +155,55 @@ func TestSignatureCorrectness(t *testing.T) {
 	wgSigCorrectness.Wait()
 }
 
+// TestSignatureCorrectnessWithCtxStr tests all enabled signatures that support context strings.
+func TestSignatureCorrectnessWithCtxStr(t *testing.T) {
+	// Disable some sigs in macOS/OSX
+	if runtime.GOOS == "darwin" {
+		disabledSigPatterns = []string{}
+	}
+	// Disable some sigs in Windows
+	if runtime.GOOS == "windows" {
+		disabledSigPatterns = []string{}
+	}
+	msg := []byte("This is our favourite message to sign")
+	// First test sigs that belong to noThreadSigPatterns[] in the main
+	// goroutine, due to issues with stack size being too small in macOS or
+	// Windows
+	cnt := 0
+	for _, sigName := range oqs.EnabledSigs() {
+		if stringMatchSlice(sigName, disabledSigPatterns) {
+			cnt++
+			continue
+		}
+		// Issues with stack size being too small
+		if stringMatchSlice(sigName, noThreadSigPatterns) {
+			cnt++
+			testSigCorrectnessWithCtxStr(sigName, msg, false, t)
+		}
+	}
+	// Test the remaining sigs in separate goroutines
+	wgSigCorrectness.Add(len(oqs.EnabledSigs()) - cnt)
+	for _, sigName := range oqs.EnabledSigs() {
+		if stringMatchSlice(sigName, disabledSigPatterns) {
+			continue
+		}
+		if !stringMatchSlice(sigName, noThreadSigPatterns) {
+			go testSigCorrectnessWithCtxStr(sigName, msg, true, t)
+		}
+	}
+	wgSigCorrectness.Wait()
+}
+
 // TestSignatureWrongSignature tests the wrong signature regime of all enabled
 // signatures.
 func TestSignatureWrongSignature(t *testing.T) {
 	// Disable some sigs in macOS/OSX
 	if runtime.GOOS == "darwin" {
-		disabledSigPatterns = []string{"Rainbow-III", "Rainbow-V"}
+		disabledSigPatterns = []string{}
 	}
 	// Disable some sigs in Windows
 	if runtime.GOOS == "windows" {
-		disabledSigPatterns = []string{"Rainbow-V"}
+		disabledSigPatterns = []string{}
 	}
 	msg := []byte("This is our favourite message to sign")
 	// First test sigs that belong to noThreadSigPatterns[] in the main
@@ -175,11 +240,11 @@ func TestSignatureWrongSignature(t *testing.T) {
 func TestSignatureWrongPublicKey(t *testing.T) {
 	// Disable some sigs in macOS/OSX
 	if runtime.GOOS == "darwin" {
-		disabledSigPatterns = []string{"Rainbow-III", "Rainbow-V"}
+		disabledSigPatterns = []string{}
 	}
 	// Disable some sigs in Windows
 	if runtime.GOOS == "windows" {
-		disabledSigPatterns = []string{"Rainbow-V"}
+		disabledSigPatterns = []string{}
 	}
 	msg := []byte("This is our favourite message to sign")
 	// First test sigs that belong to noThreadSigPatterns[] in the main

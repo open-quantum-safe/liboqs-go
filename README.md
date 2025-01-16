@@ -73,9 +73,8 @@ The project contains the following files and directories:
 
 Please note that on some platforms not all algorithms are supported:
 
-- macOS/Darwin: The Rainbow and Classic-McEliece algorithm families as well as
-  HQC-256 do not work.
-- Windows: The Rainbow and Classic-McEliece algorithm families do not work.
+- macOS/Darwin: No known issues as of liboqs-0.12.0
+- Windows: No known issues as of liboqs-0.12.0
 
 ---
 

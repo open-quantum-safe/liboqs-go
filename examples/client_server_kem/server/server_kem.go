@@ -43,7 +43,7 @@ func main() {
 		os.Exit(1)
 	}
 	port := os.Args[1]
-	kemName := "Kyber512"
+	kemName := "ML-KEM-512"
 	if len(os.Args) > 2 {
 		kemName = os.Args[2]
 	}
@@ -116,8 +116,9 @@ func handleConnection(conn net.Conn, kemName string) {
 			Details().LengthCiphertext) + " bytes, but instead wrote " + fmt.Sprintf("%v", n)))
 	}
 
+	// First connection is #1
 	log.Printf("\nConnection #%d - server shared secret:\n% X ... % X\n\n",
-		counter.Val(), sharedSecretServer[0:8],
+		counter.Val()+1, sharedSecretServer[0:8],
 		sharedSecretServer[len(sharedSecretServer)-8:])
 
 	// Increment the connection number

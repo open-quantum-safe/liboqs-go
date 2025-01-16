@@ -11,6 +11,7 @@ on:
 env:
   BUILD_TYPE: Debug
   LD_LIBRARY_PATH: /usr/local/lib
+  DYLD_LIBRARY_PATH: /usr/local/lib
   POSIX_PKG_CONFIG_PATH: ${{github.workspace}}/.config
   WIN_LIBOQS_INSTALL_PATH: C:\liboqs
   WIN_PKG_CONFIG_PATH: C:\Strawberry\c\lib\pkgconfig

@@ -9,14 +9,13 @@ import (
 	"testing"
 
 	"github.com/open-quantum-safe/liboqs-go/oqs"
-	"github.com/open-quantum-safe/liboqs-go/oqs/rand"
 )
 
 // disabledKEMPatterns lists KEMs for which unit testing is disabled
 var disabledKEMPatterns []string
 
 // noThreadKEMPatterns lists KEMs that have issues running in a separate thread
-var noThreadKEMPatterns = []string{"LEDAcryptKEM-LT52", "HQC-256"}
+var noThreadKEMPatterns = []string{}
 
 // wgKEMCorrectness groups goroutines and blocks the caller until all goroutines finish.
 var wgKEMCorrectness sync.WaitGroup
@@ -41,7 +40,7 @@ func testKEMCorrectness(kemName string, threading bool, t *testing.T) {
 	sharedSecretClient, _ := client.DecapSecret(ciphertext)
 	if !bytes.Equal(sharedSecretClient, sharedSecretServer) {
 		// t.Errorf is thread-safe
-		t.Errorf(kemName + ": shared secrets do not coincide")
+		t.Errorf("%s: shared secrets do not coincide", kemName)
 	}
 }
 
@@ -59,11 +58,11 @@ func testKEMWrongCiphertext(kemName string, threading bool, t *testing.T) {
 	_ = server.Init(kemName, nil)
 	clientPublicKey, _ := client.GenerateKeyPair()
 	ciphertext, sharedSecretServer, _ := server.EncapSecret(clientPublicKey)
-	wrongCiphertext := rand.RandomBytes(len(ciphertext))
+	wrongCiphertext := oqs.RandomBytes(len(ciphertext))
 	sharedSecretClient, _ := client.DecapSecret(wrongCiphertext)
 	if bytes.Equal(sharedSecretClient, sharedSecretServer) {
 		// t.Errorf is thread-safe
-		t.Errorf(kemName + ": shared secrets should not coincide")
+		t.Errorf("%s: shared secrets should not coincide", kemName)
 	}
 }
 
@@ -71,7 +70,7 @@ func testKEMWrongCiphertext(kemName string, threading bool, t *testing.T) {
 func TestKeyEncapsulationCorrectness(t *testing.T) {
 	// Disable some KEMs in macOS/OSX
 	if runtime.GOOS == "darwin" {
-		disabledKEMPatterns = []string{"Classic-McEliece", "HQC-256"}
+		disabledKEMPatterns = []string{}
 	}
 	// Disable some KEMs in OpenIndiana
 	if runtime.GOOS == "illumos" {
@@ -79,7 +78,7 @@ func TestKeyEncapsulationCorrectness(t *testing.T) {
 	}
 	// Disable some KEMs in Windows
 	if runtime.GOOS == "windows" {
-		disabledKEMPatterns = []string{"Classic-McEliece"}
+		disabledKEMPatterns = []string{}
 	}
 	// First test KEMs that belong to noThreadKEMPatterns[] in the main
 	// goroutine, due to issues with stack size being too small in macOS or
@@ -113,7 +112,7 @@ func TestKeyEncapsulationCorrectness(t *testing.T) {
 func TestKeyEncapsulationWrongCiphertext(t *testing.T) {
 	// disable some KEMs in macOS/OSX
 	if runtime.GOOS == "darwin" {
-		disabledKEMPatterns = []string{"Classic-McEliece", "HQC-256"}
+		disabledKEMPatterns = []string{}
 	}
 	// Disable some KEMs in OpenIndiana
 	if runtime.GOOS == "illumos" {
@@ -121,7 +120,7 @@ func TestKeyEncapsulationWrongCiphertext(t *testing.T) {
 	}
 	// Disable some KEMs in Windows
 	if runtime.GOOS == "windows" {
-		disabledKEMPatterns = []string{"Classic-McEliece"}
+		disabledKEMPatterns = []string{}
 	}
 	// First test KEMs that belong to noThreadKEMPatterns[] in the main
 	// goroutine, due to issues with stack size being too small in macOS or
