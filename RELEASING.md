@@ -22,7 +22,7 @@ Flow:
 
 ## Upstream liboqs trigger
 
-liboqs dispatches a `liboqs-release` `repository_dispatch` (payload `version` = the release tag) to this repo on `release: published`, from its `downstream-release.yml`.
+`release.yml` listens for a `liboqs-go-release` `repository_dispatch` (`client_payload.version` = liboqs release tag), sent from liboqs on `release: published`.
 
 - Upstream liboqs PR: <!-- TODO: link liboqs PR -->
 

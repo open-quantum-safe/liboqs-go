@@ -1,7 +1,7 @@
 name: Release
 
 # Cuts a version-matched liboqs-go release. Triggered by a v-prefixed tag push, a
-# manual dispatch, or upstream liboqs (repository_dispatch: liboqs-release, with
+# manual dispatch, or upstream liboqs (repository_dispatch: liboqs-go-release, with
 # client_payload.version = the liboqs release tag). The release is published only
 # if the reusable test workflow passes against the matching liboqs version.
 on:
@@ -14,7 +14,7 @@ on:
         required: true
         type: string
   repository_dispatch:
-    types: [liboqs-release]
+    types: [liboqs-go-release]
 
 permissions:
   contents: read
