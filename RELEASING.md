@@ -24,7 +24,7 @@ Flow:
 
 `release.yml` listens for a `liboqs-go-release` `repository_dispatch` (`client_payload.version` = liboqs release tag), sent from liboqs on `release: published`.
 
-- Upstream liboqs PR: <!-- TODO: link liboqs PR -->
+- Upstream liboqs PR: [open-quantum-safe/liboqs#2494](https://github.com/open-quantum-safe/liboqs/pull/2494)
 
 ## Before a release
 
