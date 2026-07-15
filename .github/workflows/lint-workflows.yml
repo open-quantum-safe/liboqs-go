@@ -30,6 +30,6 @@ jobs:
       - name: zizmor
         uses: zizmorcore/zizmor-action@192e21d79ab29983730a13d1382995c2307fbcaa # v0.5.7
         with:
-          version: 1.27.0
+          version: 1.26.1
           advanced-security: false
           inputs: .github/workflows/
