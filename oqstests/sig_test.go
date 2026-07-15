@@ -37,8 +37,9 @@ func testSigCorrectness(sigName string, msg []byte, threading bool, t *testing.T
 	_ = signer.Init(sigName, nil)
 	_ = verifier.Init(sigName, nil)
 	pubKey, _ := signer.GenerateKeyPair()
-	signature, _ := signer.Sign(msg)
-	isValid, _ := verifier.Verify(msg, signature, pubKey)
+	m := sigMessage(sigName, msg)
+	signature, _ := signer.Sign(m)
+	isValid, _ := verifier.Verify(m, signature, pubKey)
 	if !isValid {
 		// t.Errorf is thread-safe
 		t.Errorf("%s: signature verification failed", sigName)
@@ -64,8 +65,9 @@ func testSigCorrectnessWithCtxStr(sigName string, msg []byte, threading bool, t 
 	// Ignore potential errors everywhere
 	_ = verifier.Init(sigName, nil)
 	pubKey, _ := signer.GenerateKeyPair()
-	signature, _ := signer.Sign(msg)
-	isValid, _ := verifier.Verify(msg, signature, pubKey)
+	m := sigMessage(sigName, msg)
+	signature, _ := signer.Sign(m)
+	isValid, _ := verifier.Verify(m, signature, pubKey)
 	if !isValid {
 		// t.Errorf is thread-safe
 		t.Errorf("%s: signature verification failed", sigName)
@@ -85,9 +87,10 @@ func testSigWrongSignature(sigName string, msg []byte, threading bool, t *testin
 	_ = signer.Init(sigName, nil)
 	_ = verifier.Init(sigName, nil)
 	pubKey, _ := signer.GenerateKeyPair()
-	signature, _ := signer.Sign(msg)
+	m := sigMessage(sigName, msg)
+	signature, _ := signer.Sign(m)
 	wrongSignature := oqs.RandomBytes(len(signature))
-	isValid, _ := verifier.Verify(msg, wrongSignature, pubKey)
+	isValid, _ := verifier.Verify(m, wrongSignature, pubKey)
 	if isValid {
 		// t.Errorf is thread-safe
 		t.Errorf("%s: signature verification should have failed", sigName)
@@ -108,8 +111,9 @@ func testSigWrongPublicKey(sigName string, msg []byte, threading bool, t *testin
 	_ = verifier.Init(sigName, nil)
 	pubKey, _ := signer.GenerateKeyPair()
 	wrongPubKey := oqs.RandomBytes(len(pubKey))
-	signature, _ := signer.Sign(msg)
-	isValid, _ := verifier.Verify(msg, signature, wrongPubKey)
+	m := sigMessage(sigName, msg)
+	signature, _ := signer.Sign(m)
+	isValid, _ := verifier.Verify(m, signature, wrongPubKey)
 	if isValid {
 		// t.Errorf is thread-safe
 		t.Errorf("%s: signature verification should have failed", sigName)

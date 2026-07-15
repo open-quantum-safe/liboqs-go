@@ -15,6 +15,15 @@ import (
 	"unsafe"
 )
 
+// bytePtr returns a pointer to the first byte of b for passing to C, or nil when
+// b is empty (avoids an out-of-range panic on &b[0]).
+func bytePtr(b []byte) *C.uint8_t {
+	if len(b) == 0 {
+		return nil
+	}
+	return (*C.uint8_t)(unsafe.Pointer(&b[0]))
+}
+
 /**************** Misc functions ****************/
 
 // LiboqsVersion retrieves the underlying liboqs version string.
@@ -451,7 +460,7 @@ func (sig *Signature) Sign(message []byte) ([]byte, error) {
 		sig.sig,
 		(*C.uint8_t)(unsafe.Pointer(&signature[0])),
 		(*C.size_t)(unsafe.Pointer(&lenSig)),
-		(*C.uint8_t)(unsafe.Pointer(&message[0])),
+		bytePtr(message),
 		C.size_t(len(message)),
 		(*C.uint8_t)(unsafe.Pointer(&sig.secretKey[0])),
 	)
@@ -481,9 +490,9 @@ func (sig *Signature) SignWithCtxStr(message []byte, context []byte) ([]byte, er
 		sig.sig,
 		(*C.uint8_t)(unsafe.Pointer(&signature[0])),
 		(*C.size_t)(unsafe.Pointer(&lenSig)),
-		(*C.uint8_t)(unsafe.Pointer(&message[0])),
+		bytePtr(message),
 		C.size_t(len(message)),
-		(*C.uint8_t)(unsafe.Pointer(&context[0])),
+		bytePtr(context),
 		C.size_t(len(context)),
 		(*C.uint8_t)(unsafe.Pointer(&sig.secretKey[0])),
 	)
@@ -510,9 +519,9 @@ func (sig *Signature) Verify(message []byte, signature []byte,
 
 	rv := C.OQS_SIG_verify(
 		sig.sig,
-		(*C.uint8_t)(unsafe.Pointer(&message[0])),
+		bytePtr(message),
 		C.size_t(len(message)),
-		(*C.uint8_t)(unsafe.Pointer(&signature[0])),
+		bytePtr(signature),
 		C.size_t(len(signature)),
 		(*C.uint8_t)(unsafe.Pointer(&publicKey[0])),
 	)
@@ -546,13 +555,11 @@ func (sig *Signature) VerifyWithCtxStr(
 
 	rv := C.OQS_SIG_verify_with_ctx_str(
 		sig.sig,
-		(*C.uint8_t)(
-			unsafe.Pointer(&message[0]),
-		),
+		bytePtr(message),
 		C.size_t(len(message)),
-		(*C.uint8_t)(unsafe.Pointer(&signature[0])),
+		bytePtr(signature),
 		C.size_t(len(signature)),
-		(*C.uint8_t)(unsafe.Pointer(&context[0])),
+		bytePtr(context),
 		C.size_t(len(context)),
 		(*C.uint8_t)(unsafe.Pointer(&publicKey[0])),
 	)
