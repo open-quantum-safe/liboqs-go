@@ -1,5 +1,16 @@
 # Changelog for liboqs-go
 
+## Version 0.16.0 - July 15, 2026
+
+- Updated compatibility for liboqs 0.16.0
+- **Breaking change:** SPHINCS+ has been removed from liboqs 0.16.0. Users must migrate to SLH-DSA ([FIPS 205](https://csrc.nist.gov/pubs/fips/205/final))
+- Added support for the ML-DSA external-mu variants `ML-DSA-44-extmu`, `ML-DSA-65-extmu`, and `ML-DSA-87-extmu`, which take a fixed 64-byte mu digest in place of the message
+- Fixed a panic in `Sign`/`Verify`/`SignWithCtxStr`/`VerifyWithCtxStr` when passed an empty message, signature, or context string (zero-length slice dereference)
+- liboqs 0.16.0 renames the existing FrodoKEM parameter sets to ephemeral FrodoKEM (`efrodokem_*`) and adds the salted variant under the original `frodokem_*` names
+- Added an automated release workflow (`release.yml`) that is triggered by upstream liboqs and publishes a version-matched release once tests pass; see [RELEASING.md](https://github.com/open-quantum-safe/liboqs-go/blob/main/RELEASING.md)
+- Made the CI workflow reusable, pinned all GitHub Actions to commit hashes, and added an actionlint + zizmor lint gate for the workflow files
+- Switched release tags to the Go module `vX.Y.Z` convention (e.g. `v0.16.0`), so the module can be fetched with `go get github.com/open-quantum-safe/liboqs-go@v0.16.0`
+
 ## Version 0.15.0 - January 20, 2026
 
 - Updated compatibility for liboqs 0.15.0

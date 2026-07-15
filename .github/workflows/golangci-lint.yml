@@ -1,0 +1,48 @@
+name: golangci-lint
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+  workflow_call:
+    inputs:
+      liboqs_ref:
+        description: "liboqs git ref (tag or branch) to build against"
+        type: string
+        required: false
+        default: main
+
+permissions:
+  contents: read
+
+env:
+  LD_LIBRARY_PATH: /usr/local/lib
+  PKG_CONFIG_PATH: ${{ github.workspace }}/.config
+
+jobs:
+  golangci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
+        with:
+          go-version: 1.21
+
+      - name: Install liboqs
+        env:
+          LIBOQS_REF: ${{ inputs.liboqs_ref || 'main' }}
+        run: |
+          git clone --branch "$LIBOQS_REF" --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs
+          cmake -S liboqs -B liboqs/build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON
+          cmake --build liboqs/build --parallel 4
+          sudo cmake --build liboqs/build --target install
+          sudo ldconfig
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9.3.0
+        with:
+          version: v2.8.0

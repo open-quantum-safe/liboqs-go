@@ -6,7 +6,17 @@ on:
   pull_request:
     branches: ["**"]
   repository_dispatch:
-    types: ["**"]
+    types: [liboqs-upstream-trigger]
+  workflow_call:
+    inputs:
+      liboqs_ref:
+        description: "liboqs git ref (tag or branch) to build against"
+        type: string
+        required: false
+        default: main
+
+permissions:
+  contents: read
 
 env:
   BUILD_TYPE: Debug
@@ -23,23 +33,27 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
 
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
         with:
           go-version: 1.21
 
       - name: Install liboqs
+        env:
+          LIBOQS_REF: ${{ inputs.liboqs_ref || 'main' }}
         run: |
-          git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs
-          cmake -S liboqs -B liboqs/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON
+          git clone --branch "$LIBOQS_REF" --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs
+          cmake -S liboqs -B liboqs/build -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DBUILD_SHARED_LIBS=ON -DOQS_BUILD_ONLY_LIB=ON
           cmake --build liboqs/build --parallel 4
           sudo cmake --build liboqs/build --target install
 
       - name: Run examples
         run: |
-          export PKG_CONFIG_PATH=${{env.POSIX_PKG_CONFIG_PATH}}
+          export PKG_CONFIG_PATH="$POSIX_PKG_CONFIG_PATH"
           go run ./examples/kem/kem.go
           echo
           go run ./examples/sig/sig.go
@@ -48,7 +62,7 @@ jobs:
 
       - name: Run unit tests
         run: |
-          export PKG_CONFIG_PATH=${{env.POSIX_PKG_CONFIG_PATH}}
+          export PKG_CONFIG_PATH="$POSIX_PKG_CONFIG_PATH"
           go test -v -timeout 30m ./oqstests
 
   # Windows build using MSYS2/MinGW
@@ -58,15 +72,17 @@ jobs:
       LIBOQS_INSTALL_PATH: C:/liboqs
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
 
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
         with:
           go-version: 1.21
 
       - name: Set up MSYS2
-        uses: msys2/setup-msys2@v2
+        uses: msys2/setup-msys2@66cd2cce69caa17b53920067426061ca1de3a884 # v2.32.0
         with:
           msystem: MINGW64
           path-type: inherit
@@ -75,11 +91,13 @@ jobs:
 
       - name: Install liboqs
         shell: msys2 {0}
+        env:
+          LIBOQS_REF: ${{ inputs.liboqs_ref || 'main' }}
         run: |
-          git clone --branch main --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs
+          git clone --branch "$LIBOQS_REF" --single-branch --depth 1 https://github.com/open-quantum-safe/liboqs
           cmake -S liboqs -B liboqs/build -G Ninja \
-            -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
-            -DCMAKE_INSTALL_PREFIX=$LIBOQS_INSTALL_PATH \
+            -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
+            -DCMAKE_INSTALL_PREFIX="$LIBOQS_INSTALL_PATH" \
             -DBUILD_SHARED_LIBS=ON \
             -DOQS_BUILD_ONLY_LIB=ON \
             -DCMAKE_C_FLAGS="-D__ORDER_LITTLE_ENDIAN__=1234 -D__ORDER_BIG_ENDIAN__=4321 -D__BYTE_ORDER__=1234"

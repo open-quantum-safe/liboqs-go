@@ -27,7 +27,7 @@ func main() {
 		log.Fatal(errors.New("client cannot connect " +
 			"to " + address + ":" + port))
 	}
-	defer conn.Close() // clean up even in case of panic
+	defer func() { _ = conn.Close() }() // clean up even in case of panic
 
 	// Construct the KEM client
 	client := oqs.KeyEncapsulation{}

@@ -75,7 +75,7 @@ func main() {
 }
 
 func handleConnection(conn net.Conn, kemName string) {
-	defer conn.Close() // clean up even in case of panic
+	defer func() { _ = conn.Close() }() // clean up even in case of panic
 
 	// Send KEM name to client first
 	_, err := fmt.Fprintln(conn, kemName)

@@ -1,0 +1,116 @@
+name: Release
+
+# Cuts a version-matched liboqs-go release. Triggered by a v-prefixed tag push, a
+# manual dispatch, or upstream liboqs (repository_dispatch: liboqs-release, with
+# client_payload.version = the liboqs release tag). The release is published only
+# if the reusable test workflow passes against the matching liboqs version.
+on:
+  push:
+    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release, e.g. 0.16.0 (no v prefix)"
+        required: true
+        type: string
+  repository_dispatch:
+    types: [liboqs-release]
+
+permissions:
+  contents: read
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      tag: ${{ steps.v.outputs.tag }}
+    steps:
+      - id: v
+        env:
+          EVENT: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+          PAYLOAD_VERSION: ${{ github.event.client_payload.version }}
+        run: |
+          set -euo pipefail
+          case "$EVENT" in
+            push)                RAW="$REF_NAME" ;;
+            workflow_dispatch)   RAW="$INPUT_VERSION" ;;
+            repository_dispatch) RAW="$PAYLOAD_VERSION" ;;
+            *) echo "Unsupported event: $EVENT"; exit 1 ;;
+          esac
+          VERSION="${RAW#v}"   # liboqs tags carry no v; strip an optional one
+          if ! echo "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "Invalid version '$RAW'"; exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Resolved version=$VERSION tag=v$VERSION"
+
+  # Reuses the full posix + windows test matrix, built against the matching liboqs
+  # release tag. All gating jobs must pass for the release job to run.
+  test:
+    needs: resolve
+    uses: ./.github/workflows/go.yml
+    with:
+      liboqs_ref: ${{ needs.resolve.outputs.version }}
+
+  golangci:
+    needs: resolve
+    uses: ./.github/workflows/golangci-lint.yml
+    with:
+      liboqs_ref: ${{ needs.resolve.outputs.version }}
+
+  lint-workflows:
+    uses: ./.github/workflows/lint-workflows.yml
+
+  release:
+    needs: [resolve, test, golangci, lint-workflows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      TAG: ${{ needs.resolve.outputs.tag }}
+      VERSION: ${{ needs.resolve.outputs.version }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Skip if release already exists
+        id: exists
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists; nothing to do."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Extract release notes from CHANGES.md
+        if: steps.exists.outputs.skip == 'false'
+        run: |
+          awk -v v="$VERSION" '
+            /^## Version / { if ($3 == v) { f = 1; next } else if (f) { exit } }
+            f { print }
+          ' CHANGES.md > notes.md
+          if [ -s notes.md ]; then
+            echo "have_notes=true" >> "$GITHUB_ENV"
+          else
+            echo "No CHANGES.md section for $VERSION; auto-generating notes."
+            echo "have_notes=false" >> "$GITHUB_ENV"
+          fi
+
+      # Creates the vX.Y.Z tag at the tested commit (GITHUB_SHA) via the API, so no
+      # persisted git credentials are needed. Tags pushed by GITHUB_TOKEN do not
+      # re-trigger this workflow.
+      - name: Create GitHub release
+        if: steps.exists.outputs.skip == 'false'
+        run: |
+          if [ "$have_notes" = "true" ]; then
+            gh release create "$TAG" --target "$GITHUB_SHA" --title "$TAG" --notes-file notes.md
+          else
+            gh release create "$TAG" --target "$GITHUB_SHA" --title "$TAG" --generate-notes
+          fi

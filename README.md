@@ -1,8 +1,10 @@
 # liboqs-go: Go bindings for liboqs
 
-[![GitHub actions](https://github.com/open-quantum-safe/liboqs-go/actions/workflows/go.yml/badge.svg)](https://github.com/open-quantum-safe/liboqs-go/actions)
-[![Go Report Card](https://goreportcard.com/badge/github.com/open-quantum-safe/liboqs-go)](https://goreportcard.com/report/github.com/open-quantum-safe/liboqs-go)
-[![Documentation](https://godoc.org/github.com/open-quantum-safe/liboqs-go/oqs?status.svg)](https://pkg.go.dev/github.com/open-quantum-safe/liboqs-go/oqs)
+[![CI](https://github.com/open-quantum-safe/liboqs-go/actions/workflows/go.yml/badge.svg)](https://github.com/open-quantum-safe/liboqs-go/actions/workflows/go.yml)
+[![Release](https://github.com/open-quantum-safe/liboqs-go/actions/workflows/release.yml/badge.svg)](https://github.com/open-quantum-safe/liboqs-go/actions/workflows/release.yml)
+[![Latest release](https://img.shields.io/github/v/release/open-quantum-safe/liboqs-go?sort=semver)](https://github.com/open-quantum-safe/liboqs-go/releases/latest)
+[![golangci-lint](https://github.com/open-quantum-safe/liboqs-go/actions/workflows/golangci-lint.yml/badge.svg)](https://github.com/open-quantum-safe/liboqs-go/actions/workflows/golangci-lint.yml)
+[![Documentation](https://pkg.go.dev/badge/github.com/open-quantum-safe/liboqs-go/oqs.svg)](https://pkg.go.dev/github.com/open-quantum-safe/liboqs-go/oqs)
 
 ---
 
