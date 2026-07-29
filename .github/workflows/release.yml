@@ -3,14 +3,16 @@ name: Release
 # Cuts a version-matched liboqs-go release. Triggered by a v-prefixed tag push, a
 # manual dispatch, or upstream liboqs (repository_dispatch: liboqs-go-release, with
 # client_payload.version = the liboqs release tag). The release is published only
-# if the reusable test workflow passes against the matching liboqs version.
+# if the reusable test workflow passes against the matching liboqs version and the
+# repo is prepped for it (.pc files, RELEASE.md, CHANGES.md section). Release
+# candidates (X.Y.Z-rcN) run the tests only and never release.
 on:
   push:
     tags: ["v[0-9]+.[0-9]+.[0-9]+"]
   workflow_dispatch:
     inputs:
       version:
-        description: "Version to release, e.g. 0.16.0 (no v prefix)"
+        description: "Version to release, e.g. 0.16.0 (no v prefix); X.Y.Z-rcN tests readiness without releasing"
         required: true
         type: string
   repository_dispatch:
@@ -25,6 +27,7 @@ jobs:
     outputs:
       version: ${{ steps.v.outputs.version }}
       tag: ${{ steps.v.outputs.tag }}
+      prerelease: ${{ steps.v.outputs.prerelease }}
     steps:
       - id: v
         env:
@@ -41,12 +44,19 @@ jobs:
             *) echo "Unsupported event: $EVENT"; exit 1 ;;
           esac
           VERSION="${RAW#v}"   # liboqs tags carry no v; strip an optional one
-          if ! echo "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+          if ! echo "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?$'; then
             echo "Invalid version '$RAW'"; exit 1
           fi
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
-          echo "Resolved version=$VERSION tag=v$VERSION"
+          case "$VERSION" in
+            *-rc*) PRERELEASE=true ;;
+            *)     PRERELEASE=false ;;
+          esac
+          {
+            echo "version=$VERSION"
+            echo "tag=v$VERSION"
+            echo "prerelease=$PRERELEASE"
+          } >> "$GITHUB_OUTPUT"
+          echo "Resolved version=$VERSION tag=v$VERSION prerelease=$PRERELEASE"
 
   # Reuses the full posix + windows test matrix, built against the matching liboqs
   # release tag. All gating jobs must pass for the release job to run.
@@ -67,6 +77,7 @@ jobs:
 
   release:
     needs: [resolve, test, golangci, lint-workflows]
+    if: needs.resolve.outputs.prerelease == 'false'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -89,6 +100,25 @@ jobs:
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
+      # Refuses to release from a main nobody has prepped for VERSION (see the
+      # "Before a release" checklist in RELEASING.md).
+      - name: Verify repo is prepared for release
+        if: steps.exists.outputs.skip == 'false'
+        run: |
+          ok=true
+          for pc in .config/liboqs-go.pc* .config-static/liboqs-go.pc*; do
+            PC_VERSION=$(sed -n 's/^Version: //p' "$pc")
+            if [ "$PC_VERSION" != "$VERSION" ]; then
+              echo "::error file=$pc::Version is '$PC_VERSION', expected $VERSION"
+              ok=false
+            fi
+          done
+          if ! head -1 RELEASE.md | grep -Fqx "# liboqs-go version $VERSION"; then
+            echo "::error file=RELEASE.md::First line does not read '# liboqs-go version $VERSION'"
+            ok=false
+          fi
+          [ "$ok" = true ]
+
       - name: Extract release notes from CHANGES.md
         if: steps.exists.outputs.skip == 'false'
         run: |
@@ -96,11 +126,9 @@ jobs:
             /^## Version / { if ($3 == v) { f = 1; next } else if (f) { exit } }
             f { print }
           ' CHANGES.md > notes.md
-          if [ -s notes.md ]; then
-            echo "have_notes=true" >> "$GITHUB_ENV"
-          else
-            echo "No CHANGES.md section for $VERSION; auto-generating notes."
-            echo "have_notes=false" >> "$GITHUB_ENV"
+          if [ ! -s notes.md ]; then
+            echo "::error file=CHANGES.md::No release notes; add a '## Version $VERSION - <date>' section"
+            exit 1
           fi
 
       # Creates the vX.Y.Z tag at the tested commit (GITHUB_SHA) via the API, so no
@@ -108,9 +136,4 @@ jobs:
       # re-trigger this workflow.
       - name: Create GitHub release
         if: steps.exists.outputs.skip == 'false'
-        run: |
-          if [ "$have_notes" = "true" ]; then
-            gh release create "$TAG" --target "$GITHUB_SHA" --title "$TAG" --notes-file notes.md
-          else
-            gh release create "$TAG" --target "$GITHUB_SHA" --title "$TAG" --generate-notes
-          fi
+        run: gh release create "$TAG" --target "$GITHUB_SHA" --title "$TAG" --notes-file notes.md

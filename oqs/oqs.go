@@ -15,11 +15,14 @@ import (
 	"unsafe"
 )
 
-// bytePtr returns a pointer to the first byte of b for passing to C, or nil when
-// b is empty (avoids an out-of-range panic on &b[0]).
+// zeroByte backs bytePtr for empty slices; only ever read with length 0.
+var zeroByte C.uint8_t
+
+// bytePtr returns a pointer to the first byte of b for passing to C, or a valid
+// dummy pointer when b is empty (avoids &b[0] panics and NULL derefs in C).
 func bytePtr(b []byte) *C.uint8_t {
 	if len(b) == 0 {
-		return nil
+		return &zeroByte
 	}
 	return (*C.uint8_t)(unsafe.Pointer(&b[0]))
 }
@@ -513,7 +516,7 @@ func (sig *Signature) Verify(message []byte, signature []byte,
 		return false, errors.New("incorrect public key length")
 	}
 
-	if len(signature) > sig.algDetails.MaxLengthSignature {
+	if len(signature) == 0 || len(signature) > sig.algDetails.MaxLengthSignature {
 		return false, errors.New("incorrect signature size")
 	}
 
@@ -549,7 +552,7 @@ func (sig *Signature) VerifyWithCtxStr(
 		return false, errors.New("incorrect public key length")
 	}
 
-	if len(signature) > sig.algDetails.MaxLengthSignature {
+	if len(signature) == 0 || len(signature) > sig.algDetails.MaxLengthSignature {
 		return false, errors.New("incorrect signature size")
 	}
 

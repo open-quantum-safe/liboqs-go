@@ -66,11 +66,22 @@ func testSigCorrectnessWithCtxStr(sigName string, msg []byte, threading bool, t 
 	_ = verifier.Init(sigName, nil)
 	pubKey, _ := signer.GenerateKeyPair()
 	m := sigMessage(sigName, msg)
-	signature, _ := signer.Sign(m)
-	isValid, _ := verifier.Verify(m, signature, pubKey)
+	context := []byte("liboqs-go context string")
+	signature, _ := signer.SignWithCtxStr(m, context)
+	isValid, _ := verifier.VerifyWithCtxStr(m, signature, context, pubKey)
 	if !isValid {
 		// t.Errorf is thread-safe
-		t.Errorf("%s: signature verification failed", sigName)
+		t.Errorf("%s: signature verification with context string failed", sigName)
+	}
+	isValid, _ = verifier.VerifyWithCtxStr(m, signature, []byte("wrong context"), pubKey)
+	if isValid {
+		t.Errorf("%s: signature verification with wrong context string should have failed", sigName)
+	}
+	// Empty context exercises the nil-pointer path in the C calls
+	signature, _ = signer.SignWithCtxStr(m, nil)
+	isValid, _ = verifier.VerifyWithCtxStr(m, signature, nil, pubKey)
+	if !isValid {
+		t.Errorf("%s: signature verification with empty context string failed", sigName)
 	}
 }
 
@@ -277,6 +288,55 @@ func TestSignatureWrongPublicKey(t *testing.T) {
 		}
 	}
 	wgSigWrongPublicKey.Wait()
+}
+
+// TestSignatureCtxStrUnsupported tests that a non-empty context string emits an
+// error for signatures without context string support.
+func TestSignatureCtxStrUnsupported(t *testing.T) {
+	context := []byte("liboqs-go context string")
+	for _, sigName := range oqs.EnabledSigs() {
+		var signer oqs.Signature
+		if err := signer.Init(sigName, nil); err != nil {
+			signer.Clean()
+			continue
+		}
+		if signer.Details().SigWithCtxSupport {
+			signer.Clean()
+			continue
+		}
+		if _, err := signer.SignWithCtxStr([]byte("message"), context); err == nil {
+			t.Errorf("%s: SignWithCtxStr with non-empty context should have errored", sigName)
+		}
+		if _, err := signer.VerifyWithCtxStr([]byte("message"), []byte("sig"), context, []byte("pub")); err == nil {
+			t.Errorf("%s: VerifyWithCtxStr with non-empty context should have errored", sigName)
+		}
+		signer.Clean()
+	}
+}
+
+// TestSignatureEmptyMessage tests signing an empty message and verifying with an
+// empty signature, exercising the nil-pointer paths in the C calls.
+func TestSignatureEmptyMessage(t *testing.T) {
+	for _, sigName := range oqs.EnabledSigs() {
+		var signer, verifier oqs.Signature
+		// Ignore potential errors everywhere
+		_ = signer.Init(sigName, nil)
+		_ = verifier.Init(sigName, nil)
+		pubKey, _ := signer.GenerateKeyPair()
+		// sigMessage substitutes the required fixed-length mu for extmu variants
+		m := sigMessage(sigName, nil)
+		signature, _ := signer.Sign(m)
+		isValid, _ := verifier.Verify(m, signature, pubKey)
+		if !isValid {
+			t.Errorf("%s: empty message signature verification failed", sigName)
+		}
+		isValid, err := verifier.Verify(m, nil, pubKey)
+		if isValid || err == nil {
+			t.Errorf("%s: empty signature should have been rejected", sigName)
+		}
+		signer.Clean()
+		verifier.Clean()
+	}
 }
 
 // TestUnsupportedSignature tests that an unsupported signature emits an error.
