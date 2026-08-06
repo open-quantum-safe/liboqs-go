@@ -1,6 +1,6 @@
 # Changelog for liboqs-go
 
-## Version 0.16.0 - July 15, 2026
+## Version 0.16.0 - August 6, 2026
 
 - Updated compatibility for liboqs 0.16.0
 - **Breaking change:** SPHINCS+ has been removed from liboqs 0.16.0. Users must migrate to SLH-DSA ([FIPS 205](https://csrc.nist.gov/pubs/fips/205/final))
